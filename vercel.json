@@ -1,6 +1,5 @@
 {
-  "buildCommand": "CI=false npm run build",
-  "routes": [
-    { "src": "/(.*)", "dest": "/" }
+  "rewrites": [
+    { "source": "/((?!.*\\.).*)", "destination": "/" }
   ]
 }
