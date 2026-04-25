@@ -1,210 +1,759 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Check, ChevronDown, Heart, LineChart, MessageCircle, Camera, Shield } from 'lucide-react';
+import { Globe, Menu, X, Check, ArrowRight, Plus, Minus } from 'lucide-react';
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [openFaq, setOpenFaq] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState(0);
+
+  useEffect(() => {
+    // Inject Google Fonts (Fraunces + Manrope) once on mount
+    if (!document.getElementById('glowwise-fonts')) {
+      const link = document.createElement('link');
+      link.id = 'glowwise-fonts';
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap';
+      document.head.appendChild(link);
+    }
+
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
+  };
 
   const features = [
-    { icon: MessageCircle, title: 'Adaptive Intelligence', desc: 'AI learns your patterns and personalizes solutions for your unique body' },
-    { icon: LineChart, title: 'Connected Living', desc: 'Seamlessly integrate data to gather continuous clarity without friction' },
-    { icon: Camera, title: 'Glow Plan', desc: 'Your personalized wellness plan, tailored to your needs' },
+    { num: '01', title: 'AI Wellness Coach', desc: "Ask anything. Get answers built on your data, not Google's." },
+    { num: '02', title: 'Pattern Detection', desc: "The AI spots what's actually affecting you — like sleep and skin, or stress and shedding." },
+    { num: '03', title: 'Daily Check-In', desc: "60 seconds a day. Tracks energy, sleep, stress, mood and supplements." },
+    { num: '04', title: 'Personalised Insights', desc: "Weekly summaries with clear next steps for your priorities." },
+    { num: '05', title: 'Photo Tracking', desc: "Optional, private before/after photos to see real progress." },
+    { num: '06', title: 'You Control Your Data', desc: "Delete any message, photo, or your whole account anytime. GDPR compliant. No third-party sharing." },
+  ];
+
+  const samples = [
+    {
+      tag: 'Hair loss',
+      user: "I'm losing a lot of hair lately.",
+      coach: "Your stress is averaging 7/10 and sleep is around 5 hours — both raise cortisol, which triggers shedding. Let's start with sleep. Here's a 3-step plan..."
+    },
+    {
+      tag: 'Energy crashes',
+      user: "I get tired every afternoon.",
+      coach: "Your check-ins show energy dips on days with under 6 hours of sleep and high caffeine. Try: protein at lunch, no caffeine after 2pm, and a 10-minute walk after eating."
+    },
+    {
+      tag: 'Brain fog',
+      user: "I keep losing focus during work.",
+      coach: "Your patterns show brain fog spikes on days with poor sleep and skipped breakfast. Try protein within an hour of waking and consistent sleep timing — even small shifts help."
+    }
   ];
 
   const faqs = [
-    { q: 'Is this a medical advice platform?', a: 'No. GlowWise provides wellness intelligence and lifestyle suggestions. Always consult a healthcare provider for medical concerns.' },
-    { q: 'How does the AI personalization work?', a: 'Our AI learns from your daily check-ins, health history, and wellness priorities. It identifies patterns unique to your body.' },
-    { q: 'What if I want to delete my data?', a: 'You have complete control. Delete messages, photos, or your entire account anytime. Your data stays encrypted and private.' },
-    { q: 'Are supplements mandatory?', a: 'No. GlowWise is completely flexible. Track what matters to you—supplements, sleep, stress, or anything else.' },
+    { q: 'Is this a medical app?', a: 'No. GlowWise gives wellness guidance, not medical advice. Always see a doctor for medical concerns.' },
+    { q: 'How does the AI get so personalised?', a: 'Through your daily check-ins. The more data you log, the sharper the guidance gets.' },
+    { q: 'Is my data really private?', a: 'Yes. Encrypted at rest, GDPR compliant, no third-party sharing, and you can delete anything anytime.' },
+    { q: 'Can I delete everything?', a: 'Yes — individual messages, photos, conversations or your full account, anytime.' },
+    { q: 'Who is GlowWise for?', a: 'Anyone 18+ looking for clarity on their wellness. Whether you\'re tracking hormones, hair loss, energy, sleep, stress, skin or nutrition — GlowWise adapts to you.' },
+    { q: 'What does it actually cover?', a: 'Hormones, hair, energy, stress, sleep, skin, nutrition and brain health.' },
+    { q: 'Can I cancel anytime?', a: 'Yes. One tap in your account settings. No questions asked, no fees.' },
+    { q: 'Will it be available in my language?', a: "English at launch. We're adding more languages based on demand — let us know which one you'd like next via the language menu." },
+    { q: 'How quickly will I see results?', a: 'Most users notice patterns within 2 weeks of daily check-ins. Real changes to energy, sleep or skin typically take 4–6 weeks of consistent action on the AI Coach\'s suggestions.' },
+    { q: 'How is this different from ChatGPT?', a: 'ChatGPT gives general advice to anyone. GlowWise learns you — your patterns, your priorities, your daily check-ins — and gives guidance built around your body. Plus, you control your data and can delete anything anytime.' },
   ];
 
   return (
-    <div style={{ backgroundColor: '#faf9f6', color: '#1a1c1a' }}>
-      {/* Navigation */}
-      <nav style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e3e2df', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ backgroundColor: '#4a654f', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sparkles className="w-5 h-5" style={{ color: 'white' }} />
-            </div>
-            <span style={{ fontFamily: 'Manrope', fontWeight: 500, fontSize: '18px' }}>GlowWise</span>
+    <div style={{ background: '#F5F3F0', minHeight: '100vh', fontFamily: "'Manrope', system-ui, sans-serif", color: '#3D4A52' }}>
+      <style>{`
+        .glowwise-landing * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        .display { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
+        .display-bold { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.02em; }
+        .body-text { font-family: 'Manrope', sans-serif; }
+        .eyebrow {
+          font-family: 'Manrope', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #A89968;
+        }
+
+        .btn-primary {
+          background: #6B9E7F;
+          color: #FAF8F5;
+          padding: 14px 28px;
+          border: none;
+          border-radius: 100px;
+          font-family: 'Manrope', sans-serif;
+          font-size: 15px;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .btn-primary:hover { background: #557E64; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(107, 158, 127, 0.25); }
+
+        .btn-secondary {
+          background: transparent;
+          color: #3D4A52;
+          padding: 14px 24px;
+          border: 1px solid #3D4A52;
+          border-radius: 100px;
+          font-family: 'Manrope', sans-serif;
+          font-size: 15px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .btn-secondary:hover { background: #3D4A52; color: #FAF8F5; }
+
+        .nav-link {
+          font-family: 'Manrope', sans-serif;
+          font-size: 14px;
+          color: #3D4A52;
+          text-decoration: none;
+          font-weight: 500;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px 0;
+          transition: color 0.2s;
+        }
+        .nav-link:hover { color: #6B9E7F; }
+
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+        @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+        .grain::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.6'/%3E%3C/svg%3E");
+          opacity: 0.04;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .chat-bubble-user {
+          background: #FAF8F5;
+          border: 1px solid #E8E4DD;
+          border-radius: 18px 18px 4px 18px;
+          padding: 14px 18px;
+          font-size: 14px;
+          line-height: 1.5;
+          color: #3D4A52;
+          margin-left: auto;
+          max-width: 85%;
+        }
+        .chat-bubble-coach {
+          background: #6B9E7F;
+          color: #FAF8F5;
+          border-radius: 18px 18px 18px 4px;
+          padding: 14px 18px;
+          font-size: 14px;
+          line-height: 1.55;
+          max-width: 90%;
+        }
+
+        .feature-card {
+          background: #FAF8F5;
+          border: 1px solid rgba(168, 153, 104, 0.15);
+          border-radius: 4px;
+          padding: 36px 28px;
+          transition: all 0.4s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        .feature-card:hover { border-color: #6B9E7F; transform: translateY(-2px); }
+        .feature-card::after {
+          content: '';
+          position: absolute;
+          left: 0; top: 0; bottom: 0;
+          width: 2px;
+          background: #6B9E7F;
+          transform: scaleY(0);
+          transform-origin: bottom;
+          transition: transform 0.4s ease;
+        }
+        .feature-card:hover::after { transform: scaleY(1); transform-origin: top; }
+
+        .step-circle {
+          width: 56px; height: 56px;
+          border-radius: 50%;
+          background: #FAF8F5;
+          border: 1.5px solid #6B9E7F;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Fraunces', serif;
+          font-size: 20px;
+          color: #6B9E7F;
+          margin-bottom: 24px;
+        }
+
+        .pricing-card {
+          background: #FAF8F5;
+          border: 1px solid rgba(168, 153, 104, 0.2);
+          border-radius: 4px;
+          padding: 40px 32px;
+          position: relative;
+          transition: all 0.3s;
+        }
+        .pricing-card.featured {
+          background: #6B9E7F;
+          color: #FAF8F5;
+          border-color: #6B9E7F;
+        }
+        .pricing-card.featured .price-amount { color: #FAF8F5; }
+
+        .faq-item {
+          border-bottom: 1px solid rgba(168, 153, 104, 0.2);
+          padding: 24px 0;
+        }
+        .faq-question {
+          width: 100%;
+          background: none;
+          border: none;
+          padding: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          text-align: left;
+          font-family: 'Fraunces', serif;
+          font-size: 19px;
+          font-weight: 400;
+          color: #3D4A52;
+          letter-spacing: -0.01em;
+        }
+        .faq-answer {
+          margin-top: 16px;
+          font-size: 15px;
+          line-height: 1.7;
+          color: #5A6770;
+          max-width: 720px;
+        }
+
+        .lang-dropdown {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          background: #FAF8F5;
+          border: 1px solid rgba(168, 153, 104, 0.25);
+          border-radius: 8px;
+          min-width: 200px;
+          box-shadow: 0 12px 32px rgba(61, 74, 82, 0.08);
+          overflow: hidden;
+          z-index: 100;
+        }
+        .lang-item {
+          padding: 12px 18px;
+          font-size: 14px;
+          color: #3D4A52;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid rgba(168, 153, 104, 0.1);
+        }
+        .lang-item:last-child { border-bottom: none; }
+        .lang-item.active { color: #6B9E7F; font-weight: 600; }
+        .lang-item.disabled { color: #A89968; opacity: 0.6; }
+        .lang-item-soon {
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #A89968;
+        }
+
+        .floating-mark {
+          position: absolute;
+          font-family: 'Fraunces', serif;
+          color: rgba(107, 158, 127, 0.08);
+          font-size: 320px;
+          line-height: 0.8;
+          font-weight: 300;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .divider-line {
+          height: 1px;
+          background: linear-gradient(to right, transparent, rgba(168, 153, 104, 0.3), transparent);
+        }
+
+        @media (max-width: 768px) {
+          .hide-mobile { display: none !important; }
+        }
+        @media (min-width: 769px) {
+          .show-mobile { display: none !important; }
+        }
+      `}</style>
+
+      <div className="grain"></div>
+
+      {/* NAVBAR */}
+      <nav style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        background: scrolled ? 'rgba(245, 243, 240, 0.92)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(168, 153, 104, 0.15)' : '1px solid transparent',
+        transition: 'all 0.3s ease',
+        padding: '18px 0',
+      }}>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+          {/* Logo */}
+          <button onClick={() => scrollTo('top')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: '28px', height: '28px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#FAF8F5',
+              fontFamily: "'Fraunces', serif",
+              fontSize: '14px',
+              fontWeight: 500,
+            }}>g</div>
+            <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: '#3D4A52', letterSpacing: '-0.02em' }}>
+              GlowWise
+            </span>
+          </button>
+
+          {/* Desktop nav */}
+          <div className="hide-mobile" style={{ display: 'flex', gap: '36px', alignItems: 'center' }}>
+            <button onClick={() => scrollTo('how')} className="nav-link">How it works</button>
+            <button onClick={() => scrollTo('features')} className="nav-link">Features</button>
+            <button onClick={() => scrollTo('pricing')} className="nav-link">Pricing</button>
+            <button onClick={() => scrollTo('faq')} className="nav-link">FAQ</button>
           </div>
-          <div style={{ display: 'flex', gap: '32px' }}>
-            {['Features', 'Wellness AI', 'Pricing', 'FAQ'].map(item => (
-              <button key={item} style={{ fontFamily: 'Inter', fontSize: '16px', color: '#1a1c1a', background: 'none', border: 'none', cursor: 'pointer' }}>
-                {item}
+
+          {/* Right cluster */}
+          <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '20px', position: 'relative' }}>
+
+            {/* Language switcher */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: '#3D4A52', padding: '8px' }}
+              >
+                <Globe size={16} strokeWidth={1.5} />
+                <span style={{ fontSize: '13px', fontFamily: "'Manrope', sans-serif" }}>EN</span>
               </button>
-            ))}
+              {langOpen && (
+                <div className="lang-dropdown">
+                  <div className="lang-item active">
+                    English
+                    <Check size={14} strokeWidth={2} />
+                  </div>
+                  <div className="lang-item disabled">
+                    Français
+                    <span className="lang-item-soon">Soon</span>
+                  </div>
+                  <div className="lang-item disabled">
+                    العربية
+                    <span className="lang-item-soon">Soon</span>
+                  </div>
+                  <div className="lang-item disabled">
+                    Español
+                    <span className="lang-item-soon">Soon</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button onClick={() => navigate('/login')} className="nav-link">Login</button>
+            <button onClick={() => navigate('/signup')} className="btn-primary" style={{ padding: '11px 22px', fontSize: '14px' }}>Start free</button>
           </div>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={() => navigate('/login')} style={{ fontFamily: 'Inter', fontSize: '16px', color: '#1a1c1a', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px' }}>
-              Login
-            </button>
-            <button onClick={() => navigate('/signup')} style={{ backgroundColor: '#4a654f', color: 'white', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '10px 24px', borderRadius: '9999px', border: 'none', cursor: 'pointer' }}>
-              Get Started
-            </button>
-          </div>
+
+          {/* Mobile burger */}
+          <button
+            className="show-mobile"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3D4A52' }}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="show-mobile" style={{
+            background: '#FAF8F5',
+            borderTop: '1px solid rgba(168, 153, 104, 0.15)',
+            marginTop: '18px',
+            padding: '24px 32px',
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <button onClick={() => scrollTo('how')} className="nav-link" style={{ textAlign: 'left' }}>How it works</button>
+              <button onClick={() => scrollTo('features')} className="nav-link" style={{ textAlign: 'left' }}>Features</button>
+              <button onClick={() => scrollTo('pricing')} className="nav-link" style={{ textAlign: 'left' }}>Pricing</button>
+              <button onClick={() => scrollTo('faq')} className="nav-link" style={{ textAlign: 'left' }}>FAQ</button>
+              <div className="divider-line"></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#A89968', fontSize: '13px' }}>
+                <Globe size={14} /> English (more languages coming soon)
+              </div>
+              <button onClick={() => navigate('/login')} className="nav-link" style={{ textAlign: 'left' }}>Login</button>
+              <button onClick={() => navigate('/signup')} className="btn-primary">Start free</button>
+            </div>
+          </div>
+        )}
       </nav>
 
-      {/* Hero Section */}
-      <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '64px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-          <span style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 600, letterSpacing: '0.08em', color: '#4a654f', backgroundColor: '#e9e8e5', padding: '8px 16px', borderRadius: '9999px', width: 'fit-content' }}>
-            MASS RELAXATION & PRECISION
-          </span>
-          <h1 style={{ fontFamily: 'Manrope', fontSize: '48px', fontWeight: 500, lineHeight: 1.2, letterSpacing: '0.02em', margin: 0 }}>
-            Your Intelligence,<br/><span style={{ fontStyle: 'italic' }}>Reimagined</span><br/>for Wellness.
-          </h1>
-          <p style={{ fontFamily: 'Inter', fontSize: '18px', lineHeight: 1.6, color: '#424842', margin: 0 }}>
-            A personalized daily system for your body, mind, and habits. Mindful living meets high-performance science.
-          </p>
-          <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
-            <button onClick={() => navigate('/signup')} style={{ backgroundColor: '#4a654f', color: 'white', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '12px 32px', borderRadius: '9999px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              Get Started <ArrowRight className="w-4 h-4" />
-            </button>
-            <button style={{ border: '2px solid #4a654f', color: '#4a654f', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '10px 32px', borderRadius: '9999px', background: 'transparent', cursor: 'pointer' }}>
-              See The Wellness AI
-            </button>
-          </div>
-        </div>
+      {/* HERO */}
+      <section id="top" style={{ paddingTop: '140px', paddingBottom: '120px', position: 'relative', overflow: 'hidden' }}>
+        <div className="floating-mark hide-mobile" style={{ top: '60px', right: '-60px' }}>g</div>
 
-        {/* Hero Visual */}
-        <div style={{ backgroundColor: '#e9e8e5', borderRadius: '16px', padding: '32px', boxShadow: '0px 10px 30px rgba(45, 45, 45, 0.04)' }}>
-          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: '12px', padding: '24px', backdropFilter: 'blur(10px)', textAlign: 'center' }}>
-            <p style={{ fontFamily: 'Inter', fontSize: '12px', fontWeight: 600, color: '#4a654f', margin: '0 0 8px 0' }}>DAILY FOCUS</p>
-            <h3 style={{ fontFamily: 'Manrope', fontSize: '28px', fontWeight: 500, color: '#1a1c1a', margin: '0 0 16px 0' }}>Emotional Equilibrium</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontFamily: 'Inter', fontSize: '14px', color: '#424842' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <Heart className="w-4 h-4" /> Stress: 5/10
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: '80px', alignItems: 'center' }} className="hero-grid">
+
+            {/* Left: copy */}
+            <div className="fade-up">
+              <div className="eyebrow" style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ width: '24px', height: '1px', background: '#A89968' }}></span>
+                Your AI wellness coach
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                <Sparkles className="w-4 h-4" /> Energy: 7/10
+
+              <h1 className="display" style={{ fontSize: 'clamp(40px, 5.5vw, 76px)', lineHeight: 1.05, marginBottom: '32px', color: '#3D4A52' }}>
+                Understand <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>your body.</em><br />
+                Act with clarity.
+              </h1>
+
+              <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '520px' }}>
+                Personalised daily guidance on energy, hormones, hair, skin and more, built around your body rather than generic advice.
+              </p>
+
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
+                <button onClick={() => navigate('/signup')} className="btn-primary">
+                  Start free today <ArrowRight size={16} strokeWidth={2} />
+                </button>
+                <button className="btn-secondary" onClick={() => scrollTo('how')}>
+                  See how it works
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px 28px', fontSize: '12px', color: '#A89968', alignItems: 'center' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968' }}></span>
+                  Built for women &amp; men
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968' }}></span>
+                  Encrypted &amp; private
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968' }}></span>
+                  Wellness, not medical advice
+                </span>
+              </div>
+            </div>
+
+            {/* Right: chat preview */}
+            <div className="fade-up" style={{ animationDelay: '0.2s' }}>
+              <div style={{
+                background: '#FAF8F5',
+                borderRadius: '8px',
+                padding: '32px',
+                border: '1px solid rgba(168, 153, 104, 0.18)',
+                boxShadow: '0 30px 60px -20px rgba(61, 74, 82, 0.15)',
+                position: 'relative',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid rgba(168, 153, 104, 0.15)' }}>
+                  <div style={{
+                    width: '32px', height: '32px', borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #6B9E7F, #A89968)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '14px',
+                  }}>g</div>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#3D4A52' }}>Your wellness coach</div>
+                    <div style={{ fontSize: '11px', color: '#A89968', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#6B9E7F' }}></span>
+                      Online
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div className="chat-bubble-user">My energy is low all afternoon.</div>
+                  <div className="chat-bubble-coach">
+                    Your check-ins show energy crashes on days with under 6 hours of sleep. Let's look at your routine — small shifts make a real difference.
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#A89968', fontSize: '11px', marginTop: '4px' }}>
+                    <span style={{ display: 'inline-flex', gap: '3px' }}>
+                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out infinite' }}></span>
+                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out 0.2s infinite' }}></span>
+                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out 0.4s infinite' }}></span>
+                    </span>
+                    Coach is typing
+                  </div>
+                </div>
+
+                <style>{`
+                  @keyframes pulse { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+                  @media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr !important; gap: 60px !important; } }
+                `}</style>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Disclaimer */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px 64px' }}>
-        <div style={{ backgroundColor: '#f4f4f0', border: '1px solid #e3e2df', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-          <p style={{ fontFamily: 'Inter', fontSize: '14px', color: '#424842', margin: 0 }}>
-            <strong>Non-Medical Guidance:</strong> GlowWise provides wellness guidance, not medical advice. Always consult a healthcare provider for medical concerns.
-          </p>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <section style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e3e2df', borderBottom: '1px solid #e3e2df', padding: '80px 24px' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500, lineHeight: 1.2, color: '#1a1c1a', margin: '0 0 16px' }}>Precision Well-being</h2>
-            <p style={{ fontFamily: 'Inter', fontSize: '18px', color: '#424842', maxWidth: '600px', margin: '0 auto' }}>
-              Our ecosystem adapts to your needs, then elevates your readiness
+      {/* SAMPLES — See it in action */}
+      <section style={{ background: '#D4E8DD', padding: '120px 0', position: 'relative' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 80px' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>See it in action</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
+              This is what <em style={{ fontStyle: 'italic', color: '#557E64' }}>personalised</em> actually looks like.
+            </h2>
+            <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
+              Three real examples of how your AI Coach connects your data to your concerns.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
-            {features.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <div key={i} style={{ backgroundColor: '#f4f4f0', borderRadius: '16px', padding: '32px', boxShadow: '0px 10px 30px rgba(45, 45, 45, 0.04)', transition: 'all 0.3s ease' }}>
-                  <div style={{ backgroundColor: 'rgba(74, 101, 79, 0.08)', borderRadius: '12px', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-                    <Icon style={{ color: '#4a654f', width: '24px', height: '24px' }} />
-                  </div>
-                  <h3 style={{ fontFamily: 'Manrope', fontSize: '22px', fontWeight: 600, color: '#1a1c1a', margin: '0 0 8px' }}>
-                    {f.title}
-                  </h3>
-                  <p style={{ fontFamily: 'Inter', fontSize: '14px', lineHeight: 1.6, color: '#424842', margin: 0 }}>
-                    {f.desc}
-                  </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            {samples.map((s, i) => (
+              <div key={i} style={{
+                background: '#FAF8F5',
+                borderRadius: '8px',
+                padding: '32px 28px',
+                border: '1px solid rgba(168, 153, 104, 0.15)',
+                boxShadow: '0 20px 40px -20px rgba(61, 74, 82, 0.1)',
+              }}>
+                <div className="eyebrow" style={{ marginBottom: '24px', color: '#6B9E7F' }}>{s.tag}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div className="chat-bubble-user">{s.user}</div>
+                  <div className="chat-bubble-coach">{s.coach}</div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section style={{ backgroundColor: '#faf9f6', padding: '80px 24px' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500, lineHeight: 1.2, color: '#1a1c1a', margin: '0 0 16px' }}>Choose Your Rhythm</h2>
-            <p style={{ fontFamily: 'Inter', fontSize: '18px', color: '#424842', margin: 0 }}>Simple, transparent, and focused on your growth.</p>
+      {/* HOW IT WORKS */}
+      <section id="how" style={{ padding: '120px 0', position: 'relative' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 80px' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>How it works</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, color: '#3D4A52' }}>
+              Three steps to <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>clarity.</em>
+            </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', maxWidth: '900px', margin: '0 auto' }}>
-            {/* Free Tier */}
-            <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '32px', boxShadow: '0px 10px 30px rgba(45, 45, 45, 0.04)' }}>
-              <h3 style={{ fontFamily: 'Manrope', fontSize: '22px', fontWeight: 600, color: '#1a1c1a', margin: '0 0 8px' }}>Free Tier</h3>
-              <p style={{ fontFamily: 'Inter', fontSize: '14px', color: '#424842', margin: '0 0 24px' }}>Perfect for exploring</p>
-              <div style={{ marginBottom: '24px' }}>
-                <span style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500, color: '#1a1c1a' }}>£0</span>
-                <span style={{ fontFamily: 'Inter', fontSize: '14px', color: '#424842' }}> Forever free</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '48px', maxWidth: '1080px', margin: '0 auto' }}>
+            {[
+              { num: '01', title: 'Check in daily', desc: '60 seconds. Energy, sleep, stress, mood. That\'s it.' },
+              { num: '02', title: 'Your coach learns you', desc: 'The AI spots patterns you\'d never catch alone — like how your sleep affects your skin.' },
+              { num: '03', title: 'Get guidance that fits', desc: 'Personalised next steps based on your data, not someone else\'s body.' },
+            ].map((step, i) => (
+              <div key={i} style={{ textAlign: 'left' }}>
+                <div className="step-circle">{step.num}</div>
+                <h3 className="display" style={{ fontSize: '24px', marginBottom: '12px', color: '#3D4A52', fontWeight: 500 }}>
+                  {step.title}
+                </h3>
+                <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#5A6770' }}>
+                  {step.desc}
+                </p>
               </div>
-              <ul style={{ fontFamily: 'Inter', fontSize: '14px', color: '#424842', margin: '0 0 24px', paddingLeft: 0, listStyle: 'none' }}>
-                <li style={{ marginBottom: '8px' }}>✓ 2 AI questions per day</li>
-                <li style={{ marginBottom: '8px' }}>✓ Daily check-in (unlimited)</li>
-                <li style={{ marginBottom: '8px' }}>✓ Basic insights</li>
-                <li>✓ Chat history (read-only)</li>
-              </ul>
-              <button onClick={() => navigate('/signup')} style={{ width: '100%', backgroundColor: '#4a654f', color: 'white', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '12px 24px', borderRadius: '9999px', border: 'none', cursor: 'pointer' }}>
-                Get Started
-              </button>
-            </div>
-
-            {/* Premium Tier */}
-            <div style={{ backgroundColor: '#4a654f', borderRadius: '16px', padding: '32px', boxShadow: '0px 10px 30px rgba(45, 45, 45, 0.04)', position: 'relative', color: 'white' }}>
-              <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', backgroundColor: '#4a654f', color: 'white', fontFamily: 'Inter', fontSize: '12px', fontWeight: 600, padding: '6px 16px', borderRadius: '9999px' }}>
-                MOST POPULAR
-              </div>
-              <h3 style={{ fontFamily: 'Manrope', fontSize: '22px', fontWeight: 600, margin: '0 0 8px' }}>Wellness Coach</h3>
-              <p style={{ fontFamily: 'Inter', fontSize: '14px', opacity: 0.9, margin: '0 0 24px' }}>Everything you need</p>
-              <div style={{ marginBottom: '24px' }}>
-                <span style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500 }}>£4.99</span>
-                <span style={{ fontFamily: 'Inter', fontSize: '14px', opacity: 0.9 }}>/month</span>
-              </div>
-              <ul style={{ fontFamily: 'Inter', fontSize: '14px', margin: '0 0 24px', paddingLeft: 0, listStyle: 'none' }}>
-                <li style={{ marginBottom: '8px' }}>✓ Unlimited AI questions</li>
-                <li style={{ marginBottom: '8px' }}>✓ Photo uploads & tracking</li>
-                <li style={{ marginBottom: '8px' }}>✓ Full chat history</li>
-                <li style={{ marginBottom: '8px' }}>✓ Pattern detection</li>
-                <li style={{ marginBottom: '8px' }}>✓ Weekly insights email</li>
-                <li>✓ Adaptive Intelligence</li>
-              </ul>
-              <button onClick={() => navigate('/signup')} style={{ width: '100%', backgroundColor: '#ffffff', color: '#4a654f', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '12px 24px', borderRadius: '9999px', border: 'none', cursor: 'pointer' }}>
-                Upgrade Now
-              </button>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e3e2df', padding: '80px 24px' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <h2 style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500, color: '#1a1c1a', textAlign: 'center', margin: '0 0 48px' }}>
-            Curated Questions
-          </h2>
+      {/* WHY GLOWWISE — Features */}
+      <section id="features" style={{ background: '#FAF8F5', padding: '120px 0', position: 'relative' }}>
+        <div className="container">
+          <div style={{ maxWidth: '760px', margin: '0 auto 80px', textAlign: 'center' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>Why GlowWise</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
+              Most wellness advice isn't wrong.<br />
+              <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>It's just not yours.</em>
+            </h2>
+            <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
+              Generic tips don't work because your body isn't generic. GlowWise is built differently.
+            </p>
+          </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+            {features.map((f, i) => (
+              <div key={i} className="feature-card">
+                <div style={{
+                  fontFamily: "'Fraunces', serif",
+                  fontSize: '13px',
+                  color: '#A89968',
+                  marginBottom: '20px',
+                  letterSpacing: '0.05em',
+                }}>{f.num}</div>
+                <h3 className="display" style={{ fontSize: '22px', marginBottom: '14px', color: '#3D4A52', fontWeight: 500 }}>
+                  {f.title}
+                </h3>
+                <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#5A6770' }}>
+                  {f.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '64px' }}>
+            <p className="display" style={{ fontStyle: 'italic', fontSize: '20px', color: '#A89968', lineHeight: 1.5 }}>
+              Holistic. Non-diagnostic. Privacy-first. Built for women and men.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" style={{ padding: '120px 0', background: '#EDF4EF' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 64px' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>Pricing</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
+              Simple pricing. <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>No surprises.</em>
+            </h2>
+            <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
+              Start free. Upgrade only if you want unlimited access.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '880px', margin: '0 auto' }}>
+
+            {/* Free */}
+            <div className="pricing-card">
+              <div className="eyebrow" style={{ marginBottom: '20px' }}>Free</div>
+              <div style={{ marginBottom: '32px' }}>
+                <span className="display price-amount" style={{ fontSize: '52px', fontWeight: 400, color: '#3D4A52' }}>£0</span>
+                <span style={{ fontSize: '15px', color: '#A89968', marginLeft: '8px' }}>/ forever</span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
+                {[
+                  '2 questions per day to your AI Coach',
+                  'Daily wellness tracking',
+                  'Basic pattern insights',
+                  '1 photo upload per month',
+                  'Chat history'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '14px', color: '#3D4A52' }}>
+                    <Check size={16} strokeWidth={2} style={{ color: '#6B9E7F', marginTop: '2px', flexShrink: 0 }} />
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={() => navigate('/signup')} className="btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+                Start free
+              </button>
+            </div>
+
+            {/* Wellness Coach */}
+            <div className="pricing-card featured" style={{ position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                top: '-12px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: '#A89968',
+                color: '#FAF8F5',
+                padding: '5px 14px',
+                borderRadius: '100px',
+                fontSize: '10px',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+              }}>Most popular</div>
+
+              <div className="eyebrow" style={{ marginBottom: '20px', color: '#D4E8DD' }}>Wellness Coach</div>
+              <div style={{ marginBottom: '32px' }}>
+                <span className="display price-amount" style={{ fontSize: '52px', fontWeight: 400 }}>£4.99</span>
+                <span style={{ fontSize: '15px', color: '#D4E8DD', marginLeft: '8px' }}>/ month</span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#FAF8F5', opacity: 0.85, marginBottom: '4px' }}>Everything in Free, plus:</div>
+                {[
+                  'Unlimited AI Coach access',
+                  'Deeper personalisation over time',
+                  'Photo progression tracking',
+                  'Advanced pattern detection',
+                  'Weekly wellness insights',
+                  'Cancel anytime'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '14px', color: '#FAF8F5' }}>
+                    <Check size={16} strokeWidth={2} style={{ color: '#D4E8DD', marginTop: '2px', flexShrink: 0 }} />
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={() => navigate('/signup')} style={{
+                background: '#FAF8F5',
+                color: '#557E64',
+                padding: '14px 24px',
+                border: 'none',
+                borderRadius: '100px',
+                fontFamily: "'Manrope', sans-serif",
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                width: '100%',
+                transition: 'all 0.3s',
+              }}
+              onMouseEnter={(e) => { e.target.style.background = '#FFFFFF'; e.target.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={(e) => { e.target.style.background = '#FAF8F5'; e.target.style.transform = 'translateY(0)'; }}
+              >
+                Start Wellness Coach
+              </button>
+            </div>
+          </div>
+
+          <p style={{ textAlign: 'center', marginTop: '28px', fontSize: '13px', color: '#A89968', fontStyle: 'italic' }}>
+            No credit card required for free. Cancel paid anytime in one tap.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" style={{ padding: '120px 0' }}>
+        <div className="container" style={{ maxWidth: '880px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>FAQ</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, color: '#3D4A52' }}>
+              Questions, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>answered honestly.</em>
+            </h2>
+          </div>
+
+          <div>
             {faqs.map((faq, i) => (
-              <div key={i} style={{ border: '1px solid #e3e2df', borderRadius: '8px', overflow: 'hidden' }}>
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  style={{ width: '100%', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: openFaq === i ? '#f4f4f0' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'Manrope', fontSize: '16px', fontWeight: 600, color: '#1a1c1a', textAlign: 'left' }}
-                >
+              <div key={i} className="faq-item">
+                <button className="faq-question" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                   {faq.q}
-                  <ChevronDown style={{ color: '#4a654f', transition: 'transform 0.3s ease', transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }} />
+                  {openFaq === i ? <Minus size={18} strokeWidth={1.5} /> : <Plus size={18} strokeWidth={1.5} />}
                 </button>
                 {openFaq === i && (
-                  <div style={{ backgroundColor: '#f4f4f0', borderTop: '1px solid #e3e2df', padding: '24px' }}>
-                    <p style={{ fontFamily: 'Inter', fontSize: '14px', lineHeight: 1.6, color: '#424842', margin: 0 }}>
-                      {faq.a}
-                    </p>
-                  </div>
+                  <div className="faq-answer fade-up">{faq.a}</div>
                 )}
               </div>
             ))}
@@ -212,57 +761,140 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', backgroundColor: '#4a654f', borderRadius: '20px', padding: '48px', textAlign: 'center', boxShadow: '0px 10px 30px rgba(74, 101, 79, 0.1)', color: 'white' }}>
-          <h2 style={{ fontFamily: 'Manrope', fontSize: '36px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 16px' }}>
-            Start Your Personalised<br/>Glow Plan Today
+      {/* FINAL CTA */}
+      <section style={{ background: '#6B9E7F', padding: '120px 0', position: 'relative', overflow: 'hidden' }}>
+        <div className="floating-mark" style={{ top: '-40px', left: '-40px', color: 'rgba(250, 248, 245, 0.06)' }}>g</div>
+
+        <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '720px' }}>
+          <h2 className="display" style={{ fontSize: 'clamp(36px, 5vw, 64px)', lineHeight: 1.1, marginBottom: '20px', color: '#FAF8F5' }}>
+            Ready to understand <em style={{ fontStyle: 'italic', color: '#D4E8DD' }}>your body?</em>
           </h2>
-          <p style={{ fontFamily: 'Inter', fontSize: '16px', lineHeight: 1.6, opacity: 0.9, maxWidth: '600px', margin: '0 auto 32px' }}>
-            Join thousands of people discovering what their body needs to thrive. Track your wellness, decode your patterns, and feel your best.
+          <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#D4E8DD', marginBottom: '40px' }}>
+            Start free. Two questions a day. No credit card.
           </p>
-          <button onClick={() => navigate('/signup')} style={{ backgroundColor: '#ffffff', color: '#4a654f', fontFamily: 'Inter', fontSize: '16px', fontWeight: 500, padding: '12px 32px', borderRadius: '9999px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-            Claim Your Free Analysis
+
+          <button onClick={() => navigate('/signup')} style={{
+            background: '#FAF8F5',
+            color: '#557E64',
+            padding: '16px 32px',
+            border: 'none',
+            borderRadius: '100px',
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '15px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px',
+            transition: 'all 0.3s',
+          }}
+          onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 12px 28px rgba(0,0,0,0.15)'; }}
+          onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = 'none'; }}
+          >
+            Start your wellness journey <ArrowRight size={16} strokeWidth={2} />
           </button>
+
+          <p style={{ marginTop: '24px', fontSize: '13px', color: '#D4E8DD', opacity: 0.85 }}>
+            Be among the first to try GlowWise.
+          </p>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ backgroundColor: '#1a1c1a', borderTop: '1px solid #e3e2df', color: 'white', padding: '48px 24px' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '32px', marginBottom: '32px' }}>
+      {/* FOOTER */}
+      <footer style={{ background: '#3D4A52', color: '#D4E8DD', padding: '80px 0 32px' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '48px', marginBottom: '60px' }}>
+
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <Sparkles className="w-5 h-5" />
-                <span style={{ fontFamily: 'Manrope', fontWeight: 500, fontSize: '16px' }}>GlowWise</span>
+                <div style={{
+                  width: '28px', height: '28px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#FAF8F5',
+                  fontFamily: "'Fraunces', serif",
+                  fontSize: '14px',
+                }}>g</div>
+                <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: '#FAF8F5' }}>
+                  GlowWise
+                </span>
               </div>
-              <p style={{ fontFamily: 'Inter', fontSize: '14px', opacity: 0.7, margin: 0 }}>
-                Transforming wellness intelligence through personalized, ethical AI.
+              <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#A89968', marginBottom: '16px' }}>
+                Your AI wellness coach.
+              </p>
+              <p style={{ fontSize: '12px', lineHeight: 1.5, color: '#A89968', opacity: 0.8 }}>
+                GlowWise provides wellness guidance, not medical advice.
               </p>
             </div>
-            {['Product', 'Company', 'Legal'].map(col => (
-              <div key={col}>
-                <h4 style={{ fontFamily: 'Manrope', fontWeight: 600, fontSize: '14px', margin: '0 0 12px' }}>
-                  {col}
-                </h4>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {['Features', 'About', 'Privacy'].map(item => (
-                    <li key={item} style={{ marginBottom: '8px' }}>
-                      <button style={{ fontFamily: 'Inter', fontSize: '14px', color: 'white', opacity: 0.7, background: 'none', border: 'none', cursor: 'pointer' }}>
-                        {item}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+
+            <div>
+              <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Product</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {['How it works', 'Features', 'Pricing', 'FAQ'].map((link, i) => (
+                  <span key={i} style={{ fontSize: '14px', color: '#D4E8DD', cursor: 'pointer' }}
+                    onMouseEnter={(e) => e.target.style.color = '#FAF8F5'}
+                    onMouseLeave={(e) => e.target.style.color = '#D4E8DD'}
+                    onClick={() => {
+                      const targetMap = { 'How it works': 'how', 'Features': 'features', 'Pricing': 'pricing', 'FAQ': 'faq' };
+                      scrollTo(targetMap[link]);
+                    }}
+                  >{link}</span>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <div>
+              <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Company &amp; Legal</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {['Contact', 'Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR'].map((link, i) => (
+                  <span key={i} style={{ fontSize: '14px', color: '#D4E8DD', cursor: 'pointer' }}
+                    onMouseEnter={(e) => e.target.style.color = '#FAF8F5'}
+                    onMouseLeave={(e) => e.target.style.color = '#D4E8DD'}
+                  >{link}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Stay in touch</div>
+              <p style={{ fontSize: '13px', color: '#D4E8DD', marginBottom: '16px', lineHeight: 1.5 }}>
+                Monthly wellness insights. No spam.
+              </p>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  style={{
+                    flex: 1,
+                    background: 'rgba(250, 248, 245, 0.08)',
+                    border: '1px solid rgba(168, 153, 104, 0.3)',
+                    borderRadius: '100px',
+                    padding: '10px 16px',
+                    fontSize: '13px',
+                    color: '#FAF8F5',
+                    fontFamily: "'Manrope', sans-serif",
+                    outline: 'none',
+                  }}
+                />
+                <button style={{
+                  background: '#6B9E7F',
+                  color: '#FAF8F5',
+                  border: 'none',
+                  borderRadius: '100px',
+                  padding: '10px 18px',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  fontFamily: "'Manrope', sans-serif",
+                }}>Subscribe</button>
+              </div>
+            </div>
           </div>
 
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '32px', textAlign: 'center' }}>
-            <p style={{ fontFamily: 'Inter', fontSize: '14px', opacity: 0.7, margin: '0 0 12px' }}>© 2024 GlowWise. Designed by Regal using AI</p>
-            <p style={{ fontFamily: 'Inter', fontSize: '12px', opacity: 0.6, margin: 0 }}>
-              Always consult a qualified healthcare provider. GlowWise is not a substitute for professional medical care.
-            </p>
+          <div style={{ borderTop: '1px solid rgba(168, 153, 104, 0.2)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <p style={{ fontSize: '12px', color: '#A89968' }}>© 2026 GlowWise · Made with care in the UK</p>
+            <p style={{ fontSize: '12px', color: '#A89968' }}>glowwise.app</p>
           </div>
         </div>
       </footer>
