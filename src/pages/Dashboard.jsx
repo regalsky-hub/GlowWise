@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserData } from '../context/UserDataContext';
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../AppLayout';
 import { ChevronRight, MessageCircle, Calendar, BarChart3, Settings, Heart, Moon, Activity, Z
 export default function Dashboard() {
 const { profile, glowScore, glowType, getTodayCheckIn, checkIns } = useUserData();
