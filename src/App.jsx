@@ -13,6 +13,11 @@ import DailyCheckin from './pages/DailyCheckin';
 import AICoach from './pages/AICoach';
 import Insights from './pages/Insights';
 import Settings from './pages/Settings';
+import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Cookies from './pages/Cookies';
+import Disclaimer from './pages/Disclaimer';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -60,6 +65,11 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/contact" element={<Contact />} />
+<Route path="/privacy" element={<Privacy />} />
+<Route path="/terms" element={<Terms />} />
+<Route path="/cookies" element={<Cookies />} />
+<Route path="/disclaimer" element={<Disclaimer />} />
       {/* Public Routes */}
       <Route path="/" element={<Landing />} />
       <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
