@@ -845,16 +845,27 @@ export default function Landing() {
             </div>
 
             <div>
-              <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Company &amp; Legal</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {['Contact', 'Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Medical Disclaimer'].map((link, i) => (
-                  <span key={i} style={{ fontSize: '14px', color: '#D4E8DD', cursor: 'pointer' }}
-                    onMouseEnter={(e) => e.target.style.color = '#FAF8F5'}
-                    onMouseLeave={(e) => e.target.style.color = '#D4E8DD'}
-                  >{link}</span>
-                ))}
-              </div>
-            </div>
+                  <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Company &amp; Legal</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { label: 'Contact', path: '/contact' },
+                      { label: 'Privacy Policy', path: '/privacy' },
+                      { label: 'Terms of Service', path: '/terms' },
+                      { label: 'Cookie Policy', path: '/cookies' },
+                      { label: 'Medical Disclaimer', path: '/disclaimer' },
+                    ].map((link, i) => (
+                    <a
+                        key={i}
+                        href={link.path}
+                        style={{ fontSize: '14px', color: '#D4E8DD', cursor: 'pointer', textDecoration: 'none' }}
+                        onMouseEnter={(e) => e.target.style.color = '#FAF8F5'}
+                        onMouseLeave={(e) => e.target.style.color = '#D4E8DD'}
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
 
             <div>
               <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Stay in touch</div>
