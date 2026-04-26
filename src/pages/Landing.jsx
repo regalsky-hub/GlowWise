@@ -847,7 +847,7 @@ export default function Landing() {
             <div>
               <div className="eyebrow" style={{ color: '#A89968', marginBottom: '20px' }}>Company &amp; Legal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {['Contact', 'Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR'].map((link, i) => (
+                {['Contact', 'Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Medical Disclaimer'].map((link, i) => (
                   <span key={i} style={{ fontSize: '14px', color: '#D4E8DD', cursor: 'pointer' }}
                     onMouseEnter={(e) => e.target.style.color = '#FAF8F5'}
                     onMouseLeave={(e) => e.target.style.color = '#D4E8DD'}
