@@ -109,8 +109,8 @@ export default function Privacy() {
       <p>We may update this Privacy Policy from time to time. If we make significant changes, we'll email you and update the "Last updated" date above. Continued use of GlowWise after changes means you accept the updated policy.</p>
 
       <h2>12. Contact us</h2>
-      <p>For any privacy questions, data requests, or concerns, please email <a href="mailto:privacy@glowwise.app">privacy@glowwise.app</a>.</p>
-      <p>If you're not satisfied with our response, you have the right to complain to the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noreferrer">ico.org.uk</a> or by calling 0303 123 1113.</p>
+      <p>For any privacy questions, data requests, or concerns, please email <a href="mailto:privacy@glowwise.app">privacy@glowwise.app</a>. We aim to resolve every issue directly with you and will respond within one calendar month.</p>
+      <p>You also have the right to lodge a complaint with a supervisory authority. In the UK, this is the Information Commissioner's Office (<a href="https://ico.org.uk" target="_blank" rel="noreferrer">ico.org.uk</a>). We'd ask that you contact us first so we can address any concerns directly.</p>
     </LegalLayout>
   );
 }
