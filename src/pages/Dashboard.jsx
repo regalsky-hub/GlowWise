@@ -259,7 +259,7 @@ export default function Dashboard() {
             return (
               <button key={i} onClick={() => navigate(item.path)} className="card card-hover" style={{ padding: '20px', textAlign: 'left', cursor: 'pointer' }}>
                 <Icon size={20} strokeWidth={1.6} style={{ color: '#6B9E7F', marginBottom: '12px' }} />
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '4px' }}>{item.label}</div>
+                <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: '20px', fontWeight: 500, color: '#3D4A52', marginBottom: '4px', letterSpacing: '-0.01em' }}>{item.label}</div>
                 <div style={{ fontSize: '12px', color: '#A89968' }}>{item.desc}</div>
               </button>
             );
