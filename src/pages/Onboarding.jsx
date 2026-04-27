@@ -4,16 +4,17 @@ import { useUserData } from '../context/UserDataContext';
 import { ChevronRight, ChevronLeft, Check, AlertCircle, Camera, Sparkles, Shield, X } from 'lucide-react';
 
 const WELLNESS_TOPICS = [
-  { id: 'hormones', label: 'Hormones & Cycle', icon: '◐' },
+  { id: 'hormones', label: 'Hormones & Metabolism', icon: '◐' },
   { id: 'fertility', label: 'Fertility', icon: '✦' },
-  { id: 'hair', label: 'Hair & Scalp', icon: '✧' },
-  { id: 'skin', label: 'Skin & Acne', icon: '◇' },
-  { id: 'brain', label: 'Brain & Focus', icon: '◈' },
-  { id: 'sleep', label: 'Sleep & Rest', icon: '☾' },
-  { id: 'stress', label: 'Stress & Anxiety', icon: '◉' },
+  { id: 'weight', label: 'Weight & Body Composition', icon: '◑' },
   { id: 'energy', label: 'Energy & Fatigue', icon: '◎' },
+  { id: 'sleep', label: 'Sleep & Recovery', icon: '☾' },
+  { id: 'stress', label: 'Stress & Anxiety', icon: '◉' },
+  { id: 'brain', label: 'Brain & Focus', icon: '◈' },
   { id: 'gut', label: 'Gut & Digestion', icon: '◍' },
-  { id: 'nutrition', label: 'Nutrition', icon: '◆' },
+  { id: 'skin', label: 'Skin & Acne', icon: '◇' },
+  { id: 'hair', label: 'Hair & Scalp', icon: '✧' },
+  { id: 'nutrition', label: 'Nutrition & Diet', icon: '◆' },
 ];
 
 const DIET_TYPES = [
@@ -126,7 +127,10 @@ export default function Onboarding() {
       glowTypeDescription = 'Low energy can have many causes — sleep, stress, nutrition, hormones. We\'ll work systematically to identify what\'s draining you.';
     } else if (priorities.includes('hormones') || priorities.includes('fertility')) {
       glowType = 'Hormonal Balance Journey';
-      glowTypeDescription = 'Hormonal health affects everything from mood to skin to energy. We\'ll track patterns connected to your cycle and lifestyle.';
+      glowTypeDescription = 'Hormonal health affects everything from mood and skin to energy and metabolism. We\'ll track patterns connected to your lifestyle.';
+    } else if (priorities.includes('weight')) {
+      glowType = 'Body Composition Focus';
+      glowTypeDescription = 'Sustainable changes come from understanding your patterns — sleep, stress, nutrition and movement. We\'ll help you spot what\'s actually moving the needle.';
     } else if (priorities.includes('hair')) {
       glowType = 'Hair Health Focus';
       glowTypeDescription = 'Hair health reflects internal health. We\'ll look at the underlying factors — stress, nutrition, hormones — that affect your hair.';
@@ -139,6 +143,10 @@ export default function Onboarding() {
     } else if (priorities.includes('brain')) {
       glowType = 'Brain & Focus Boost';
       glowTypeDescription = 'Mental clarity depends on sleep, blood sugar, hydration, and stress. We\'ll work on the foundations that sharpen your thinking.';
+    } else if (priorities.includes('nutrition')) {
+      glowType = 'Nutrition Foundations';
+      glowTypeDescription = 'Food affects everything — energy, mood, skin, sleep. We\'ll help you build eating patterns that work for your body and your goals.';
+    }
     } else {
       glowTypeDescription = 'You\'re in a good place overall. We\'ll help you spot patterns and fine-tune the areas that matter most to you.';
     }
