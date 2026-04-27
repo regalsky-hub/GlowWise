@@ -146,7 +146,6 @@ export default function Onboarding() {
     } else if (priorities.includes('nutrition')) {
       glowType = 'Nutrition Foundations';
       glowTypeDescription = 'Food affects everything — energy, mood, skin, sleep. We\'ll help you build eating patterns that work for your body and your goals.';
-    }
     } else {
       glowTypeDescription = 'You\'re in a good place overall. We\'ll help you spot patterns and fine-tune the areas that matter most to you.';
     }
