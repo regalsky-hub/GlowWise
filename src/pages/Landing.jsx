@@ -441,7 +441,7 @@ export default function Landing() {
               </h1>
 
               <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '520px' }}>
-                Personalised daily guidance on energy, hormones, hair, skin and more, built around your body rather than generic advice.
+                Personalised daily guidance on energy, hormones, skin, hair and lifestyle patterns, built around your body rather than generic advice.
               </p>
 
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
@@ -730,7 +730,7 @@ export default function Landing() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '28px', fontSize: '13px', color: '#A89968', fontStyle: 'italic' }}>
-            No credit card required for free. Cancel paid anytime in one tap.
+            No credit card needed for free tier. Cancel anytime. Fair-use policy applies to unlimited access.
           </p>
         </div>
       </section>
