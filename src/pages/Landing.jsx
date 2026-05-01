@@ -651,55 +651,6 @@ export default function Landing() {
                 </span>
               </div>
             </div>
-
-            {/* Right: chat preview */}
-            <div className="fade-up" style={{ animationDelay: '0.2s' }}>
-              <div style={{
-                background: '#FAF8F5',
-                borderRadius: '8px',
-                padding: '32px',
-                border: '1px solid rgba(168, 153, 104, 0.18)',
-                boxShadow: '0 30px 60px -20px rgba(61, 74, 82, 0.15)',
-                position: 'relative',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid rgba(168, 153, 104, 0.15)' }}>
-                  <div style={{
-                    width: '32px', height: '32px', borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #6B9E7F, #A89968)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '14px',
-                  }}>g</div>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#3D4A52' }}>Your wellness coach</div>
-                    <div style={{ fontSize: '11px', color: '#A89968', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#6B9E7F' }}></span>
-                      Online
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div className="chat-bubble-user">My energy is low all afternoon.</div>
-                  <div className="chat-bubble-coach">
-                    Your check-ins show energy crashes on days with under 6 hours of sleep. Let's look at your routine — small shifts make a real difference.
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#A89968', fontSize: '11px', marginTop: '4px' }}>
-                    <span style={{ display: 'inline-flex', gap: '3px' }}>
-                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out infinite' }}></span>
-                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out 0.2s infinite' }}></span>
-                      <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968', animation: 'pulse 1.4s ease-in-out 0.4s infinite' }}></span>
-                    </span>
-                    Coach is typing
-                  </div>
-                </div>
-
-                <style>{`
-                  @keyframes pulse { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
-                  @media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr !important; gap: 60px !important; } }
-                `}</style>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
