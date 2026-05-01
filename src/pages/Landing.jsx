@@ -2,6 +2,189 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Globe, Menu, X, Check, ArrowRight, Plus, Minus } from 'lucide-react';
 
+function AnimatedCoachDemo() {
+  const conversations = [
+    { user: "My energy is low all afternoon.", coach: "Your check-ins show energy crashes on days with under 6 hours of sleep. Let's look at your routine — small shifts make a real difference." },
+    { user: "My skin breaks out the week before my period.", coach: "That's a classic luteal-phase pattern — progesterone and androgens shift right before your period. Want a cycle-aware skincare rhythm to get ahead of it?" },
+    { user: "I've been shedding more hair than usual.", coach: "Shedding often spikes 2–3 months after stress, illness, or low ferritin. Has anything shifted recently? We can trace it back together." },
+    { user: "I keep losing my train of thought in meetings.", coach: "Brain fog rarely shows up randomly — it usually tracks with sleep quality, blood sugar dips, or hormone shifts. Want to walk through this week so we can spot the pattern?" }
+  ];
+
+  const [activeIdx, setActiveIdx] = React.useState(0);
+  const [userVisible, setUserVisible] = React.useState(false);
+  const [typingVisible, setTypingVisible] = React.useState(false);
+  const [coachText, setCoachText] = React.useState('');
+  const [coachVisible, setCoachVisible] = React.useState(false);
+  const [fading, setFading] = React.useState(false);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+    async function runConversation(idx) {
+      if (cancelled) return;
+      const { user, coach } = conversations[idx];
+      setFading(false);
+      setUserVisible(false);
+      setTypingVisible(false);
+      setCoachText('');
+      setCoachVisible(false);
+
+      await wait(400);
+      if (cancelled) return;
+      setUserVisible(true);
+      await wait(900);
+
+      if (cancelled) return;
+      setTypingVisible(true);
+      await wait(1400);
+
+      if (cancelled) return;
+      setTypingVisible(false);
+      await wait(150);
+      setCoachVisible(true);
+
+      const words = coach.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        if (cancelled) return;
+        setCoachText(prev => prev + (i === 0 ? '' : ' ') + words[i]);
+        const last = words[i].slice(-1);
+        const delay = (last === '.' || last === ',' || last === '?' || last === '—') ? 180 : 75;
+        await wait(delay);
+      }
+
+      await wait(3200);
+      if (cancelled) return;
+      setFading(true);
+      await wait(420);
+    }
+
+    async function loop() {
+      let i = activeIdx;
+      while (!cancelled) {
+        await runConversation(i);
+        i = (i + 1) % conversations.length;
+        if (!cancelled) setActiveIdx(i);
+      }
+    }
+
+    loop();
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div style={{ maxWidth: '560px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+      <style>{`
+        @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes msgOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-6px); } }
+        @keyframes typeBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+        @keyframes blinkCaret { 50% { opacity: 0; } }
+        @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .msg-in { animation: msgIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .msg-out { animation: msgOut 0.4s ease forwards; }
+        .type-dot { width: 5px; height: 5px; border-radius: 50%; background: #A89968; animation: typeBounce 1.2s ease-in-out infinite; }
+        .type-dot:nth-child(2) { animation-delay: 0.15s; }
+        .type-dot:nth-child(3) { animation-delay: 0.3s; }
+        .caret { display: inline-block; width: 2px; height: 1em; background: #FAF8F5; margin-left: 2px; vertical-align: text-bottom; animation: blinkCaret 0.8s step-end infinite; }
+      `}</style>
+
+      <div style={{
+        background: '#FAF8F5',
+        borderRadius: '16px',
+        padding: '24px 22px 22px',
+        border: '1px solid rgba(168, 153, 104, 0.18)',
+        boxShadow: '0 30px 60px -20px rgba(61, 74, 82, 0.15)',
+      }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '18px', borderBottom: '1px solid rgba(168, 153, 104, 0.18)' }}>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '50%',
+            background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500,
+            boxShadow: 'inset 0 -2px 4px rgba(44, 62, 80, 0.08)',
+          }}>g</div>
+          <div>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: '18px', fontWeight: 500, color: '#3D4A52', letterSpacing: '-0.01em' }}>Your wellness coach</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#6B9E7F', marginTop: '2px' }}>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#6B9E7F', animation: 'pulseDot 2s ease-in-out infinite' }}></span>
+              Online
+            </div>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div style={{ padding: '22px 4px 8px', minHeight: '280px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {userVisible && (
+            <div className={fading ? 'msg-out' : 'msg-in'} style={{
+              alignSelf: 'flex-end',
+              maxWidth: '82%',
+              background: 'transparent',
+              border: '1px solid rgba(168, 153, 104, 0.25)',
+              color: '#3D4A52',
+              padding: '14px 18px',
+              borderRadius: '14px 14px 4px 14px',
+              fontSize: '15px',
+              lineHeight: 1.5,
+            }}>
+              {conversations[activeIdx].user}
+            </div>
+          )}
+
+          {coachVisible && (
+            <div className={fading ? 'msg-out' : 'msg-in'} style={{
+              alignSelf: 'flex-start',
+              maxWidth: '90%',
+              background: '#6B9E7F',
+              color: '#FAF8F5',
+              padding: '14px 18px',
+              borderRadius: '14px 14px 14px 4px',
+              fontSize: '15px',
+              lineHeight: 1.55,
+              boxShadow: '0 2px 8px rgba(107, 158, 127, 0.18)',
+            }}>
+              {coachText}
+              {coachText.length < conversations[activeIdx].coach.length && <span className="caret"></span>}
+            </div>
+          )}
+        </div>
+
+        {/* Typing indicator */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '4px 4px 0',
+          fontSize: '13px',
+          color: '#A89968',
+          opacity: typingVisible ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+        }}>
+          <div style={{ display: 'flex', gap: '3px' }}>
+            <span className="type-dot"></span>
+            <span className="type-dot"></span>
+            <span className="type-dot"></span>
+          </div>
+          Coach is typing
+        </div>
+      </div>
+
+      {/* Progress dots */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '20px' }}>
+        {conversations.map((_, i) => (
+          <div key={i} style={{
+            width: i === activeIdx ? '18px' : '6px',
+            height: '6px',
+            borderRadius: i === activeIdx ? '3px' : '50%',
+            background: i === activeIdx ? '#6B9E7F' : 'rgba(168, 153, 104, 0.3)',
+            transition: 'all 0.3s ease',
+          }}></div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Landing() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -520,36 +703,20 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* SAMPLES — See it in action */}
+ {/* SAMPLES — See it in action (animated) */}
       <section style={{ background: '#D4E8DD', padding: '120px 0', position: 'relative' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 80px' }}>
+          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 60px' }}>
             <div className="eyebrow" style={{ marginBottom: '20px' }}>See it in action</div>
             <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
               This is what <em style={{ fontStyle: 'italic', color: '#557E64' }}>personalised</em> actually looks like.
             </h2>
             <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
-              Three real examples of how your AI Coach connects your data to your concerns.
+              A glimpse of what your coach can help with.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-            {samples.map((s, i) => (
-              <div key={i} style={{
-                background: '#FAF8F5',
-                borderRadius: '8px',
-                padding: '32px 28px',
-                border: '1px solid rgba(168, 153, 104, 0.15)',
-                boxShadow: '0 20px 40px -20px rgba(61, 74, 82, 0.1)',
-              }}>
-                <div className="eyebrow" style={{ marginBottom: '24px', color: '#6B9E7F' }}>{s.tag}</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div className="chat-bubble-user">{s.user}</div>
-                  <div className="chat-bubble-coach">{s.coach}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <AnimatedCoachDemo />
         </div>
       </section>
 
