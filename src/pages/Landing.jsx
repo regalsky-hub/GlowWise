@@ -624,7 +624,7 @@ export default function Landing() {
               </h1>
 
               <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '520px' }}>
-                Personalised daily guidance on energy, hormones, skin, hair and lifestyle patterns — built around your body, not generic advice.
+                Fix energy crashes, hormone breakouts, hair shedding, and brain fog, using patterns from your own data.
               </p>
 
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
