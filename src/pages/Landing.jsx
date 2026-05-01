@@ -609,13 +609,13 @@ export default function Landing() {
         <div className="floating-mark hide-mobile" style={{ top: '60px', right: '-60px' }}>g</div>
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 0.9fr)', gap: '80px', alignItems: 'center' }} className="hero-grid">
+         <div style={{ maxWidth: '720px' }}>
 
             {/* Left: copy */}
             <div className="fade-up">
               <div className="eyebrow" style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ width: '24px', height: '1px', background: '#A89968' }}></span>
-                Your AI wellness coach
+                Your personal AI wellness coach
               </div>
 
               <h1 className="display" style={{ fontSize: 'clamp(40px, 5.5vw, 76px)', lineHeight: 1.05, marginBottom: '32px', color: '#3D4A52' }}>
@@ -624,7 +624,7 @@ export default function Landing() {
               </h1>
 
               <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '520px' }}>
-                Personalised daily guidance on energy, hormones, skin, hair and lifestyle patterns, built around your body rather than generic advice.
+                Personalised daily guidance on energy, hormones, skin, hair and lifestyle patterns — built around your body, not generic advice.
               </p>
 
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
