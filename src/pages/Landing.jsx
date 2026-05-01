@@ -651,8 +651,9 @@ export default function Landing() {
                 </span>
               </div>
             </div>
+          </div>
         </div>
-      </section>
+  </section>
 
  {/* SAMPLES — See it in action (animated) */}
       <section style={{ background: '#D4E8DD', padding: '120px 0', position: 'relative' }}>
