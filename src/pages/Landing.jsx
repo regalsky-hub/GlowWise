@@ -246,7 +246,7 @@ export default function Landing() {
   },
   {
     q: 'What is GlowWise?',
-    a: 'GlowWise is your AI wellness coach. It learns from your daily check-ins, priorities and patterns to give guidance built around your body — not generic advice. The more you log, the sharper it gets.'
+    { q: 'What is GlowWise?', a: 'GlowWise is your AI wellness coach. It learns from your daily check-ins, priorities and patterns to give guidance built around your body not someone else\'s. The more you log, the sharper it gets.'
   },
   {
     q: 'How is my data used?',
@@ -267,6 +267,9 @@ export default function Landing() {
   {
     q: 'Is there a mobile app?',
     a: 'GlowWise works in your browser on any device. A native app is on our roadmap — join early and help shape it.'
+  },
+    { q: 'How is this different from ChatGPT?', 
+     a: 'ChatGPT responds to your questions. GlowWise learns your patterns over time, so your guidance evolves with you.' 
   },
 ];
 
