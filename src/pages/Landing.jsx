@@ -393,16 +393,18 @@ export default function Landing() {
         }
 
         .pricing-card {
-  background: #FAF8F5;
-  border: 1px solid rgba(168, 153, 104, 0.2);
-  border-radius: 4px;
-  padding: 40px 32px;
-  position: relative;
-  transition: all 0.3s;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+        background: #FAF8F5;
+        border: 1px solid rgba(168, 153, 104, 0.2);
+        border-radius: 4px;
+        padding: 40px 32px;
+        position: relative;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        }
+
         .pricing-card.featured {
           background: #6B9E7F;
           color: #FAF8F5;
