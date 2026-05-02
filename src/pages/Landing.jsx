@@ -1016,8 +1016,8 @@ export default function Landing() {
           </button>
 
           <p style={{ marginTop: '24px', fontSize: '13px', color: '#D4E8DD', opacity: 0.85 }}>
-            Be among the first to try GlowWise.
-          </p>
+  Your body's been telling you something. Time to listen.
+</p>
         </div>
       </section>
 
