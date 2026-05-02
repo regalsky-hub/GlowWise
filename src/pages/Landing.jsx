@@ -1045,7 +1045,7 @@ export default function Landing() {
                 Your AI wellness coach.
               </p>
               <p style={{ fontSize: '12px', lineHeight: 1.5, color: '#A89968', opacity: 0.8 }}>
-                GlowWise provides wellness guidance, not medical advice.
+                GlowWise provides wellness guidance, not medical advice. Always see a doctor for medical concerns.
               </p>
             </div>
 
@@ -1125,7 +1125,7 @@ export default function Landing() {
           </div>
 
           <div style={{ borderTop: '1px solid rgba(168, 153, 104, 0.2)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-            <p style={{ fontSize: '12px', color: '#A89968' }}>© 2026 GlowWise · Made with care in the UK</p>
+            <p style={{ fontSize: '12px', color: '#A89968' }}>© 2026 GlowWise · All rights reserved · Made with care in the UK</p>
             <p style={{ fontSize: '12px', color: '#A89968' }}>glowwise.app</p>
           </div>
         </div>
