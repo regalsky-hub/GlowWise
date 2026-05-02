@@ -925,7 +925,7 @@ export default function Landing() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '28px', fontSize: '13px', color: '#A89968', fontStyle: 'italic' }}>
-            No credit card needed for free tier. Cancel anytime. Fair-use policy applies to unlimited access.
+            Cancel anytime. Fair-use policy applies to unlimited access.
           </p>
         </div>
       </section>
