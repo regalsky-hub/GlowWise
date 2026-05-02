@@ -651,7 +651,7 @@ export default function Landing() {
 
               <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '560px' }}>
   <span style={{ fontWeight: 600, color: '#3D4A52' }}>Energy crashes. Hormonal breakouts. Hair shedding. Brain fog.</span><br />
-  See what's really causing yours, based on your data — not generic advice.
+  Find out what's really driving yours.
 </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px', flex: 1 }}>
