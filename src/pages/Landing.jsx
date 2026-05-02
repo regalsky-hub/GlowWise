@@ -215,7 +215,7 @@ export default function Landing() {
   const features = [
     { num: '01', title: 'AI Wellness Coach', desc: "Ask anything. Get answers built on your data, not Google's." },
     { num: '02', title: 'Pattern Detection', desc: "The AI spots what's actually affecting you — like sleep and skin, or stress and shedding." },
-    { num: '03', title: 'Daily Check-In', desc: "60 seconds a day. Tracks energy, sleep, stress, mood and supplements." },
+    { num: '03', title: 'Daily Wellness Log', desc: "Plus optional notes on supplements, symptoms, habits and lifestyle. The richer your data, the sharper the patterns." },
     { num: '04', title: 'Personalised Insights', desc: "Weekly summaries with clear next steps for your priorities." },
     { num: '05', title: 'Photo Tracking', desc: "Optional, private before/after photos to see real progress." },
     { num: '06', title: 'You Control Your Data', desc: "Delete any message, photo, or your whole account anytime. GDPR compliant. No third-party sharing." },
@@ -690,7 +690,7 @@ export default function Landing() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '48px', maxWidth: '1080px', margin: '0 auto' }}>
             {[
-              { num: '01', title: 'Check in daily', desc: '60 seconds. Energy, sleep, stress, mood. That\'s it.' },
+              { num: '01', title: 'Share how you\'re feeling', desc: 'A quick update on energy, sleep, stress and mood — the foundations of every insight that follows.' },
               { num: '02', title: 'Your coach learns you', desc: 'The AI spots patterns you\'d never catch alone — like how your sleep affects your skin.' },
               { num: '03', title: 'Get guidance that fits', desc: 'Personalised next steps based on your data, not someone else\'s body.' },
             ].map((step, i) => (
