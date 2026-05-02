@@ -240,17 +240,35 @@ export default function Landing() {
   ];
 
   const faqs = [
-    { q: 'Is this a medical app?', a: 'No. GlowWise gives wellness guidance, not medical advice. Always see a doctor for medical concerns.' },
-    { q: 'How does the AI get so personalised?', a: 'Through your daily check-ins. The more data you log, the sharper the guidance gets.' },
-    { q: 'Is my data really private?', a: 'Yes. Encrypted at rest, GDPR compliant, no third-party sharing, and you can delete anything anytime.' },
-    { q: 'Can I delete everything?', a: 'Yes — individual messages, photos, conversations or your full account, anytime.' },
-    { q: 'Who is GlowWise for?', a: 'Anyone 18+ looking for clarity on their wellness. Whether you\'re tracking hormones, hair loss, energy, sleep, stress, skin or nutrition — GlowWise adapts to you.' },
-    { q: 'What does it actually cover?', a: 'Hormones, hair, energy, stress, sleep, skin, nutrition and brain health.' },
-    { q: 'Can I cancel anytime?', a: 'Yes. One tap in your account settings. No questions asked, no fees.' },
-    { q: 'Will it be available in my language?', a: "English at launch. We're adding more languages based on demand — let us know which one you'd like next via the language menu." },
-    { q: 'How quickly will I see results?', a: 'Most users notice patterns within 2 weeks of daily check-ins. Real changes to energy, sleep or skin typically take 4–6 weeks of consistent action on the AI Coach\'s suggestions.' },
-    { q: 'How is this different from ChatGPT?', a: 'ChatGPT gives general advice to anyone. GlowWise learns you — your patterns, your priorities, your daily check-ins — and gives guidance built around your body. Plus, you control your data and can delete anything anytime.' },
-  ];
+  {
+    q: 'Is GlowWise a medical app?',
+    a: 'No. GlowWise gives wellness guidance, not medical advice. Always see a doctor for medical concerns.'
+  },
+  {
+    q: 'What is GlowWise?',
+    a: 'GlowWise is your AI wellness coach. It learns from your daily check-ins, priorities and patterns to give guidance built around your body — not generic advice. The more you log, the sharper it gets.'
+  },
+  {
+    q: 'How is my data used?',
+    a: 'Your data is encrypted and used only to personalise your guidance. We don\'t sell it. We don\'t share it with third parties. GDPR compliant. You can delete messages, photos or your whole account anytime — no questions, no fees.'
+  },
+  {
+    q: 'Who is GlowWise for?',
+    a: 'Anyone 18+ looking for clarity on their wellness. Whether you\'re tracking hormones, hair, energy, sleep, stress, skin, nutrition or brain health — GlowWise adapts to you.'
+  },
+  {
+    q: 'What if I miss a day?',
+    a: 'No problem. GlowWise works with the updates you give, when you give them. Consistency is what helps your coach spot real patterns in your energy, sleep or other concerns — but you can always pick up where you left off.'
+  },
+  {
+    q: 'Can I use GlowWise alongside my doctor?',
+    a: 'Absolutely. GlowWise helps you understand your patterns day-to-day. Your doctor handles diagnosis and treatment. They work best together.'
+  },
+  {
+    q: 'Is there a mobile app?',
+    a: 'GlowWise works in your browser on any device. A native app is on our roadmap — join early and help shape it.'
+  },
+];
 
   return (
     <div style={{ background: '#F5F3F0', minHeight: '100vh', fontFamily: "'Manrope', system-ui, sans-serif", color: '#3D4A52' }}>
