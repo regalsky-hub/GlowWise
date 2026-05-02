@@ -623,9 +623,10 @@ export default function Landing() {
                 Act with clarity.
               </h1>
 
-              <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '520px' }}>
-                Fix energy crashes, hormone breakouts, hair shedding, and brain fog, using patterns from your own data.
-              </p>
+              <p style={{ fontSize: '18px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px', maxWidth: '560px' }}>
+  <span style={{ fontWeight: 600, color: '#3D4A52' }}>Energy crashes. Hormonal breakouts. Hair shedding. Brain fog.</span><br />
+  See what's really causing yours, based on your data — not generic advice.
+</p>
 
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '32px' }}>
                 <button onClick={() => navigate('/signup')} className="btn-primary">
@@ -660,12 +661,12 @@ export default function Landing() {
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 60px' }}>
             <div className="eyebrow" style={{ marginBottom: '20px' }}>See it in action</div>
-            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
-              This is what <em style={{ fontStyle: 'italic', color: '#557E64' }}>personalised</em> actually looks like.
-            </h2>
-            <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
-              A glimpse of what your coach can help with.
-            </p>
+<h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, marginBottom: '20px', color: '#3D4A52' }}>
+  This is why <em style={{ fontStyle: 'italic', color: '#557E64' }}>generic advice</em> doesn't work.
+</h2>
+<p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770' }}>
+  GlowWise connects your symptoms to patterns, not guesses.
+</p>
           </div>
 
           <AnimatedCoachDemo />
