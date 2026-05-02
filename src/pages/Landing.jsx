@@ -744,7 +744,66 @@ export default function Landing() {
           </div>
         </div>
       </section>
+{/* COMPARISON */}
+      <section style={{ padding: '120px 0', background: '#FAF8F5', position: 'relative' }}>
+        <div className="container" style={{ maxWidth: '900px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <div className="eyebrow" style={{ marginBottom: '20px' }}>The difference</div>
+            <h2 className="display" style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', lineHeight: 1.1, color: '#3D4A52' }}>
+              GlowWise vs <em style={{ fontStyle: 'italic', color: '#A89968' }}>everything else.</em>
+            </h2>
+          </div>
 
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            background: '#F5F3F0',
+            border: '1px solid rgba(168, 153, 104, 0.2)',
+            borderRadius: '8px',
+            overflow: 'hidden',
+          }}>
+            {/* Header row */}
+            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(168, 153, 104, 0.2)', borderRight: '1px solid rgba(168, 153, 104, 0.2)' }}>
+              <div className="eyebrow" style={{ color: '#A89968' }}>Others</div>
+            </div>
+            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(168, 153, 104, 0.2)', background: '#EDF4EF' }}>
+              <div className="eyebrow" style={{ color: '#557E64' }}>GlowWise</div>
+            </div>
+
+            {[
+              { left: 'Generic advice', right: 'Learns your patterns' },
+              { left: 'One-off answers', right: 'Tracks trends over time' },
+              { left: 'No memory', right: 'Builds your health profile' },
+              { left: 'Overwhelming info', right: 'Clear next steps' },
+              { left: 'Same advice for everyone', right: 'Built around your body' },
+            ].map((row, i, arr) => (
+              <React.Fragment key={i}>
+                <div style={{
+                  padding: '22px 28px',
+                  borderRight: '1px solid rgba(168, 153, 104, 0.2)',
+                  borderBottom: i < arr.length - 1 ? '1px solid rgba(168, 153, 104, 0.15)' : 'none',
+                  fontSize: '15px',
+                  color: '#A89968',
+                  fontFamily: "'Manrope', sans-serif",
+                }}>
+                  {row.left}
+                </div>
+                <div style={{
+                  padding: '22px 28px',
+                  background: '#EDF4EF',
+                  borderBottom: i < arr.length - 1 ? '1px solid rgba(168, 153, 104, 0.15)' : 'none',
+                  fontSize: '15px',
+                  color: '#3D4A52',
+                  fontWeight: 500,
+                  fontFamily: "'Manrope', sans-serif",
+                }}>
+                  {row.right}
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* PRICING */}
       <section id="pricing" style={{ padding: '120px 0', background: '#EDF4EF' }}>
         <div className="container">
