@@ -887,7 +887,7 @@ export default function Landing() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
-                <div style={{ fontSize: '13px', fontWeight: 600, color: '#FAF8F5', opacity: 0.85, marginBottom: '4px' }}>Everything in Free, plus:</div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#FAF8F5', opacity: 0.85, marginBottom: '4px' }}>Get the full GlowWise experience:</div>
                 {[
                   'Unlimited AI Coach access',
                   'Deeper personalisation over time',
