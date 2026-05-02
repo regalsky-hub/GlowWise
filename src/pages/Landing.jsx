@@ -822,10 +822,26 @@ export default function Landing() {
             {/* Free */}
             <div className="pricing-card">
               <div className="eyebrow" style={{ marginBottom: '20px' }}>Free</div>
-              <div style={{ marginBottom: '32px' }}>
-                <span className="display price-amount" style={{ fontSize: '52px', fontWeight: 400, color: '#3D4A52' }}>£0</span>
-                <span style={{ fontSize: '15px', color: '#A89968', marginLeft: '8px' }}>/ forever</span>
-              </div>
+              <div style={{ marginBottom: '20px' }}>
+  <span className="display price-amount" style={{ fontSize: '52px', fontWeight: 400, color: '#3D4A52' }}>£0</span>
+  <span style={{ fontSize: '15px', color: '#A89968', marginLeft: '8px' }}>/ forever</span>
+</div>
+<div style={{
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  background: '#EDF4EF',
+  color: '#557E64',
+  padding: '6px 14px',
+  borderRadius: '100px',
+  fontSize: '12px',
+  fontWeight: 600,
+  marginBottom: '32px',
+  border: '1px solid rgba(107, 158, 127, 0.25)',
+}}>
+  <Check size={12} strokeWidth={2.5} />
+  No credit card needed
+</div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
                 {[
