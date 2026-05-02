@@ -244,10 +244,10 @@ export default function Landing() {
     q: 'Is GlowWise a medical app?',
     a: 'No. GlowWise gives wellness guidance, not medical advice. Always see a doctor for medical concerns.'
   },
-  {
-    q: 'What is GlowWise?',
-    { q: 'What is GlowWise?', a: 'GlowWise is your AI wellness coach. It learns from your daily check-ins, priorities and patterns to give guidance built around your body not someone else\'s. The more you log, the sharper it gets.'
-  },
+{
+      q: 'What is GlowWise?',
+      a: 'GlowWise is your AI wellness coach. It learns from your daily check-ins, priorities and patterns to give guidance built around your body — not someone else\'s. The more you log, the sharper it gets.'
+    },
   {
     q: 'How is my data used?',
     a: 'Your data is encrypted and used only to personalise your guidance. We don\'t sell it. We don\'t share it with third parties. GDPR compliant. You can delete messages, photos or your whole account anytime — no questions, no fees.'
