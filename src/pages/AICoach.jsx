@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
-import { Send, Trash2, Plus } from 'lucide-react';
+import { Send, Trash2, Plus, Menu, X } from 'lucide-react';
 import { db } from '../config/firebase';
 import {
-  collection, addDoc, getDocs, updateDoc, doc,
+  collection, addDoc, getDocs, updateDoc, doc, deleteDoc,
   query, orderBy, limit
 } from 'firebase/firestore';
 
@@ -19,7 +19,6 @@ const SAMPLE_AI_RESPONSES = [
   "That's a thoughtful observation. What feels most pressing right now — sleep, stress, energy, or something else?",
 ];
 
-// PLACEHOLDER — replace internals with real OpenAI call later (5-line change).
 async function getAIResponse(userMessage, history, profile) {
   await new Promise(r => setTimeout(r, 900));
   return SAMPLE_AI_RESPONSES[Math.floor(Math.random() * SAMPLE_AI_RESPONSES.length)];
@@ -31,11 +30,77 @@ const SUGGESTIONS = [
   { label: 'Skin',   items: ['What might be causing my breakouts?', 'How does stress affect my skin?'] },
 ];
 
+// ---------- Date / time helpers ----------
+const toDate = (ts) => {
+  if (!ts) return new Date();
+  if (ts.toDate) return ts.toDate();
+  return new Date(ts);
+};
+
+const formatTime = (ts) => {
+  return toDate(ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+};
+
+const formatDateDivider = (ts) => {
+  const d = toDate(ts);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+  const msgDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  if (msgDay.getTime() === today.getTime()) return 'Today';
+  if (msgDay.getTime() === yesterday.getTime()) return 'Yesterday';
+  const sameYear = d.getFullYear() === now.getFullYear();
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long',
+    ...(sameYear ? {} : { year: 'numeric' })
+  });
+};
+
+const formatRelativeTime = (ts) => {
+  const d = toDate(ts);
+  const now = new Date();
+  const diffMins = Math.floor((now - d) / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return formatDateDivider(d);
+};
+
+const getConversationPreview = (conv) => {
+  const msgs = conv.messages || [];
+  const firstUserMsg = msgs.find(m => m.role === 'user');
+  if (firstUserMsg) {
+    const t = firstUserMsg.content;
+    return t.length > 48 ? t.slice(0, 48) + '…' : t;
+  }
+  return 'New conversation';
+};
+
+const groupConversations = (convs) => {
+  const groups = { today: [], yesterday: [], week: [], older: [] };
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+  const weekAgo = new Date(today); weekAgo.setDate(weekAgo.getDate() - 7);
+  convs.forEach(c => {
+    const d = toDate(c.updated_at);
+    const cDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    if (cDay.getTime() === today.getTime()) groups.today.push(c);
+    else if (cDay.getTime() === yesterday.getTime()) groups.yesterday.push(c);
+    else if (d > weekAgo) groups.week.push(c);
+    else groups.older.push(c);
+  });
+  return groups;
+};
+
 export default function AICoach() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
@@ -43,19 +108,36 @@ export default function AICoach() {
 
   const userName = profile?.name || 'there';
 
-  // Auto-scroll on message change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Load most recent conversation OR create one
   useEffect(() => {
     if (!user) return;
-    loadOrCreateConversation();
+    initialiseChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const loadOrCreateConversation = async () => {
+  const initialiseChat = async () => {
+    await loadAllConversations();
+    await loadOrCreateLatestConversation();
+  };
+
+  const loadAllConversations = async () => {
+    try {
+      const convsRef = collection(db, 'users', user.uid, 'conversations');
+      const q = query(convsRef, orderBy('updated_at', 'desc'));
+      const snap = await getDocs(q);
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setConversations(list);
+      return list;
+    } catch (e) {
+      console.error('Load all conversations failed:', e);
+      return [];
+    }
+  };
+
+  const loadOrCreateLatestConversation = async () => {
     try {
       const convsRef = collection(db, 'users', user.uid, 'conversations');
       const q = query(convsRef, orderBy('updated_at', 'desc'), limit(1));
@@ -78,15 +160,11 @@ export default function AICoach() {
     try {
       const newConv = await addDoc(
         collection(db, 'users', user.uid, 'conversations'),
-        {
-          messages: [],
-          created_at: new Date(),
-          updated_at: new Date(),
-          topic: 'New conversation',
-        }
+        { messages: [], created_at: new Date(), updated_at: new Date(), topic: 'New conversation' }
       );
       setConversationId(newConv.id);
       setMessages([]);
+      await loadAllConversations();
     } catch (e) {
       console.error('Create conversation failed:', e);
       setConversationId('local-fallback');
@@ -101,6 +179,12 @@ export default function AICoach() {
         doc(db, 'users', user.uid, 'conversations', conversationId),
         { messages: updated, updated_at: new Date() }
       );
+      setConversations(prev => {
+        const next = prev.map(c =>
+          c.id === conversationId ? { ...c, messages: updated, updated_at: new Date() } : c
+        );
+        return next.sort((a, b) => toDate(b.updated_at) - toDate(a.updated_at));
+      });
     } catch (e) {
       console.error('Save messages failed:', e);
     }
@@ -157,8 +241,48 @@ export default function AICoach() {
 
   const handleNewChat = async () => {
     setOpenMenu(null);
+    setDrawerOpen(false);
     await createNewConversation();
   };
+
+  const switchConversation = (conv) => {
+    setConversationId(conv.id);
+    setMessages(conv.messages || []);
+    setOpenMenu(null);
+    setDrawerOpen(false);
+  };
+
+  const deleteConversation = async (e, convId) => {
+    e.stopPropagation();
+    if (!user) return;
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'conversations', convId));
+      const updated = conversations.filter(c => c.id !== convId);
+      setConversations(updated);
+      if (convId === conversationId) {
+        if (updated.length > 0) switchConversation(updated[0]);
+        else await createNewConversation();
+      }
+    } catch (err) {
+      console.error('Delete conversation failed:', err);
+    }
+  };
+
+  const renderMessagesWithDividers = () => {
+    const items = [];
+    let lastDate = null;
+    messages.forEach(m => {
+      const dateLabel = formatDateDivider(m.timestamp);
+      if (dateLabel !== lastDate) {
+        items.push({ kind: 'divider', id: `div-${m.id}`, label: dateLabel });
+        lastDate = dateLabel;
+      }
+      items.push({ kind: 'message', ...m });
+    });
+    return items;
+  };
+
+  const grouped = groupConversations(conversations);
 
   return (
     <AppLayout>
@@ -168,56 +292,48 @@ export default function AICoach() {
         .fade-up { animation: fu 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
         @keyframes fu { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ---- Stable shell: full-height flex column ---- */
         .chat-shell {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 64px);
-  max-width: 760px;
-  margin: 0 auto;
-  width: 100%;
-  position: relative;
-}
-@media (max-width: 768px) {
-  .chat-shell { height: calc(100vh - 64px - 80px); }
-}
+          display: flex; flex-direction: column;
+          height: calc(100vh - 64px);
+          max-width: 760px; margin: 0 auto; width: 100%;
+          position: relative;
+        }
+        @media (max-width: 768px) {
+          .chat-shell { height: calc(100vh - 64px - 80px); }
+        }
 
-/* ---- Decorative background g letterforms ---- */
-.bg-decoration {
-  position: absolute;
-  top: 0; right: -60px; bottom: 0;
-  width: 260px;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-.bg-g {
-  position: absolute;
-  font-family: 'Fraunces', serif;
-  font-weight: 300;
-  color: #6B9E7F;
-  opacity: 0.07;
-  font-size: 280px;
-  line-height: 1;
-  user-select: none;
-}
-.bg-g-1 { top: 4%;  right: -10px; }
-.bg-g-2 { top: 38%; right: 70px; font-size: 240px; opacity: 0.06; }
-.bg-g-3 { top: 70%; right: -30px; font-size: 260px; }
+        .bg-decoration {
+          position: absolute; top: 0; right: -60px; bottom: 0;
+          width: 260px; pointer-events: none; overflow: hidden; z-index: 0;
+        }
+        .bg-g {
+          position: absolute; font-family: 'Fraunces', serif; font-weight: 300;
+          color: #6B9E7F; opacity: 0.07; font-size: 280px; line-height: 1;
+          user-select: none;
+        }
+        .bg-g-1 { top: 4%;  right: -10px; }
+        .bg-g-2 { top: 38%; right: 70px; font-size: 240px; opacity: 0.06; }
+        .bg-g-3 { top: 70%; right: -30px; font-size: 260px; }
 
-.topbar, .messages-scroll, .input-bar { position: relative; z-index: 1; }
+        .topbar, .messages-scroll, .input-bar { position: relative; z-index: 1; }
 
-        /* ---- Top bar ---- */
         .topbar {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 14px 24px;
+          padding: 12px 20px;
           border-bottom: 1px solid rgba(168, 153, 104, 0.15);
-          background: rgba(245, 243, 240, 0.85);
-          backdrop-filter: blur(8px);
-          flex-shrink: 0;
+          background: rgba(245, 243, 240, 0.85); backdrop-filter: blur(8px);
+          flex-shrink: 0; gap: 12px;
         }
+        .topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+        .icon-btn {
+          background: transparent; border: none; cursor: pointer;
+          width: 36px; height: 36px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          color: #5A6770; transition: all 0.2s; flex-shrink: 0;
+        }
+        .icon-btn:hover { background: rgba(107, 158, 127, 0.1); color: #557E64; }
         .topbar-label {
-          display: flex; align-items: center; gap: 10px;
+          display: flex; align-items: center; gap: 10px; min-width: 0;
           font-family: 'Manrope', sans-serif; font-size: 14px; color: #5A6770;
         }
         .g-mark {
@@ -225,6 +341,7 @@ export default function AICoach() {
           background: linear-gradient(135deg, #6B9E7F, #A89968);
           display: flex; align-items: center; justify-content: center;
           color: #FAF8F5; font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
+          flex-shrink: 0;
         }
         .new-chat-btn {
           display: flex; align-items: center; gap: 6px;
@@ -233,25 +350,99 @@ export default function AICoach() {
           color: #557E64;
           font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 500;
           padding: 8px 16px; border-radius: 100px;
-          cursor: pointer; transition: all 0.2s;
+          cursor: pointer; transition: all 0.2s; flex-shrink: 0;
         }
         .new-chat-btn:hover { background: #EDF4EF; border-color: #6B9E7F; }
 
-        /* ---- Scrollable message area ---- */
+        .drawer-backdrop {
+          position: fixed; inset: 0; background: rgba(61, 74, 82, 0.35);
+          backdrop-filter: blur(2px);
+          z-index: 100; opacity: 0; pointer-events: none;
+          transition: opacity 0.25s;
+        }
+        .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+        .drawer {
+          position: fixed; top: 0; left: 0; bottom: 0;
+          width: 340px; max-width: 85vw;
+          background: #FAF8F5;
+          z-index: 101;
+          transform: translateX(-100%);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          display: flex; flex-direction: column;
+          box-shadow: 4px 0 24px rgba(61, 74, 82, 0.08);
+        }
+        .drawer.open { transform: translateX(0); }
+        .drawer-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 18px 22px;
+          border-bottom: 1px solid rgba(168, 153, 104, 0.15);
+        }
+        .drawer-title {
+          font-family: 'Fraunces', serif; font-size: 19px;
+          color: #3D4A52; font-weight: 500; letter-spacing: -0.01em;
+        }
+        .drawer-newchat {
+          display: flex; align-items: center; gap: 8px; justify-content: center;
+          margin: 14px 18px;
+          padding: 12px 16px; border-radius: 100px;
+          background: #6B9E7F; color: #FAF8F5; border: none;
+          font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .drawer-newchat:hover { background: #557E64; }
+        .drawer-list { flex: 1; overflow-y: auto; padding: 6px 0 18px; }
+        .drawer-group { margin-top: 14px; }
+        .drawer-group-label { padding: 0 22px 6px; }
+        .conv-item {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 10px 22px;
+          cursor: pointer; transition: background 0.15s; gap: 10px;
+        }
+        .conv-item:hover { background: rgba(107, 158, 127, 0.08); }
+        .conv-item.active { background: #EDF4EF; border-left: 3px solid #6B9E7F; padding-left: 19px; }
+        .conv-text { min-width: 0; flex: 1; }
+        .conv-preview {
+          font-family: 'Manrope', sans-serif; font-size: 13.5px;
+          color: #3D4A52; font-weight: 500;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          margin-bottom: 3px;
+        }
+        .conv-time { font-family: 'Manrope', sans-serif; font-size: 11px; color: #A89968; }
+        .conv-delete {
+          opacity: 0; transition: opacity 0.15s;
+          background: transparent; border: none; cursor: pointer;
+          color: #A89968; padding: 4px;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .conv-item:hover .conv-delete { opacity: 0.7; }
+        .conv-delete:hover { color: #C97B5C; opacity: 1; }
+        .drawer-empty {
+          padding: 40px 22px; text-align: center;
+          font-family: 'Manrope', sans-serif; font-size: 13px; color: #A89968;
+          line-height: 1.5;
+        }
+
         .messages-scroll {
-          flex: 1;
-          overflow-y: auto;
-          padding: 24px;
+          flex: 1; overflow-y: auto; padding: 20px 24px;
           -webkit-overflow-scrolling: touch;
         }
-        .messages-list { display: flex; flex-direction: column; gap: 14px; }
+        .messages-list { display: flex; flex-direction: column; gap: 12px; }
 
-        /* ---- Input bar ---- */
+        .date-divider {
+          display: flex; align-items: center; justify-content: center;
+          margin: 14px 0 8px;
+        }
+        .date-divider span {
+          font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 500;
+          color: #A89968; letter-spacing: 0.05em;
+          background: rgba(245, 243, 240, 0.8);
+          padding: 4px 12px; border-radius: 100px;
+          border: 1px solid rgba(168, 153, 104, 0.2);
+        }
+
         .input-bar {
-          flex-shrink: 0;
-          padding: 16px 24px 14px;
-          background: rgba(245, 243, 240, 0.95);
-          backdrop-filter: blur(8px);
+          flex-shrink: 0; padding: 14px 24px 12px;
+          background: rgba(245, 243, 240, 0.95); backdrop-filter: blur(8px);
           border-top: 1px solid rgba(168, 153, 104, 0.12);
         }
         .input-row { display: flex; gap: 10px; align-items: center; }
@@ -274,15 +465,13 @@ export default function AICoach() {
         .footer-note {
           font-family: 'Manrope', sans-serif;
           font-size: 11px; color: #A89968;
-          text-align: center; margin: 10px 0 0;
-          line-height: 1.5;
+          text-align: center; margin: 10px 0 0; line-height: 1.5;
         }
         .footer-note strong { color: #5A6770; font-weight: 600; }
 
-        /* ---- Messages ---- */
-        .msg-row { display: flex; position: relative; }
-        .msg-row.user { justify-content: flex-end; }
-        .msg-row.assistant { justify-content: flex-start; }
+        .msg-row { display: flex; flex-direction: column; position: relative; }
+        .msg-row.user { align-items: flex-end; }
+        .msg-row.assistant { align-items: flex-start; }
         .msg-bubble {
           max-width: 80%; padding: 14px 18px;
           font-family: 'Manrope', sans-serif;
@@ -297,6 +486,11 @@ export default function AICoach() {
         .msg-bubble.assistant {
           background: #EDF4EF; color: #3D4A52;
           border-bottom-left-radius: 6px;
+        }
+        .msg-time {
+          font-family: 'Manrope', sans-serif; font-size: 10.5px;
+          color: #A89968; margin-top: 4px; padding: 0 6px;
+          letter-spacing: 0.02em;
         }
         .msg-actions {
           position: absolute; top: -12px;
@@ -321,7 +515,6 @@ export default function AICoach() {
         }
         .action-btn:hover { background: #fff; color: #C97B5C; border-color: #C97B5C; }
 
-        /* ---- Typing indicator ---- */
         .typing-row { display: flex; align-items: center; gap: 12px; }
         .typing-dots { display: flex; gap: 5px; }
         .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #6B9E7F; animation: bounce 1.4s infinite; }
@@ -331,13 +524,10 @@ export default function AICoach() {
           font-size: 13.5px; color: #557E64;
         }
 
-        /* ---- Welcome state ---- */
         .welcome {
           display: flex; flex-direction: column;
           align-items: center; justify-content: center;
-          text-align: center;
-          padding: 32px 0 24px;
-          min-height: 100%;
+          text-align: center; padding: 32px 0 24px; min-height: 100%;
         }
         .welcome-mark {
           width: 64px; height: 64px; border-radius: 50%;
@@ -357,45 +547,96 @@ export default function AICoach() {
           font-size: 14.5px; line-height: 1.6; color: #5A6770;
           max-width: 440px; margin: 0 0 32px;
         }
-        .suggestion-group {
-          width: 100%; max-width: 520px;
-          margin-bottom: 18px;
-        }
-        .suggestion-group-label {
-          display: block; text-align: left; margin-bottom: 8px;
-          padding-left: 6px;
-        }
+        .suggestion-group { width: 100%; max-width: 520px; margin-bottom: 18px; }
+        .suggestion-group-label { display: block; text-align: left; margin-bottom: 8px; padding-left: 6px; }
         .suggestion-list { display: flex; flex-direction: column; gap: 8px; }
         .suggestion {
           width: 100%; background: #FAF8F5;
           border: 1px solid rgba(168, 153, 104, 0.22);
           border-radius: 100px; padding: 12px 20px;
           font-family: 'Manrope', sans-serif; font-size: 13.5px;
-          color: #3D4A52; cursor: pointer; transition: all 0.2s;
-          text-align: left;
+          color: #3D4A52; cursor: pointer; transition: all 0.2s; text-align: left;
         }
         .suggestion:hover { border-color: #6B9E7F; background: #EDF4EF; color: #557E64; }
       `}</style>
 
-      <div className="chat-shell">
-  <div className="bg-decoration" aria-hidden="true">
-    <span className="bg-g bg-g-1">g</span>
-    <span className="bg-g bg-g-2">g</span>
-    <span className="bg-g bg-g-3">g</span>
-  </div>
+      {/* ---- Drawer (history) ---- */}
+      <div className={`drawer-backdrop ${drawerOpen ? 'open' : ''}`} onClick={() => setDrawerOpen(false)} />
+      <aside className={`drawer ${drawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <div className="drawer-title">Conversations</div>
+          <button className="icon-btn" onClick={() => setDrawerOpen(false)} aria-label="Close">
+            <X size={18} />
+          </button>
+        </div>
+        <button className="drawer-newchat" onClick={handleNewChat}>
+          <Plus size={16} strokeWidth={2.2} /> New chat
+        </button>
+        <div className="drawer-list">
+          {conversations.length === 0 ? (
+            <div className="drawer-empty">
+              No past conversations yet.<br />Start one below.
+            </div>
+          ) : (
+            <>
+              {[
+                { key: 'today', label: 'Today', items: grouped.today },
+                { key: 'yesterday', label: 'Yesterday', items: grouped.yesterday },
+                { key: 'week', label: 'Previous 7 days', items: grouped.week },
+                { key: 'older', label: 'Older', items: grouped.older },
+              ].map(group => group.items.length > 0 && (
+                <div key={group.key} className="drawer-group">
+                  <div className="eyebrow drawer-group-label">{group.label}</div>
+                  {group.items.map(c => (
+                    <div
+                      key={c.id}
+                      className={`conv-item ${c.id === conversationId ? 'active' : ''}`}
+                      onClick={() => switchConversation(c)}
+                    >
+                      <div className="conv-text">
+                        <div className="conv-preview">{getConversationPreview(c)}</div>
+                        <div className="conv-time">{formatRelativeTime(c.updated_at)}</div>
+                      </div>
+                      <button
+                        className="conv-delete"
+                        onClick={(e) => deleteConversation(e, c.id)}
+                        aria-label="Delete conversation"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </aside>
 
-  {/* Top bar */}
+      <div className="chat-shell">
+        <div className="bg-decoration" aria-hidden="true">
+          <span className="bg-g bg-g-1">g</span>
+          <span className="bg-g bg-g-2">g</span>
+          <span className="bg-g bg-g-3">g</span>
+        </div>
+
+        {/* Top bar */}
         <div className="topbar">
-          <div className="topbar-label">
-            <div className="g-mark">g</div>
-            <span>Wellness coach</span>
+          <div className="topbar-left">
+            <button className="icon-btn" onClick={() => setDrawerOpen(true)} aria-label="Open conversations">
+              <Menu size={20} />
+            </button>
+            <div className="topbar-label">
+              <div className="g-mark">g</div>
+              <span>Wellness coach</span>
+            </div>
           </div>
           <button className="new-chat-btn" onClick={handleNewChat}>
             <Plus size={14} strokeWidth={2.2} /> New chat
           </button>
         </div>
 
-        {/* Messages — scrollable */}
+        {/* Messages */}
         <div className="messages-scroll">
           {messages.length === 0 && !loading ? (
             <div className="welcome fade-up">
@@ -422,26 +663,37 @@ export default function AICoach() {
             </div>
           ) : (
             <div className="messages-list">
-              {messages.map(m => (
-                <div
-                  key={m.id}
-                  className={`msg-row ${m.role}`}
-                  onClick={() => setOpenMenu(openMenu === m.id ? null : m.id)}
-                >
-                  <div className={`msg-bubble ${m.role}`}>
-                    {m.content}
-                    <div className={`msg-actions ${openMenu === m.id ? 'open' : ''}`}>
-                      <button
-                        className="action-btn"
-                        onClick={(e) => { e.stopPropagation(); deleteMessage(m.id); }}
-                        aria-label="Delete message"
-                      >
-                        <Trash2 size={11} /> Delete
-                      </button>
+              {renderMessagesWithDividers().map(item => {
+                if (item.kind === 'divider') {
+                  return (
+                    <div key={item.id} className="date-divider">
+                      <span>{item.label}</span>
                     </div>
+                  );
+                }
+                const m = item;
+                return (
+                  <div
+                    key={m.id}
+                    className={`msg-row ${m.role}`}
+                    onClick={() => setOpenMenu(openMenu === m.id ? null : m.id)}
+                  >
+                    <div className={`msg-bubble ${m.role}`}>
+                      {m.content}
+                      <div className={`msg-actions ${openMenu === m.id ? 'open' : ''}`}>
+                        <button
+                          className="action-btn"
+                          onClick={(e) => { e.stopPropagation(); deleteMessage(m.id); }}
+                          aria-label="Delete message"
+                        >
+                          <Trash2 size={11} /> Delete
+                        </button>
+                      </div>
+                    </div>
+                    <div className="msg-time">{formatTime(m.timestamp)}</div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {loading && (
                 <div className="msg-row assistant">
                   <div className="msg-bubble assistant">
