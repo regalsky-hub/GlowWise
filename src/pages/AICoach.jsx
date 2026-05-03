@@ -120,7 +120,7 @@ export default function AICoach() {
 
   const initialiseChat = async () => {
     await loadAllConversations();
-    await loadOrCreateLatestConversation();
+    await loadLatestConversation();
   };
 
   const loadAllConversations = async () => {
@@ -128,7 +128,10 @@ export default function AICoach() {
       const convsRef = collection(db, 'users', user.uid, 'conversations');
       const q = query(convsRef, orderBy('updated_at', 'desc'));
       const snap = await getDocs(q);
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Filter out empty conversations from the displayed list
+      const list = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(c => c.messages && c.messages.length > 0);
       setConversations(list);
       return list;
     } catch (e) {
@@ -137,52 +140,63 @@ export default function AICoach() {
     }
   };
 
-  const loadOrCreateLatestConversation = async () => {
+  // Load most recent NON-EMPTY conversation. If none, leave state empty (welcome screen).
+  const loadLatestConversation = async () => {
     try {
       const convsRef = collection(db, 'users', user.uid, 'conversations');
-      const q = query(convsRef, orderBy('updated_at', 'desc'), limit(1));
+      const q = query(convsRef, orderBy('updated_at', 'desc'), limit(10));
       const snap = await getDocs(q);
-      if (!snap.empty) {
-        const latest = snap.docs[0];
-        setConversationId(latest.id);
-        setMessages(latest.data().messages || []);
-      } else {
-        await createNewConversation();
+      const nonEmpty = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .find(c => c.messages && c.messages.length > 0);
+      if (nonEmpty) {
+        setConversationId(nonEmpty.id);
+        setMessages(nonEmpty.messages);
       }
+      // else: leave conversationId null — will be created lazily on first message
     } catch (e) {
       console.error('Load conversation failed:', e);
-      setConversationId('local-fallback');
     }
   };
 
-  const createNewConversation = async () => {
-    if (!user) return;
+  // Creates a Firestore conversation doc and returns the new ID.
+  // Called lazily — only when the user actually sends their first message.
+  const createConversationDoc = async () => {
+    if (!user) return null;
     try {
       const newConv = await addDoc(
         collection(db, 'users', user.uid, 'conversations'),
         { messages: [], created_at: new Date(), updated_at: new Date(), topic: 'New conversation' }
       );
       setConversationId(newConv.id);
-      setMessages([]);
-      await loadAllConversations();
+      return newConv.id;
     } catch (e) {
       console.error('Create conversation failed:', e);
-      setConversationId('local-fallback');
-      setMessages([]);
+      return null;
     }
   };
 
-  const persistMessages = async (updated) => {
-    if (!user || !conversationId || conversationId === 'local-fallback') return;
+  const persistMessages = async (updated, explicitConvId = null) => {
+    const convId = explicitConvId || conversationId;
+    if (!user || !convId) return;
     try {
       await updateDoc(
-        doc(db, 'users', user.uid, 'conversations', conversationId),
+        doc(db, 'users', user.uid, 'conversations', convId),
         { messages: updated, updated_at: new Date() }
       );
+      // Update local conversations list (insert if new, update if existing)
       setConversations(prev => {
-        const next = prev.map(c =>
-          c.id === conversationId ? { ...c, messages: updated, updated_at: new Date() } : c
-        );
+        const exists = prev.find(c => c.id === convId);
+        let next;
+        if (exists) {
+          next = prev.map(c =>
+            c.id === convId ? { ...c, messages: updated, updated_at: new Date() } : c
+          );
+        } else if (updated.length > 0) {
+          next = [...prev, { id: convId, messages: updated, updated_at: new Date(), created_at: new Date() }];
+        } else {
+          next = prev;
+        }
         return next.sort((a, b) => toDate(b.updated_at) - toDate(a.updated_at));
       });
     } catch (e) {
@@ -195,6 +209,16 @@ export default function AICoach() {
     const text = input.trim();
     if (!text || loading) return;
 
+    // Lazy-create the conversation doc on first message
+    let convId = conversationId;
+    if (!convId) {
+      convId = await createConversationDoc();
+      if (!convId) {
+        console.error('Could not create conversation');
+        return;
+      }
+    }
+
     const userMsg = {
       id: Date.now().toString(),
       role: 'user',
@@ -205,7 +229,7 @@ export default function AICoach() {
     setMessages(afterUser);
     setInput('');
     setLoading(true);
-    persistMessages(afterUser);
+    persistMessages(afterUser, convId);
 
     try {
       const aiText = await getAIResponse(text, afterUser, profile);
@@ -217,7 +241,7 @@ export default function AICoach() {
       };
       const afterAI = [...afterUser, aiMsg];
       setMessages(afterAI);
-      persistMessages(afterAI);
+      persistMessages(afterAI, convId);
     } catch (err) {
       console.error('AI response failed:', err);
       const errMsg = {
@@ -239,10 +263,13 @@ export default function AICoach() {
     setOpenMenu(null);
   };
 
-  const handleNewChat = async () => {
+  // "New chat" no longer creates a Firestore doc. Just clears local state.
+  // The doc is created when the user sends their first message.
+  const handleNewChat = () => {
     setOpenMenu(null);
     setDrawerOpen(false);
-    await createNewConversation();
+    setConversationId(null);
+    setMessages([]);
   };
 
   const switchConversation = (conv) => {
@@ -261,7 +288,7 @@ export default function AICoach() {
       setConversations(updated);
       if (convId === conversationId) {
         if (updated.length > 0) switchConversation(updated[0]);
-        else await createNewConversation();
+        else handleNewChat();
       }
     } catch (err) {
       console.error('Delete conversation failed:', err);
@@ -354,6 +381,7 @@ export default function AICoach() {
         }
         .new-chat-btn:hover { background: #EDF4EF; border-color: #6B9E7F; }
 
+        /* Drawer now starts BELOW the GlowWise app header */
         .drawer-backdrop {
           position: fixed; inset: 0; background: rgba(61, 74, 82, 0.35);
           backdrop-filter: blur(2px);
@@ -362,7 +390,7 @@ export default function AICoach() {
         }
         .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
         .drawer {
-          position: fixed; top: 0; left: 0; bottom: 0;
+          position: fixed; top: 64px; left: 0; bottom: 0;
           width: 340px; max-width: 85vw;
           background: #FAF8F5;
           z-index: 101;
