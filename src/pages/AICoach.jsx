@@ -170,16 +170,42 @@ export default function AICoach() {
 
         /* ---- Stable shell: full-height flex column ---- */
         .chat-shell {
-          display: flex;
-          flex-direction: column;
-          height: calc(100vh - 64px);
-          max-width: 760px;
-          margin: 0 auto;
-          width: 100%;
-        }
-        @media (max-width: 768px) {
-          .chat-shell { height: calc(100vh - 64px - 80px); }
-        }
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  max-width: 760px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .chat-shell { height: calc(100vh - 64px - 80px); }
+}
+
+/* ---- Decorative background g letterforms ---- */
+.bg-decoration {
+  position: absolute;
+  top: 0; right: -60px; bottom: 0;
+  width: 260px;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.bg-g {
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  color: #6B9E7F;
+  opacity: 0.07;
+  font-size: 280px;
+  line-height: 1;
+  user-select: none;
+}
+.bg-g-1 { top: 4%;  right: -10px; }
+.bg-g-2 { top: 38%; right: 70px; font-size: 240px; opacity: 0.06; }
+.bg-g-3 { top: 70%; right: -30px; font-size: 260px; }
+
+.topbar, .messages-scroll, .input-bar { position: relative; z-index: 1; }
 
         /* ---- Top bar ---- */
         .topbar {
@@ -352,8 +378,13 @@ export default function AICoach() {
       `}</style>
 
       <div className="chat-shell">
+  <div className="bg-decoration" aria-hidden="true">
+    <span className="bg-g bg-g-1">g</span>
+    <span className="bg-g bg-g-2">g</span>
+    <span className="bg-g bg-g-3">g</span>
+  </div>
 
-        {/* Top bar */}
+  {/* Top bar */}
         <div className="topbar">
           <div className="topbar-label">
             <div className="g-mark">g</div>
