@@ -2,10 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
-import { Send, MoreVertical, Trash2, Plus, MessageCircle } from 'lucide-react';
+import { Send, Trash2, Plus } from 'lucide-react';
 import { db } from '../config/firebase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import {
+  collection, addDoc, getDocs, updateDoc, doc,
+  query, orderBy, limit
+} from 'firebase/firestore';
 
+// ---------- Mock responses (swap getAIResponse() body for OpenAI later) ----------
 const SAMPLE_AI_RESPONSES = [
   "I've noticed your sleep quality has been varying. Let's explore what might be affecting it — stress, screen time before bed, or caffeine could all play a role.",
   "Your stress has been elevated this week. Even a 5-minute breathing exercise daily can meaningfully reduce cortisol over time.",
@@ -15,153 +19,438 @@ const SAMPLE_AI_RESPONSES = [
   "That's a thoughtful observation. What feels most pressing right now — sleep, stress, energy, or something else?",
 ];
 
+// PLACEHOLDER — replace internals with real OpenAI call later (5-line change).
+async function getAIResponse(userMessage, history, profile) {
+  await new Promise(r => setTimeout(r, 900));
+  return SAMPLE_AI_RESPONSES[Math.floor(Math.random() * SAMPLE_AI_RESPONSES.length)];
+}
+
+const SUGGESTIONS = [
+  { label: 'Sleep',  items: ['Why do I wake up tired?', 'How can I fall asleep faster?'] },
+  { label: 'Stress', items: ['Why am I always anxious?', 'How do I lower cortisol naturally?'] },
+  { label: 'Skin',   items: ['What might be causing my breakouts?', 'How does stress affect my skin?'] },
+];
+
 export default function AICoach() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
-  const [showDeleteMenu, setShowDeleteMenu] = useState(null);
+  const [openMenu, setOpenMenu] = useState(null);
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
   const { profile } = useUserData();
 
   const userName = profile?.name || 'there';
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
-
+  // Auto-scroll on message change
   useEffect(() => {
-    if (user) startNewConversation();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, loading]);
+
+  // Load most recent conversation OR create one
+  useEffect(() => {
+    if (!user) return;
+    loadOrCreateConversation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const startNewConversation = async () => {
+  const loadOrCreateConversation = async () => {
+    try {
+      const convsRef = collection(db, 'users', user.uid, 'conversations');
+      const q = query(convsRef, orderBy('updated_at', 'desc'), limit(1));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const latest = snap.docs[0];
+        setConversationId(latest.id);
+        setMessages(latest.data().messages || []);
+      } else {
+        await createNewConversation();
+      }
+    } catch (e) {
+      console.error('Load conversation failed:', e);
+      setConversationId('local-fallback');
+    }
+  };
+
+  const createNewConversation = async () => {
     if (!user) return;
     try {
-      const newConv = await addDoc(collection(db, 'users', user.uid, 'conversations'), {
-        messages: [], created_at: new Date(), topic: 'New conversation',
-      });
+      const newConv = await addDoc(
+        collection(db, 'users', user.uid, 'conversations'),
+        {
+          messages: [],
+          created_at: new Date(),
+          updated_at: new Date(),
+          topic: 'New conversation',
+        }
+      );
       setConversationId(newConv.id);
       setMessages([]);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error('Create conversation failed:', e);
+      setConversationId('local-fallback');
+      setMessages([]);
+    }
+  };
+
+  const persistMessages = async (updated) => {
+    if (!user || !conversationId || conversationId === 'local-fallback') return;
+    try {
+      await updateDoc(
+        doc(db, 'users', user.uid, 'conversations', conversationId),
+        { messages: updated, updated_at: new Date() }
+      );
+    } catch (e) {
+      console.error('Save messages failed:', e);
+    }
   };
 
   const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || !conversationId) return;
-    const userMessage = { id: Date.now().toString(), role: 'user', content: input, timestamp: new Date().toISOString() };
-    setMessages(prev => [...prev, userMessage]);
+    e?.preventDefault();
+    const text = input.trim();
+    if (!text || loading) return;
+
+    const userMsg = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text,
+      timestamp: new Date().toISOString(),
+    };
+    const afterUser = [...messages, userMsg];
+    setMessages(afterUser);
     setInput('');
     setLoading(true);
-    setTimeout(() => {
-      const aiMessage = {
-        id: (Date.now() + 1).toString(), role: 'assistant',
-        content: SAMPLE_AI_RESPONSES[Math.floor(Math.random() * SAMPLE_AI_RESPONSES.length)],
+    persistMessages(afterUser);
+
+    try {
+      const aiText = await getAIResponse(text, afterUser, profile);
+      const aiMsg = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: aiText,
         timestamp: new Date().toISOString(),
       };
-      setMessages(prev => [...prev, aiMessage]);
+      const afterAI = [...afterUser, aiMsg];
+      setMessages(afterAI);
+      persistMessages(afterAI);
+    } catch (err) {
+      console.error('AI response failed:', err);
+      const errMsg = {
+        id: (Date.now() + 2).toString(),
+        role: 'assistant',
+        content: "Sorry — I couldn't respond just now. Please try again.",
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, errMsg]);
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   const deleteMessage = (id) => {
-    setMessages(prev => prev.filter(m => m.id !== id));
-    setShowDeleteMenu(null);
+    const updated = messages.filter(m => m.id !== id);
+    setMessages(updated);
+    persistMessages(updated);
+    setOpenMenu(null);
   };
 
-  const suggestions = [
-    'Why am I tired so often?',
-    'How can I improve my sleep?',
-    'What might be causing my breakouts?',
-  ];
+  const handleNewChat = async () => {
+    setOpenMenu(null);
+    await createNewConversation();
+  };
 
   return (
     <AppLayout>
       <style>{`
         .display { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
         .eyebrow { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #A89968; }
-        .fade-up { animation: fu 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes fu { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .suggestion { width: 100%; background: #FAF8F5; border: 1px solid rgba(168, 153, 104, 0.25); border-radius: 100px; padding: 14px 22px; font-family: 'Manrope', sans-serif; font-size: 14px; color: #3D4A52; cursor: pointer; transition: all 0.2s; text-align: left; }
-        .suggestion:hover { border-color: #6B9E7F; background: #EDF4EF; color: #557E64; }
-        .chat-input { flex: 1; border: 1px solid rgba(168, 153, 104, 0.25); background: #FAF8F5; border-radius: 100px; padding: 14px 20px; font-family: 'Manrope', sans-serif; font-size: 15px; color: #3D4A52; outline: none; transition: all 0.2s; }
+        .fade-up { animation: fu 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes fu { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ---- Stable shell: full-height flex column ---- */
+        .chat-shell {
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 64px);
+          max-width: 760px;
+          margin: 0 auto;
+          width: 100%;
+        }
+        @media (max-width: 768px) {
+          .chat-shell { height: calc(100vh - 64px - 80px); }
+        }
+
+        /* ---- Top bar ---- */
+        .topbar {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 14px 24px;
+          border-bottom: 1px solid rgba(168, 153, 104, 0.15);
+          background: rgba(245, 243, 240, 0.85);
+          backdrop-filter: blur(8px);
+          flex-shrink: 0;
+        }
+        .topbar-label {
+          display: flex; align-items: center; gap: 10px;
+          font-family: 'Manrope', sans-serif; font-size: 14px; color: #5A6770;
+        }
+        .g-mark {
+          width: 28px; height: 28px; border-radius: 50%;
+          background: linear-gradient(135deg, #6B9E7F, #A89968);
+          display: flex; align-items: center; justify-content: center;
+          color: #FAF8F5; font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
+        }
+        .new-chat-btn {
+          display: flex; align-items: center; gap: 6px;
+          background: transparent;
+          border: 1px solid rgba(107, 158, 127, 0.35);
+          color: #557E64;
+          font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 500;
+          padding: 8px 16px; border-radius: 100px;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .new-chat-btn:hover { background: #EDF4EF; border-color: #6B9E7F; }
+
+        /* ---- Scrollable message area ---- */
+        .messages-scroll {
+          flex: 1;
+          overflow-y: auto;
+          padding: 24px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .messages-list { display: flex; flex-direction: column; gap: 14px; }
+
+        /* ---- Input bar ---- */
+        .input-bar {
+          flex-shrink: 0;
+          padding: 16px 24px 14px;
+          background: rgba(245, 243, 240, 0.95);
+          backdrop-filter: blur(8px);
+          border-top: 1px solid rgba(168, 153, 104, 0.12);
+        }
+        .input-row { display: flex; gap: 10px; align-items: center; }
+        .chat-input {
+          flex: 1; border: 1px solid rgba(168, 153, 104, 0.25);
+          background: #FAF8F5; border-radius: 100px;
+          padding: 14px 20px;
+          font-family: 'Manrope', sans-serif; font-size: 15px; color: #3D4A52;
+          outline: none; transition: all 0.2s;
+        }
         .chat-input:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
-        .send-btn { background: #6B9E7F; color: #FAF8F5; border: none; border-radius: 50%; width: 48px; height: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+        .send-btn {
+          background: #6B9E7F; color: #FAF8F5; border: none; border-radius: 50%;
+          width: 48px; height: 48px; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          transition: all 0.2s; flex-shrink: 0;
+        }
         .send-btn:hover:not(:disabled) { background: #557E64; }
-        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .msg-bubble { max-width: 85%; padding: 14px 18px; border-radius: 16px; font-size: 14px; line-height: 1.55; position: relative; }
-        .msg-user { background: #6B9E7F; color: #FAF8F5; border-bottom-right-radius: 4px; }
-        .msg-ai { background: #FAF8F5; color: #3D4A52; border: 1px solid rgba(168, 153, 104, 0.15); border-bottom-left-radius: 4px; }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .footer-note {
+          font-family: 'Manrope', sans-serif;
+          font-size: 11px; color: #A89968;
+          text-align: center; margin: 10px 0 0;
+          line-height: 1.5;
+        }
+        .footer-note strong { color: #5A6770; font-weight: 600; }
+
+        /* ---- Messages ---- */
+        .msg-row { display: flex; position: relative; }
+        .msg-row.user { justify-content: flex-end; }
+        .msg-row.assistant { justify-content: flex-start; }
+        .msg-bubble {
+          max-width: 80%; padding: 14px 18px;
+          font-family: 'Manrope', sans-serif;
+          font-size: 14.5px; line-height: 1.6;
+          position: relative; border-radius: 18px;
+          word-wrap: break-word;
+        }
+        .msg-bubble.user {
+          background: #6B9E7F; color: #FAF8F5;
+          border-bottom-right-radius: 6px;
+        }
+        .msg-bubble.assistant {
+          background: #EDF4EF; color: #3D4A52;
+          border-bottom-left-radius: 6px;
+        }
+        .msg-actions {
+          position: absolute; top: -12px;
+          opacity: 0; transition: opacity 0.15s;
+          pointer-events: none;
+        }
+        .msg-row.user .msg-actions { right: 8px; }
+        .msg-row.assistant .msg-actions { left: 8px; }
+        .msg-row:hover .msg-actions, .msg-actions.open {
+          opacity: 1; pointer-events: auto;
+        }
+        .action-btn {
+          background: #FAF8F5;
+          border: 1px solid rgba(168, 153, 104, 0.3);
+          border-radius: 100px;
+          padding: 5px 10px;
+          font-family: 'Manrope', sans-serif; font-size: 11px;
+          color: #5A6770;
+          cursor: pointer; display: flex; align-items: center; gap: 4px;
+          transition: all 0.15s;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .action-btn:hover { background: #fff; color: #C97B5C; border-color: #C97B5C; }
+
+        /* ---- Typing indicator ---- */
+        .typing-row { display: flex; align-items: center; gap: 12px; }
+        .typing-dots { display: flex; gap: 5px; }
         .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #6B9E7F; animation: bounce 1.4s infinite; }
-        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-6px); opacity: 1; } }
+        @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-5px); opacity: 1; } }
+        .typing-text {
+          font-family: 'Fraunces', serif; font-style: italic;
+          font-size: 13.5px; color: #557E64;
+        }
+
+        /* ---- Welcome state ---- */
+        .welcome {
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          text-align: center;
+          padding: 32px 0 24px;
+          min-height: 100%;
+        }
+        .welcome-mark {
+          width: 64px; height: 64px; border-radius: 50%;
+          background: linear-gradient(135deg, #6B9E7F 0%, #557E64 100%);
+          display: flex; align-items: center; justify-content: center;
+          color: #FAF8F5; font-family: 'Fraunces', serif;
+          font-size: 28px; font-weight: 500; margin-bottom: 22px;
+        }
+        .welcome-title {
+          font-family: 'Fraunces', serif; font-weight: 400;
+          font-size: clamp(26px, 4vw, 34px);
+          line-height: 1.2; color: #3D4A52; margin: 0 0 12px;
+          letter-spacing: -0.02em;
+        }
+        .welcome-sub {
+          font-family: 'Manrope', sans-serif;
+          font-size: 14.5px; line-height: 1.6; color: #5A6770;
+          max-width: 440px; margin: 0 0 32px;
+        }
+        .suggestion-group {
+          width: 100%; max-width: 520px;
+          margin-bottom: 18px;
+        }
+        .suggestion-group-label {
+          display: block; text-align: left; margin-bottom: 8px;
+          padding-left: 6px;
+        }
+        .suggestion-list { display: flex; flex-direction: column; gap: 8px; }
+        .suggestion {
+          width: 100%; background: #FAF8F5;
+          border: 1px solid rgba(168, 153, 104, 0.22);
+          border-radius: 100px; padding: 12px 20px;
+          font-family: 'Manrope', sans-serif; font-size: 13.5px;
+          color: #3D4A52; cursor: pointer; transition: all 0.2s;
+          text-align: left;
+        }
+        .suggestion:hover { border-color: #6B9E7F; background: #EDF4EF; color: #557E64; }
       `}</style>
 
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 64px - 80px)', maxWidth: '760px', margin: '0 auto', padding: '0 24px' }}>
+      <div className="chat-shell">
 
-        {/* Disclaimer */}
-        <div style={{ background: 'rgba(212, 232, 221, 0.5)', borderLeft: '3px solid #6B9E7F', borderRadius: '4px', padding: '12px 16px', fontSize: '12px', color: '#557E64', margin: '24px 0' }}>
-          <strong style={{ fontWeight: 600 }}>Wellness, not medical advice.</strong> Always consult a healthcare provider for medical concerns.
+        {/* Top bar */}
+        <div className="topbar">
+          <div className="topbar-label">
+            <div className="g-mark">g</div>
+            <span>Wellness coach</span>
+          </div>
+          <button className="new-chat-btn" onClick={handleNewChat}>
+            <Plus size={14} strokeWidth={2.2} /> New chat
+          </button>
         </div>
 
-        {/* Messages or welcome */}
-        <div style={{ flex: 1, padding: '20px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {messages.length === 0 ? (
-            <div className="fade-up" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px 0' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '28px', fontWeight: 500, marginBottom: '24px' }}>g</div>
-              <div className="eyebrow" style={{ marginBottom: '14px' }}>Your wellness coach</div>
-              <h1 className="display" style={{ fontSize: 'clamp(28px, 4vw, 36px)', lineHeight: 1.15, color: '#3D4A52', marginBottom: '14px' }}>
+        {/* Messages — scrollable */}
+        <div className="messages-scroll">
+          {messages.length === 0 && !loading ? (
+            <div className="welcome fade-up">
+              <div className="welcome-mark">g</div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>Your wellness coach</div>
+              <h1 className="welcome-title">
                 Hello, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>{userName}.</em>
               </h1>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', maxWidth: '440px', marginBottom: '32px' }}>
-                Ask me anything about your wellness, patterns you're noticing, or how to feel better day to day.
+              <p className="welcome-sub">
+                Ask me anything about your wellness, the patterns you're noticing, or how to feel better day to day.
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: '420px' }}>
-                {suggestions.map((s, i) => (
-                  <button key={i} onClick={() => setInput(s)} className="suggestion">{s}</button>
-                ))}
-              </div>
+              {SUGGESTIONS.map(group => (
+                <div key={group.label} className="suggestion-group">
+                  <div className="eyebrow suggestion-group-label">{group.label}</div>
+                  <div className="suggestion-list">
+                    {group.items.map((s, i) => (
+                      <button key={i} className="suggestion" onClick={() => setInput(s)}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <>
-              {messages.map((m) => (
-                <div key={m.id} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
-                  <div className={`msg-bubble ${m.role === 'user' ? 'msg-user' : 'msg-ai'}`}>
+            <div className="messages-list">
+              {messages.map(m => (
+                <div
+                  key={m.id}
+                  className={`msg-row ${m.role}`}
+                  onClick={() => setOpenMenu(openMenu === m.id ? null : m.id)}
+                >
+                  <div className={`msg-bubble ${m.role}`}>
                     {m.content}
-                    <button onClick={() => setShowDeleteMenu(m.id === showDeleteMenu ? null : m.id)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: m.role === 'user' ? 'rgba(250,248,245,0.5)' : '#A89968', opacity: 0.6 }}>
-                      <MoreVertical size={14} />
-                    </button>
-                    {showDeleteMenu === m.id && (
-                      <button onClick={() => deleteMessage(m.id)} style={{ position: 'absolute', top: '28px', right: '4px', background: '#FAF8F5', border: '1px solid rgba(204, 68, 68, 0.3)', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', color: '#CC4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', zIndex: 10 }}>
-                        <Trash2 size={12} /> Delete
+                    <div className={`msg-actions ${openMenu === m.id ? 'open' : ''}`}>
+                      <button
+                        className="action-btn"
+                        onClick={(e) => { e.stopPropagation(); deleteMessage(m.id); }}
+                        aria-label="Delete message"
+                      >
+                        <Trash2 size={11} /> Delete
                       </button>
-                    )}
+                    </div>
                   </div>
                 </div>
               ))}
               {loading && (
-                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                  <div className="msg-ai" style={{ padding: '16px 20px' }}>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                      <div className="typing-dot"></div>
-                      <div className="typing-dot" style={{ animationDelay: '0.15s' }}></div>
-                      <div className="typing-dot" style={{ animationDelay: '0.3s' }}></div>
+                <div className="msg-row assistant">
+                  <div className="msg-bubble assistant">
+                    <div className="typing-row">
+                      <div className="typing-dots">
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot" style={{ animationDelay: '0.15s' }}></div>
+                        <div className="typing-dot" style={{ animationDelay: '0.3s' }}></div>
+                      </div>
+                      <span className="typing-text">thinking…</span>
                     </div>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
-            </>
+            </div>
           )}
         </div>
 
-        {/* Input */}
-        <div style={{ position: 'sticky', bottom: '80px', background: 'rgba(245, 243, 240, 0.95)', backdropFilter: 'blur(8px)', padding: '16px 0' }}>
-          <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask your wellness coach..." disabled={loading} className="chat-input" />
-            <button type="submit" disabled={loading || !input.trim()} className="send-btn">
+        {/* Input + footer disclaimer */}
+        <div className="input-bar">
+          <form onSubmit={handleSendMessage} className="input-row">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask your wellness coach…"
+              className="chat-input"
+            />
+            <button
+              type="submit"
+              disabled={loading || !input.trim()}
+              className="send-btn"
+              aria-label="Send"
+            >
               <Send size={18} strokeWidth={2} />
             </button>
           </form>
-          <p style={{ fontSize: '11px', color: '#A89968', marginTop: '10px', textAlign: 'center' }}>
-            Delete any message anytime · Your data is encrypted
+          <p className="footer-note">
+            <strong>Wellness, not medical advice.</strong> Consult a healthcare provider for medical concerns.
           </p>
         </div>
       </div>
