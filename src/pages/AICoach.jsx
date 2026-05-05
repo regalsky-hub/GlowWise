@@ -35,11 +35,6 @@ async function getAIResponse(userMessage, history, profile) {
   }
 }
 
-async function getAIResponse(userMessage, history, profile) {
-  await new Promise(r => setTimeout(r, 900));
-  return SAMPLE_AI_RESPONSES[Math.floor(Math.random() * SAMPLE_AI_RESPONSES.length)];
-}
-
 const SUGGESTIONS = [
   { label: 'Sleep',  items: ['Why do I wake up tired?', 'How can I fall asleep faster?'] },
   { label: 'Stress', items: ['Why am I always anxious?', 'How do I lower cortisol naturally?'] },
