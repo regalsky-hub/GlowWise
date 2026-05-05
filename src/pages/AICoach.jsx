@@ -8,6 +8,7 @@ import {
   collection, addDoc, getDocs, updateDoc, doc, deleteDoc,
   query, orderBy, limit
 } from 'firebase/firestore';
+import ReactMarkdown from 'react-markdown';
 
 // ---------- Real OpenAI call via Vercel serverless function ----------
 async function getAIResponse(userMessage, history, profile) {
@@ -718,7 +719,17 @@ export default function AICoach() {
                     onClick={() => setOpenMenu(openMenu === m.id ? null : m.id)}
                   >
                     <div className={`msg-bubble ${m.role}`}>
-                      {m.content}
+                      <ReactMarkdown
+  components={{
+    p: ({children}) => <p style={{margin: '0 0 8px 0'}}>{children}</p>,
+    ul: ({children}) => <ul style={{margin: '6px 0', paddingLeft: '18px'}}>{children}</ul>,
+    li: ({children}) => <li style={{margin: '2px 0'}}>{children}</li>,
+    strong: ({children}) => <strong style={{fontWeight: 600}}>{children}</strong>,
+    em: ({children}) => <em style={{fontStyle: 'italic'}}>{children}</em>,
+  }}
+>
+  {m.content}
+</ReactMarkdown>
                       <div className={`msg-actions ${openMenu === m.id ? 'open' : ''}`}>
                         <button
                           className="action-btn"
