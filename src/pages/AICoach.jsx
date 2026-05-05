@@ -9,15 +9,31 @@ import {
   query, orderBy, limit
 } from 'firebase/firestore';
 
-// ---------- Mock responses (swap getAIResponse() body for OpenAI later) ----------
-const SAMPLE_AI_RESPONSES = [
-  "I've noticed your sleep quality has been varying. Let's explore what might be affecting it — stress, screen time before bed, or caffeine could all play a role.",
-  "Your stress has been elevated this week. Even a 5-minute breathing exercise daily can meaningfully reduce cortisol over time.",
-  "There's a clear pattern between your sleep and energy. On nights you sleep less than 7 hours, your energy drops noticeably the next day.",
-  "Skin concerns often connect back to stress and sleep. When cortisol is high and sleep is short, inflammation rises and breakouts follow.",
-  "Hair health starts internally — sleep, protein, hydration, and stress management. Small consistent changes show in 6-8 weeks.",
-  "That's a thoughtful observation. What feels most pressing right now — sleep, stress, energy, or something else?",
-];
+// ---------- Real OpenAI call via Vercel serverless function ----------
+async function getAIResponse(userMessage, history, profile) {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userMessage,
+        history,
+        userContext: profile || null,
+      }),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Request failed (${response.status})`);
+    }
+
+    const data = await response.json();
+    return data.reply;
+  } catch (err) {
+    console.error('getAIResponse failed:', err);
+    throw err;
+  }
+}
 
 async function getAIResponse(userMessage, history, profile) {
   await new Promise(r => setTimeout(r, 900));
