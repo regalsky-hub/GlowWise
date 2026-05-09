@@ -1,1041 +1,510 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
-import { ChevronRight, ChevronLeft, Check, AlertCircle, Camera, Sparkles, Shield, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, AlertCircle } from 'lucide-react';
 
-const WELLNESS_TOPICS = [
-  { id: 'hormones', label: 'Hormones & Metabolism', icon: '◐' },
-  { id: 'fertility', label: 'Fertility', icon: '✦' },
-  { id: 'weight', label: 'Weight & Body Composition', icon: '◑' },
-  { id: 'energy', label: 'Energy & Fatigue', icon: '◎' },
-  { id: 'sleep', label: 'Sleep & Recovery', icon: '☾' },
-  { id: 'stress', label: 'Stress & Anxiety', icon: '◉' },
-  { id: 'brain', label: 'Brain & Focus', icon: '◈' },
-  { id: 'gut', label: 'Gut & Digestion', icon: '◍' },
-  { id: 'skin', label: 'Skin & Acne', icon: '◇' },
-  { id: 'hair', label: 'Hair & Scalp', icon: '✧' },
-  { id: 'nutrition', label: 'Nutrition & Diet', icon: '◆' },
+// 11 wellness priorities (locked, gender-neutral)
+const WELLNESS_PRIORITIES = [
+  { id: 'hormonal', label: 'Hormonal Balance' },
+  { id: 'fertility', label: 'Fertility Support' },
+  { id: 'body-comp', label: 'Body Composition' },
+  { id: 'energy', label: 'Energy & Fatigue' },
+  { id: 'sleep', label: 'Sleep & Recovery' },
+  { id: 'stress', label: 'Stress & Anxiety' },
+  { id: 'brain', label: 'Brain & Focus' },
+  { id: 'gut', label: 'Gut & Digestion' },
+  { id: 'skin', label: 'Skin & Acne' },
+  { id: 'hair', label: 'Hair & Scalp Wellness' },
+  { id: 'nutrition', label: 'Nutrition & Eating Habits' },
 ];
 
-const DIET_TYPES = [
-  { id: 'Balanced', label: 'Balanced', desc: 'A bit of everything' },
-  { id: 'Plant-Based', label: 'Plant-based', desc: 'Vegetarian or vegan' },
-  { id: 'Mediterranean', label: 'Mediterranean', desc: 'Veggies, fish, olive oil' },
-  { id: 'Keto', label: 'Keto / low-carb', desc: 'High fat, low carb' },
-  { id: 'Paleo', label: 'Paleo', desc: 'Whole foods, no grains' },
-  { id: 'Other', label: 'Something else', desc: 'I\'ll tell my coach later' },
+const STRESS_TRIGGERS = [
+  'Work pressure or deadlines',
+  'Feeling mentally overloaded',
+  'Sleep difficulties',
+  'Relationship tension',
+  'Financial concerns',
+  'Health worries',
+  'Caregiver or parenting demands',
+  'Shift work or irregular hours',
+  'Lack of time',
 ];
 
-const GENDER_OPTIONS = [
-  { id: 'female', label: 'Female' },
-  { id: 'male', label: 'Male' },
-  { id: 'non-binary', label: 'Non-binary' },
-  { id: 'prefer-not', label: 'Prefer not to say' },
+const EATING_STYLES = [
+  'Mostly home-cooked, varied meals',
+  'A mix of home cooking and convenience foods',
+  'Often eat takeaways or restaurant meals',
+  'Mostly on-the-go or processed foods',
+  'Following a specific approach (vegan, vegetarian, keto, Mediterranean, etc.)',
+  "Other / I'll tell my coach later",
 ];
 
-export default function Onboarding() {
-  const [step, setStep] = useState(0);
-  const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
-  const { updateProfile, addCheckIn } = useUserData();
+const SUPPLEMENTS = [
+  'Vitamin D', 'Vitamin B12', 'Iron', 'Magnesium',
+  'Omega-3', 'Multivitamin', 'Probiotic', 'Collagen',
+];
+
+const calculateGlowType = (priorities) => {
+  if (!priorities || priorities.length === 0) {
+    return {
+      type: 'Balanced Wellness Glow',
+      description: "You're tuning into your body's natural rhythms — a path of patience and self-attention.",
+    };
+  }
+  const primary = priorities[0];
+  const map = {
+    'hormonal': { type: 'Hormonal Balance Journey', description: "You're tuning into your body's natural rhythms — a path of patience and self-attention." },
+    'fertility': { type: 'Fertility & Cycle Focus', description: 'A journey of nurturing balance and listening closely to your body.' },
+    'body-comp': { type: 'Body Composition Focus', description: 'Strength, vitality, and feeling at home in your body.' },
+    'energy': { type: 'Energy Rebuilding Path', description: 'Restoring your reserves through gentle, sustainable habits.' },
+    'sleep': { type: 'Sleep Restoration Focus', description: 'Healing through deeper rest and consistent rhythms.' },
+    'stress': { type: 'Stress-Driven Recovery', description: 'Finding calm through small, supportive shifts each day.' },
+    'brain': { type: 'Brain & Focus Boost', description: 'Sharpening clarity through balanced energy and rest.' },
+    'gut': { type: 'Gut Health Reset', description: 'Healing from the inside out — your foundation matters most.' },
+    'skin': { type: 'Skin Clarity Path', description: 'Glowing skin starts with what supports you internally.' },
+    'hair': { type: 'Hair Health Focus', description: 'Nourishing growth through nutrition, calm, and care.' },
+    'nutrition': { type: 'Nutrition Foundations', description: 'Building wellness through what nourishes you most.' },
+  };
+  return map[primary] || map['hormonal'];
+};
+
+const Onboarding = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { updateProfile } = useUserData();
 
-  const [data, setData] = useState({
-    // Personal
-    name: '',
-    age: '',
-    gender: '',
-    // Priorities
-    wellness_priorities: [],
-    // Body signals
-    body_signals: '',
-    // Sleep & energy
-    sleep_hours: 7,
-    energy_level: 7,
-    // Stress
-    stress_level: 5,
-    stress_triggers: '',
-    // Nutrition
-    diet_type: 'Balanced',
-    supplements: '',
-    // Lifestyle
-    exercise_per_week: 3,
-    water_intake: 2,
-    // Health context
-    health_context: '',
-    medications: '',
-    // Preferences
-    notification_frequency: 'daily',
-    photo_uploaded: false,
-  });
-
-  useEffect(() => {
-    // Inject Google Fonts once on mount
-    if (!document.getElementById('glowwise-fonts')) {
-      const link = document.createElement('link');
-      link.id = 'glowwise-fonts';
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap';
-      document.head.appendChild(link);
-    }
-  }, []);
-
-  // Reset error and scroll to top when step changes
-  useEffect(() => {
-    setError('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [step]);
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [ageRange, setAgeRange] = useState('');
+  const [gender, setGender] = useState('');
+  const [priorities, setPriorities] = useState([]);
+  const [concerns, setConcerns] = useState('');
+  const [sleepHours, setSleepHours] = useState(7);
+  const [sleepQuality, setSleepQuality] = useState(5);
+  const [energy, setEnergy] = useState(5);
+  const [stress, setStress] = useState(5);
+  const [stressTriggers, setStressTriggers] = useState([]);
+  const [stressOther, setStressOther] = useState('');
+  const [eatingStyle, setEatingStyle] = useState('');
+  const [exerciseDays, setExerciseDays] = useState(3);
+  const [waterLitres, setWaterLitres] = useState(2);
+  const [supplements, setSupplements] = useState([]);
+  const [healthConsiderations, setHealthConsiderations] = useState('');
+  const [medications, setMedications] = useState('');
+  const [reminders, setReminders] = useState('daily');
 
   const totalSteps = 9;
+  const progress = (step / totalSteps) * 100;
 
-  const toggleWellnessPriority = (topicId) => {
-    setData(prev => {
-      const has = prev.wellness_priorities.includes(topicId);
-      if (has) {
-        return { ...prev, wellness_priorities: prev.wellness_priorities.filter(p => p !== topicId) };
-      }
-      // Cap at 3 picks
-      if (prev.wellness_priorities.length >= 3) return prev;
-      return { ...prev, wellness_priorities: [...prev.wellness_priorities, topicId] };
-    });
+  const togglePriority = (id) => {
+    if (priorities.includes(id)) setPriorities(priorities.filter(p => p !== id));
+    else if (priorities.length < 3) setPriorities([...priorities, id]);
+  };
+  const toggleTrigger = (t) => {
+    if (stressTriggers.includes(t)) setStressTriggers(stressTriggers.filter(x => x !== t));
+    else setStressTriggers([...stressTriggers, t]);
+  };
+  const toggleSupplement = (s) => {
+    if (supplements.includes(s)) setSupplements(supplements.filter(x => x !== s));
+    else setSupplements([...supplements, s]);
   };
 
-  // ============================
-  // Enhanced Glow Type calculation
-  // Creates a richer personalisation profile
-  // ============================
-  const generatePersonalisedProfile = (formData) => {
-    const priorities = formData.wellness_priorities;
-    const stress = formData.stress_level;
-    const sleep = formData.sleep_hours;
-    const energy = formData.energy_level;
-    const exercise = formData.exercise_per_week;
-    const water = formData.water_intake;
+  const handleNext = () => { if (step < totalSteps) { setStep(step + 1); window.scrollTo(0, 0); } };
+  const handleBack = () => { if (step > 1) { setStep(step - 1); window.scrollTo(0, 0); } };
 
-    // Determine primary Glow Type (more nuanced than Haiku's version)
-    let glowType = 'Balanced Wellness Glow';
-    let glowTypeDescription = '';
-
-    if (stress >= 8) {
-      glowType = 'Stress-Driven Recovery';
-      glowTypeDescription = 'Your stress is high enough that it\'s likely affecting other areas. We\'ll start by helping you build calm into your daily routine — the rest will follow.';
-    } else if (sleep < 6) {
-      glowType = 'Sleep Restoration Focus';
-      glowTypeDescription = 'Sleep is foundational to everything else — energy, hormones, skin, brain. We\'ll prioritise rebuilding your sleep first.';
-    } else if (energy <= 4) {
-      glowType = 'Energy Rebuilding Path';
-      glowTypeDescription = 'Low energy can have many causes — sleep, stress, nutrition, hormones. We\'ll work systematically to identify what\'s draining you.';
-    } else if (priorities.includes('hormones') || priorities.includes('fertility')) {
-      glowType = 'Hormonal Balance Journey';
-      glowTypeDescription = 'Hormonal health affects everything from mood and skin to energy and metabolism. We\'ll track patterns connected to your lifestyle.';
-    } else if (priorities.includes('weight')) {
-      glowType = 'Body Composition Focus';
-      glowTypeDescription = 'Sustainable changes come from understanding your patterns — sleep, stress, nutrition and movement. We\'ll help you spot what\'s actually moving the needle.';
-    } else if (priorities.includes('hair')) {
-      glowType = 'Hair Health Focus';
-      glowTypeDescription = 'Hair health reflects internal health. We\'ll look at the underlying factors — stress, nutrition, hormones — that affect your hair.';
-    } else if (priorities.includes('skin')) {
-      glowType = 'Skin Clarity Path';
-      glowTypeDescription = 'Skin issues often stem from inflammation, hormones, or gut health. We\'ll connect your daily patterns to what your skin is telling you.';
-    } else if (priorities.includes('gut')) {
-      glowType = 'Gut Health Reset';
-      glowTypeDescription = 'Gut health influences mood, skin, energy, and immunity. We\'ll help you identify foods and habits that support your digestion.';
-    } else if (priorities.includes('brain')) {
-      glowType = 'Brain & Focus Boost';
-      glowTypeDescription = 'Mental clarity depends on sleep, blood sugar, hydration, and stress. We\'ll work on the foundations that sharpen your thinking.';
-    } else if (priorities.includes('nutrition')) {
-      glowType = 'Nutrition Foundations';
-      glowTypeDescription = 'Food affects everything — energy, mood, skin, sleep. We\'ll help you build eating patterns that work for your body and your goals.';
-    } else {
-      glowTypeDescription = 'You\'re in a good place overall. We\'ll help you spot patterns and fine-tune the areas that matter most to you.';
-    }
-
-    // Identify top 3 priority focus areas
-    const focusAreas = priorities.length > 0
-      ? priorities.map(id => WELLNESS_TOPICS.find(t => t.id === id)?.label).filter(Boolean)
-      : ['Overall wellness'];
-
-    // Generate immediate action recommendations
-    const immediateActions = [];
-    if (sleep < 7) immediateActions.push('Aim for 7+ hours of sleep');
-    if (stress >= 7) immediateActions.push('Add a 5-minute calm break each day');
-    if (water < 2) immediateActions.push('Increase water intake to 2L+ daily');
-    if (exercise < 3) immediateActions.push('Add 2 short walks per week');
-    if (immediateActions.length === 0) immediateActions.push('Stay consistent with daily check-ins');
-    if (immediateActions.length < 3) immediateActions.push('Track patterns over the next 7 days');
-
-    // Build the AI Coach context — this gets fed to OpenAI as part of the system prompt
-    // so the AI actually uses this profile in conversations
-    const aiContext = {
-      name: formData.name || 'there',
-      age: formData.age,
-      gender: formData.gender,
-      glowType,
-      focusAreas,
-      currentBaseline: {
-        sleep: `${formData.sleep_hours}h average`,
-        stress: `${formData.stress_level}/10`,
-        energy: `${formData.energy_level}/10`,
-        exercise: `${formData.exercise_per_week} days/week`,
-        diet: formData.diet_type,
-      },
-      bodySignals: formData.body_signals || 'None reported',
-      stressTriggers: formData.stress_triggers || 'Not specified',
-      supplements: formData.supplements || 'None reported',
-      healthContext: formData.health_context || 'None disclosed',
-      medications: formData.medications || 'None disclosed',
-    };
-
-    return { glowType, glowTypeDescription, focusAreas, immediateActions, aiContext };
-  };
-
-  const handleNext = () => {
-    setError('');
-
-    // Validation per step
-    if (step === 1) {
-      if (!data.name.trim()) { setError('Please tell us your name'); return; }
-      if (!data.age || isNaN(data.age) || data.age < 18 || data.age > 120) {
-        setError('Please enter a valid age (18 or over)'); return;
-      }
-    }
-    if (step === 2 && !data.gender) {
-      setError('Please pick one — or "Prefer not to say"'); return;
-    }
-    if (step === 3 && data.wellness_priorities.length === 0) {
-      setError('Pick at least one — up to 3'); return;
-    }
-
-    if (step < totalSteps - 1) {
-      setStep(step + 1);
-    } else {
-      completeOnboarding();
-    }
-  };
-
-  const handleBack = () => {
-    setError('');
-    setStep(Math.max(0, step - 1));
-  };
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Photo must be under 10MB');
-        return;
-      }
-      setData(prev => ({ ...prev, photo_uploaded: true }));
-    }
-  };
-
-  const completeOnboarding = async () => {
-    setSaving(true);
-    setError('');
+  const handleComplete = async () => {
+    setLoading(true);
     try {
-      const profile = generatePersonalisedProfile(data);
+      const glowType = calculateGlowType(priorities);
+      const focusAreas = priorities.map(id =>
+        WELLNESS_PRIORITIES.find(p => p.id === id)?.label
+      ).filter(Boolean);
 
       await updateProfile({
-        ...data,
-        glowType: profile.glowType,
-        glowTypeDescription: profile.glowTypeDescription,
-        focusAreas: profile.focusAreas,
-        immediateActions: profile.immediateActions,
-        aiContext: profile.aiContext,
-        onboarding_completed: true,
-        onboarding_completed_at: new Date(),
+        name, ageRange, gender, priorities, focusAreas,
+        glowType: glowType.type,
+        glowTypeDescription: glowType.description,
+        concerns, sleepHours, sleepQuality, energy, stress,
+        stressTriggers, stressOther, eatingStyle, exerciseDays,
+        waterLitres, supplements, healthConsiderations,
+        medications, reminders, onboardingComplete: true,
+        aiContext: {
+          name, glowType: glowType.type, focusAreas,
+          baselineSleep: sleepHours, baselineEnergy: energy,
+          baselineStress: stress, eatingStyle,
+        },
       });
-
-      await addCheckIn({
-        energy: data.energy_level,
-        sleep_hours: data.sleep_hours,
-        stress_level: data.stress_level,
-        mood: 7,
-        symptoms: data.body_signals ? [data.body_signals] : [],
-        supplement_taken: false,
-      });
-
       navigate('/dashboard');
     } catch (err) {
       console.error('Onboarding save error:', err);
-      // Still navigate so user isn't stuck — data should mostly be saved
       navigate('/dashboard');
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  // Step titles for the progress label
-  const stepLabels = [
-    'Welcome', 'About you', 'Identity', 'Priorities',
-    'How you feel', 'Sleep & energy', 'Stress', 'Lifestyle',
-    'Almost there'
-  ];
+  const containerStyle = {
+    minHeight: '100vh', background: '#F5F3F0',
+    fontFamily: "'Manrope', sans-serif", color: '#3D4A52', position: 'relative',
+  };
+  const grainStyle = {
+    position: 'fixed', inset: 0,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E")`,
+    opacity: 0.04, pointerEvents: 'none', zIndex: 0,
+  };
+  const innerStyle = { position: 'relative', zIndex: 1, maxWidth: '640px', margin: '0 auto', padding: '40px 24px 120px' };
+  const progressBarStyle = { height: '3px', background: 'rgba(168, 153, 104, 0.15)', borderRadius: '100px', marginBottom: '40px', overflow: 'hidden' };
+  const progressFillStyle = { height: '100%', background: '#6B9E7F', width: `${progress}%`, transition: 'width 0.3s ease' };
+  const stepLabelStyle = { fontSize: '11px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A89968', marginBottom: '16px' };
+  const titleStyle = { fontFamily: "'Fraunces', serif", fontSize: 'clamp(32px, 5vw, 44px)', fontWeight: 400, color: '#3D4A52', lineHeight: 1.1, marginBottom: '12px', letterSpacing: '-0.5px' };
+  const italicSage = { fontStyle: 'italic', color: '#6B9E7F' };
+  const subtitleStyle = { fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: '20px', color: '#6B9E7F', marginBottom: '24px', fontWeight: 400 };
+  const paragraphStyle = { fontSize: '16px', lineHeight: 1.6, color: '#5A6770', marginBottom: '20px' };
+  const labelStyle = { fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '10px', display: 'block' };
+  const helperStyle = { fontSize: '13px', color: '#A89968', marginTop: '6px', fontStyle: 'italic' };
+  const inputStyle = { width: '100%', padding: '14px 18px', fontSize: '16px', fontFamily: "'Manrope', sans-serif", border: '1px solid rgba(168, 153, 104, 0.3)', borderRadius: '8px', background: '#FAF8F5', color: '#3D4A52', outline: 'none' };
+  const textareaStyle = { ...inputStyle, minHeight: '100px', resize: 'vertical' };
+  const radioCardStyle = (selected) => ({
+    padding: '14px 18px',
+    border: selected ? '2px solid #6B9E7F' : '1px solid rgba(168, 153, 104, 0.25)',
+    borderRadius: '10px',
+    background: selected ? '#EDF4EF' : '#FAF8F5',
+    cursor: 'pointer', transition: 'all 0.2s',
+    fontSize: '15px', color: '#3D4A52', marginBottom: '8px',
+    fontWeight: selected ? 600 : 400,
+  });
+  const checkboxCardStyle = (selected) => ({
+    padding: '12px 16px',
+    border: selected ? '2px solid #6B9E7F' : '1px solid rgba(168, 153, 104, 0.25)',
+    borderRadius: '10px',
+    background: selected ? '#EDF4EF' : '#FAF8F5',
+    cursor: 'pointer', transition: 'all 0.2s',
+    fontSize: '14px', color: '#3D4A52', marginBottom: '8px',
+    display: 'flex', alignItems: 'center', gap: '10px',
+  });
+  const priorityCardStyle = (selected, disabled) => ({
+    padding: '14px 18px',
+    border: selected ? '2px solid #6B9E7F' : '1px solid rgba(168, 153, 104, 0.25)',
+    borderRadius: '10px',
+    background: selected ? '#EDF4EF' : disabled ? '#F5F3F0' : '#FAF8F5',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    transition: 'all 0.2s',
+    fontSize: '15px',
+    color: disabled ? '#A89968' : '#3D4A52',
+    fontWeight: selected ? 600 : 400,
+    opacity: disabled ? 0.5 : 1,
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: '8px',
+  });
+  const sliderContainerStyle = { marginBottom: '24px' };
+  const sliderStyle = { width: '100%', height: '6px', borderRadius: '3px', background: 'rgba(168, 153, 104, 0.2)', outline: 'none', appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' };
+  const sliderLabelsStyle = { display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#A89968', marginTop: '8px' };
+  const sliderValueStyle = { fontFamily: "'Fraunces', serif", fontSize: '32px', fontWeight: 400, color: '#6B9E7F', textAlign: 'center', marginBottom: '12px', lineHeight: 1 };
+  const navButtonsStyle = { display: 'flex', gap: '12px', marginTop: '40px' };
+  const buttonPrimaryStyle = { flex: 1, padding: '16px 32px', fontSize: '16px', fontWeight: 600, fontFamily: "'Manrope', sans-serif", background: '#6B9E7F', color: '#FAF8F5', border: 'none', borderRadius: '100px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' };
+  const buttonSecondaryStyle = { padding: '16px 32px', fontSize: '16px', fontWeight: 500, fontFamily: "'Manrope', sans-serif", background: 'transparent', color: '#3D4A52', border: '1.5px solid #3D4A52', borderRadius: '100px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' };
+  const disclaimerCardStyle = { background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.18)', borderRadius: '12px', padding: '20px 22px', marginBottom: '14px' };
+  const disclaimerTitleStyle = { fontFamily: "'Fraunces', serif", fontSize: '15px', fontWeight: 500, color: '#3D4A52', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' };
+  const disclaimerTextStyle = { fontSize: '13px', lineHeight: 1.6, color: '#5A6770' };
+  const supplementChipStyle = (selected) => ({
+    display: 'inline-flex', alignItems: 'center', gap: '6px',
+    padding: '8px 14px',
+    border: selected ? '1.5px solid #6B9E7F' : '1px solid rgba(168, 153, 104, 0.3)',
+    borderRadius: '100px',
+    background: selected ? '#EDF4EF' : '#FAF8F5',
+    cursor: 'pointer', fontSize: '13px',
+    color: '#3D4A52', fontWeight: selected ? 600 : 400,
+    marginRight: '6px', marginBottom: '8px',
+  });
+
+  const sleepQualityLabel = sleepQuality <= 3 ? 'Restless' : sleepQuality <= 5 ? 'Mixed' : sleepQuality <= 7 ? 'Fair' : 'Restful';
+  const energyLabel = energy <= 3 ? 'Low' : energy <= 5 ? 'Building' : energy <= 7 ? 'Steady' : energy <= 9 ? 'Energised' : 'Vibrant';
+  const stressLabel = stress <= 3 ? 'Calm' : stress <= 5 ? 'Manageable' : stress <= 7 ? 'Elevated' : stress <= 9 ? 'Pressured' : 'Overwhelmed';
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#F5F3F0',
-      fontFamily: "'Manrope', system-ui, sans-serif",
-      color: '#3D4A52',
-      position: 'relative',
-    }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    <div style={containerStyle}>
+      <div style={grainStyle}></div>
+      <div style={innerStyle}>
 
-        .display { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
-        .body-text { font-family: 'Manrope', sans-serif; }
+        <div style={progressBarStyle}><div style={progressFillStyle}></div></div>
+        <div style={stepLabelStyle}>Step {step} of {totalSteps}</div>
 
-        .eyebrow {
-          font-family: 'Manrope', sans-serif;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #A89968;
-        }
-
-        .grain::before {
-          content: '';
-          position: fixed;
-          inset: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.6'/%3E%3C/svg%3E");
-          opacity: 0.04;
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .step-fade { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-        .onboarding-input {
-          width: 100%;
-          background: #FAF8F5;
-          border: 1px solid rgba(168, 153, 104, 0.25);
-          border-radius: 8px;
-          padding: 16px 18px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 15px;
-          color: #3D4A52;
-          transition: all 0.2s;
-          outline: none;
-        }
-        .onboarding-input:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
-        .onboarding-input::placeholder { color: #A89968; opacity: 0.7; }
-
-        .onboarding-textarea {
-          width: 100%;
-          background: #FAF8F5;
-          border: 1px solid rgba(168, 153, 104, 0.25);
-          border-radius: 8px;
-          padding: 16px 18px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 15px;
-          color: #3D4A52;
-          transition: all 0.2s;
-          outline: none;
-          resize: vertical;
-          min-height: 110px;
-          line-height: 1.55;
-        }
-        .onboarding-textarea:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
-
-        .choice-card {
-          width: 100%;
-          background: #FAF8F5;
-          border: 1px solid rgba(168, 153, 104, 0.25);
-          border-radius: 8px;
-          padding: 16px 18px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 15px;
-          font-weight: 500;
-          color: #3D4A52;
-          cursor: pointer;
-          transition: all 0.2s;
-          text-align: left;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-        }
-        .choice-card:hover { border-color: #6B9E7F; }
-        .choice-card.selected { background: #EDF4EF; border-color: #6B9E7F; color: #557E64; }
-        .choice-card.selected .choice-icon { color: #6B9E7F; }
-        .choice-card.disabled { opacity: 0.4; cursor: not-allowed; }
-        .choice-card.disabled:hover { border-color: rgba(168, 153, 104, 0.25); }
-
-        .priority-chip {
-          background: #FAF8F5;
-          border: 1px solid rgba(168, 153, 104, 0.25);
-          border-radius: 100px;
-          padding: 12px 18px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 14px;
-          font-weight: 500;
-          color: #3D4A52;
-          cursor: pointer;
-          transition: all 0.2s;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .priority-chip:hover { border-color: #6B9E7F; }
-        .priority-chip.selected { background: #6B9E7F; border-color: #6B9E7F; color: #FAF8F5; }
-        .priority-chip.disabled { opacity: 0.4; cursor: not-allowed; }
-        .priority-chip-icon {
-          font-family: 'Fraunces', serif;
-          font-size: 16px;
-        }
-
-        .slider-track {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 100%;
-          height: 4px;
-          background: rgba(168, 153, 104, 0.2);
-          border-radius: 100px;
-          outline: none;
-          cursor: pointer;
-        }
-        .slider-track::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 24px;
-          height: 24px;
-          background: #6B9E7F;
-          border-radius: 50%;
-          cursor: pointer;
-          border: 4px solid #FAF8F5;
-          box-shadow: 0 2px 8px rgba(107, 158, 127, 0.3);
-          transition: transform 0.15s;
-        }
-        .slider-track::-webkit-slider-thumb:hover { transform: scale(1.1); }
-        .slider-track::-moz-range-thumb {
-          width: 24px;
-          height: 24px;
-          background: #6B9E7F;
-          border-radius: 50%;
-          cursor: pointer;
-          border: 4px solid #FAF8F5;
-          box-shadow: 0 2px 8px rgba(107, 158, 127, 0.3);
-        }
-
-        .btn-primary {
-          background: #6B9E7F;
-          color: #FAF8F5;
-          padding: 14px 28px;
-          border: none;
-          border-radius: 100px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 15px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .btn-primary:hover:not(:disabled) { background: #557E64; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(107, 158, 127, 0.25); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        .btn-ghost {
-          background: transparent;
-          color: #5A6770;
-          padding: 14px 24px;
-          border: 1px solid rgba(168, 153, 104, 0.3);
-          border-radius: 100px;
-          font-family: 'Manrope', sans-serif;
-          font-size: 15px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .btn-ghost:hover:not(:disabled) { color: #3D4A52; border-color: #3D4A52; }
-        .btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        .btn-skip {
-          background: transparent;
-          color: #A89968;
-          padding: 12px 18px;
-          border: none;
-          font-family: 'Manrope', sans-serif;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          text-decoration: underline;
-          text-decoration-color: rgba(168, 153, 104, 0.4);
-          text-underline-offset: 4px;
-        }
-        .btn-skip:hover { color: #6B9E7F; text-decoration-color: #6B9E7F; }
-
-        .progress-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: rgba(168, 153, 104, 0.3);
-          transition: all 0.3s;
-        }
-        .progress-dot.active { background: #6B9E7F; width: 24px; border-radius: 100px; }
-        .progress-dot.complete { background: #6B9E7F; }
-
-        .info-box {
-          background: rgba(212, 232, 221, 0.5);
-          border-left: 3px solid #6B9E7F;
-          border-radius: 4px;
-          padding: 16px 18px;
-          font-size: 13px;
-          line-height: 1.6;
-          color: #557E64;
-        }
-
-        .error-box {
-          background: rgba(204, 68, 68, 0.08);
-          border-left: 3px solid #CC4444;
-          border-radius: 4px;
-          padding: 12px 16px;
-          font-size: 13px;
-          color: #CC4444;
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-        }
-
-        @media (max-width: 640px) {
-          .container { padding: 0 20px !important; }
-        }
-      `}</style>
-
-      <div className="grain"></div>
-
-      {/* Top bar with brand + progress */}
-      <div style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 40,
-        background: 'rgba(245, 243, 240, 0.92)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(168, 153, 104, 0.15)',
-        padding: '18px 0',
-      }}>
-        <div className="container" style={{ maxWidth: '720px', margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{
-                width: '24px', height: '24px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#FAF8F5',
-                fontFamily: "'Fraunces', serif",
-                fontSize: '12px',
-              }}>g</div>
-              <span className="display" style={{ fontSize: '17px', fontWeight: 500, color: '#3D4A52' }}>GlowWise</span>
-            </div>
-            <span className="eyebrow" style={{ fontSize: '10px' }}>
-              Step {step + 1} of {totalSteps}
-            </span>
-          </div>
-
-          {/* Progress dots */}
-          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', justifyContent: 'center' }}>
-            {Array.from({ length: totalSteps }).map((_, i) => (
-              <div
-                key={i}
-                className={`progress-dot ${i === step ? 'active' : i < step ? 'complete' : ''}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Step content */}
-      <div className="container" style={{ maxWidth: '640px', margin: '0 auto', padding: '60px 32px 40px', position: 'relative', zIndex: 2 }}>
-        <div className="step-fade" key={step}>
-
-          {/* STEP 0 — WELCOME */}
-          {step === 0 && (
-            <div style={{ textAlign: 'center' }}>
-              <div className="eyebrow" style={{ marginBottom: '24px' }}>Welcome</div>
-              <h1 className="display" style={{ fontSize: 'clamp(36px, 6vw, 56px)', lineHeight: 1.1, marginBottom: '24px', color: '#3D4A52' }}>
-                Let's get to know <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>each other.</em>
-              </h1>
-              <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#5A6770', maxWidth: '480px', margin: '0 auto 40px' }}>
-                The next 9 questions help your AI Coach understand you. Your answers shape every recommendation, every insight, every conversation. Take your time — this is the foundation of your personalised wellness profile.
-              </p>
-
-              <div className="info-box" style={{ textAlign: 'left', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <Shield size={18} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <strong style={{ fontWeight: 600 }}>Wellness, not medical advice.</strong> GlowWise gives lifestyle guidance based on your answers. It's not a substitute for a doctor — please always consult a qualified healthcare provider for medical concerns.
-                  </div>
-                </div>
+        {step === 1 && (
+          <>
+            <h1 style={titleStyle}>Welcome.</h1>
+            <p style={subtitleStyle}>Let's get to know you a little better.</p>
+            <p style={paragraphStyle}>These next few questions help GlowWise personalise your experience — from wellness insights to daily guidance and recommendations.</p>
+            <p style={paragraphStyle}>There are no right or wrong answers. Just answer honestly, based on how you actually feel.</p>
+            <div style={{ marginTop: '32px' }}>
+              <div style={disclaimerCardStyle}>
+                <div style={disclaimerTitleStyle}><AlertCircle size={16} strokeWidth={1.8} color="#A89968" />Wellness, not medical advice</div>
+                <p style={disclaimerTextStyle}>GlowWise provides wellness guidance based on your responses. It's not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.</p>
               </div>
-
-              <div className="info-box" style={{ textAlign: 'left', background: 'rgba(168, 153, 104, 0.08)', borderLeftColor: '#A89968', color: '#5A6770' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <Sparkles size={18} strokeWidth={1.8} style={{ color: '#A89968', flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <strong style={{ fontWeight: 600, color: '#3D4A52' }}>Your data is yours.</strong> Encrypted, private, never shared. Delete any answer, message, or your whole account whenever you want.
-                  </div>
-                </div>
+              <div style={disclaimerCardStyle}>
+                <div style={disclaimerTitleStyle}><Check size={16} strokeWidth={2} color="#6B9E7F" />Your privacy matters</div>
+                <p style={disclaimerTextStyle}>Your data stays private, encrypted, and under your control. You can edit or delete your answers, messages, or account anytime.</p>
               </div>
             </div>
-          )}
-
-          {/* STEP 1 — NAME & AGE */}
-          {step === 1 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>About you</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                What should we <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>call you?</em>
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '36px' }}>
-                Just a first name is fine — your coach will use this in conversations.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Your name</label>
-                  <input
-                    type="text"
-                    value={data.name}
-                    onChange={(e) => setData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="e.g. Sarah"
-                    className="onboarding-input"
-                    autoFocus
-                  />
-                </div>
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Your age</label>
-                  <input
-                    type="number"
-                    value={data.age}
-                    onChange={(e) => setData(prev => ({ ...prev, age: e.target.value }))}
-                    placeholder="e.g. 32"
-                    min="18"
-                    max="120"
-                    className="onboarding-input"
-                  />
-                  <p style={{ fontSize: '12px', color: '#A89968', marginTop: '8px' }}>You must be 18 or older to use GlowWise.</p>
-                </div>
-              </div>
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={() => navigate('/dashboard')}><ChevronLeft size={18} /> Back</button>
+              <button style={buttonPrimaryStyle} onClick={handleNext}>Let's begin <ChevronRight size={18} /></button>
             </div>
-          )}
+          </>
+        )}
 
-          {/* STEP 2 — GENDER */}
-          {step === 2 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Identity</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                How do you <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>identify?</em>
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '36px' }}>
-                This helps your coach give relevant guidance — for example, on hormones or nutrition. There are no wrong answers.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {GENDER_OPTIONS.map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setData(prev => ({ ...prev, gender: opt.id }))}
-                    className={`choice-card ${data.gender === opt.id ? 'selected' : ''}`}
-                  >
-                    <span>{opt.label}</span>
-                    {data.gender === opt.id && <Check size={18} strokeWidth={2} style={{ color: '#6B9E7F' }} />}
-                  </button>
+        {step === 2 && (
+          <>
+            <h1 style={titleStyle}>Basic profile.</h1>
+            <p style={subtitleStyle}>Just the essentials.</p>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>What's your name?</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your first name" style={inputStyle} />
+            </div>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>Your age range</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                {['18-24', '25-34', '35-44', '45-54', '55-64', '65+'].map(range => (
+                  <div key={range} style={radioCardStyle(ageRange === range)} onClick={() => setAgeRange(range)}>{range}</div>
                 ))}
               </div>
             </div>
-          )}
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={{ ...buttonPrimaryStyle, opacity: (!name || !ageRange) ? 0.5 : 1 }} onClick={handleNext} disabled={!name || !ageRange}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
 
-          {/* STEP 3 — WELLNESS PRIORITIES */}
-          {step === 3 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Priorities</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                What matters <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>most</em> to you?
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '14px' }}>
-                Pick up to 3 areas your coach should focus on. You can change these anytime.
-              </p>
-              <p style={{ fontSize: '13px', color: '#A89968', marginBottom: '32px' }}>
-                {data.wellness_priorities.length} of 3 selected
-              </p>
+        {step === 3 && (
+          <>
+            <h1 style={titleStyle}>How do you identify?</h1>
+            <p style={subtitleStyle}>This helps your coach personalise guidance.</p>
+            <p style={paragraphStyle}>For example, hormones, fertility, and nutrition support vary depending on how you identify. There are no wrong answers.</p>
+            <div style={{ marginTop: '24px' }}>
+              {['Female', 'Male', 'Non-binary', 'Prefer not to say'].map(opt => (
+                <div key={opt} style={radioCardStyle(gender === opt)} onClick={() => setGender(opt)}>{opt}</div>
+              ))}
+            </div>
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={{ ...buttonPrimaryStyle, opacity: !gender ? 0.5 : 1 }} onClick={handleNext} disabled={!gender}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {WELLNESS_TOPICS.map(topic => {
-                  const selected = data.wellness_priorities.includes(topic.id);
-                  const disabled = !selected && data.wellness_priorities.length >= 3;
+        {step === 4 && (
+          <>
+            <h1 style={titleStyle}>What matters <em style={italicSage}>most</em> to you?</h1>
+            <p style={subtitleStyle}>Pick up to 3 areas your coach should focus on.</p>
+            <p style={paragraphStyle}>You can change these anytime.<span style={{ color: '#6B9E7F', fontWeight: 600, marginLeft: '8px' }}>{priorities.length} of 3 selected</span></p>
+            <div style={{ marginTop: '20px' }}>
+              {WELLNESS_PRIORITIES.map(priority => {
+                const selected = priorities.includes(priority.id);
+                const disabled = !selected && priorities.length >= 3;
+                return (
+                  <div key={priority.id} style={priorityCardStyle(selected, disabled)} onClick={() => !disabled && togglePriority(priority.id)}>
+                    <span>{priority.label}</span>
+                    {selected && <Check size={16} strokeWidth={2.5} color="#6B9E7F" />}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={{ ...buttonPrimaryStyle, opacity: priorities.length === 0 ? 0.5 : 1 }} onClick={handleNext} disabled={priorities.length === 0}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
+
+        {step === 5 && (
+          <>
+            <h1 style={titleStyle}>Anything you'd like your coach to know?</h1>
+            <p style={subtitleStyle}>Optional — but helpful context.</p>
+            <p style={paragraphStyle}>What's been on your mind lately, or what would you most like guidance on? Free-text — your coach will use this to tailor your first conversations.</p>
+            <textarea value={concerns} onChange={(e) => setConcerns(e.target.value)} placeholder="e.g. Hair shedding more than usual, low energy in the afternoons, trouble winding down at night..." style={textareaStyle} />
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={buttonPrimaryStyle} onClick={handleNext}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
+
+        {step === 6 && (
+          <>
+            <h1 style={titleStyle}>Sleep & energy.</h1>
+            <p style={subtitleStyle}>The foundation of everything.</p>
+            <p style={paragraphStyle}>Sleep and energy shape how you feel — physically, mentally, and emotionally — every day.</p>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>On average, how many hours of sleep are you getting?</label>
+              <div style={sliderValueStyle}>{sleepHours}h</div>
+              <input type="range" min="4" max="12" step="0.5" value={sleepHours} onChange={(e) => setSleepHours(parseFloat(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>4h</span><span>12h</span></div>
+              <div style={helperStyle}>Most adults feel best with 7–9 hours.</div>
+            </div>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>How restful is your sleep, typically?</label>
+              <div style={sliderValueStyle}>{sleepQualityLabel}</div>
+              <input type="range" min="1" max="10" value={sleepQuality} onChange={(e) => setSleepQuality(parseInt(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>Restless</span><span>Restful</span></div>
+            </div>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>How's your energy on a typical day?</label>
+              <div style={sliderValueStyle}>{energyLabel}</div>
+              <input type="range" min="1" max="10" value={energy} onChange={(e) => setEnergy(parseInt(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>Exhausted</span><span>Energised</span></div>
+            </div>
+
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={buttonPrimaryStyle} onClick={handleNext}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
+
+        {step === 7 && (
+          <>
+            <h1 style={titleStyle}>Stress.</h1>
+            <p style={subtitleStyle}>How have things felt lately?</p>
+            <p style={paragraphStyle}>Stress quietly shapes sleep, focus, energy, mood, and recovery — even when we don't notice it.</p>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>Current stress level</label>
+              <div style={sliderValueStyle}>{stressLabel}</div>
+              <input type="range" min="1" max="10" value={stress} onChange={(e) => setStress(parseInt(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>Calm</span><span>Overwhelmed</span></div>
+            </div>
+
+            <div style={{ marginTop: '32px' }}>
+              <label style={labelStyle}>What tends to trigger your stress? (optional)</label>
+              <p style={{ ...helperStyle, marginBottom: '14px', marginTop: 0 }}>Select all that apply.</p>
+              {STRESS_TRIGGERS.map(trigger => {
+                const selected = stressTriggers.includes(trigger);
+                return (
+                  <div key={trigger} style={checkboxCardStyle(selected)} onClick={() => toggleTrigger(trigger)}>
+                    <div style={{ width: '18px', height: '18px', border: selected ? 'none' : '1.5px solid #A89968', borderRadius: '4px', background: selected ? '#6B9E7F' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {selected && <Check size={12} strokeWidth={3} color="#FAF8F5" />}
+                    </div>
+                    {trigger}
+                  </div>
+                );
+              })}
+              <div style={{ marginTop: '12px' }}>
+                <input type="text" value={stressOther} onChange={(e) => setStressOther(e.target.value)} placeholder="Other (optional)" style={inputStyle} />
+              </div>
+            </div>
+
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={buttonPrimaryStyle} onClick={handleNext}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
+
+        {step === 8 && (
+          <>
+            <h1 style={titleStyle}>Your daily rhythm.</h1>
+            <p style={subtitleStyle}>Small habits, big impact.</p>
+            <p style={paragraphStyle}>Small daily habits shape your energy, focus, stress, and recovery — often more than we realise.</p>
+
+            <div style={{ marginBottom: '32px' }}>
+              <label style={labelStyle}>What best describes how you eat?</label>
+              {EATING_STYLES.map(style => (
+                <div key={style} style={radioCardStyle(eatingStyle === style)} onClick={() => setEatingStyle(style)}>{style}</div>
+              ))}
+            </div>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>How many days a week do you exercise?</label>
+              <div style={sliderValueStyle}>{exerciseDays} days</div>
+              <input type="range" min="0" max="7" value={exerciseDays} onChange={(e) => setExerciseDays(parseInt(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>0</span><span>7</span></div>
+              <div style={helperStyle}>Counts walking, dancing, gym, sports, yoga, swimming, cycling — anything that gets you moving.</div>
+            </div>
+
+            <div style={sliderContainerStyle}>
+              <label style={labelStyle}>Roughly how much water do you drink daily?</label>
+              <div style={sliderValueStyle}>{waterLitres}L</div>
+              <input type="range" min="0" max="4" step="0.5" value={waterLitres} onChange={(e) => setWaterLitres(parseFloat(e.target.value))} style={sliderStyle} />
+              <div style={sliderLabelsStyle}><span>0L</span><span>4L</span></div>
+              <div style={helperStyle}>Most adults feel best with 2–3 litres a day.</div>
+            </div>
+
+            <div style={{ marginTop: '32px' }}>
+              <label style={labelStyle}>Supplements you take (optional)</label>
+              <p style={{ ...helperStyle, marginBottom: '14px', marginTop: 0 }}>Tap any that apply.</p>
+              <div>
+                {SUPPLEMENTS.map(sup => {
+                  const selected = supplements.includes(sup);
                   return (
-                    <button
-                      key={topic.id}
-                      onClick={() => !disabled && toggleWellnessPriority(topic.id)}
-                      className={`priority-chip ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
-                    >
-                      <span className="priority-chip-icon">{topic.icon}</span>
-                      {topic.label}
-                      {selected && <X size={14} strokeWidth={2} />}
-                    </button>
+                    <span key={sup} style={supplementChipStyle(selected)} onClick={() => toggleSupplement(sup)}>
+                      {selected && <Check size={12} strokeWidth={2.5} color="#6B9E7F" />}
+                      {sup}
+                    </span>
                   );
                 })}
               </div>
             </div>
-          )}
 
-          {/* STEP 4 — BODY SIGNALS */}
-          {step === 4 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>How you feel</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                What's your body <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>telling you?</em>
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '36px' }}>
-                Anything you're noticing right now — symptoms, patterns, concerns. The more honest, the better your coach can help. Skip if you'd rather not share yet.
-              </p>
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack}><ChevronLeft size={18} /> Back</button>
+              <button style={{ ...buttonPrimaryStyle, opacity: !eatingStyle ? 0.5 : 1 }} onClick={handleNext} disabled={!eatingStyle}>Continue <ChevronRight size={18} /></button>
+            </div>
+          </>
+        )}
 
-              <textarea
-                value={data.body_signals}
-                onChange={(e) => setData(prev => ({ ...prev, body_signals: e.target.value }))}
-                placeholder="e.g. Tired by 3pm most days, breakouts on my chin around my period, brain fog after lunch..."
-                className="onboarding-textarea"
-              />
+        {step === 9 && (
+          <>
+            <h1 style={titleStyle}>Almost there.</h1>
+            <p style={subtitleStyle}>A few final details.</p>
+            <p style={paragraphStyle}>These are completely optional — they help GlowWise personalise your wellness insights more thoughtfully.</p>
 
-              <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                <button onClick={handleNext} className="btn-skip">Skip for now</button>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>Health considerations (optional)</label>
+              <p style={{ ...helperStyle, marginBottom: '8px', marginTop: 0 }}>Anything GlowWise should be aware of? E.g. PCOS, IBS, thyroid issues, anxiety, hormonal changes.</p>
+              <textarea value={healthConsiderations} onChange={(e) => setHealthConsiderations(e.target.value)} placeholder="Optional" style={{ ...textareaStyle, minHeight: '70px' }} />
+            </div>
+
+            <div style={{ marginBottom: '32px' }}>
+              <label style={labelStyle}>Current medications or treatments (optional)</label>
+              <p style={{ ...helperStyle, marginBottom: '8px', marginTop: 0 }}>E.g. birth control, thyroid medication, antidepressants.</p>
+              <textarea value={medications} onChange={(e) => setMedications(e.target.value)} placeholder="Optional" style={{ ...textareaStyle, minHeight: '70px' }} />
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>How would you like GlowWise to support you?</label>
+              <div style={radioCardStyle(reminders === 'daily')} onClick={() => setReminders('daily')}>
+                <strong style={{ display: 'block', marginBottom: '4px', fontSize: '15px' }}>Daily check-ins</strong>
+                <span style={{ fontSize: '13px', color: '#5A6770' }}>A gentle wellness nudge each morning</span>
+              </div>
+              <div style={radioCardStyle(reminders === 'weekly')} onClick={() => setReminders('weekly')}>
+                <strong style={{ display: 'block', marginBottom: '4px', fontSize: '15px' }}>Weekly reflections</strong>
+                <span style={{ fontSize: '13px', color: '#5A6770' }}>A summary of your patterns every Sunday</span>
+              </div>
+              <div style={radioCardStyle(reminders === 'none')} onClick={() => setReminders('none')}>
+                <strong style={{ display: 'block', marginBottom: '4px', fontSize: '15px' }}>No reminders</strong>
+                <span style={{ fontSize: '13px', color: '#5A6770' }}>I'll check in when I need support</span>
               </div>
             </div>
-          )}
 
-          {/* STEP 5 — SLEEP & ENERGY */}
-          {step === 5 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Sleep &amp; energy</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                The <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>foundation</em> of everything.
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                Sleep and energy affect almost every other wellness area. Give us your honest baseline.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Sleep per night</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.sleep_hours}h
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="3"
-                    max="12"
-                    value={data.sleep_hours}
-                    onChange={(e) => setData(prev => ({ ...prev, sleep_hours: Number(e.target.value) }))}
-                    className="slider-track"
-                  />
-                  <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>
-                    Most adults feel best with 7–9 hours.
-                  </p>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Energy level today</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.energy_level}<span style={{ fontSize: '14px', color: '#A89968' }}>/10</span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={data.energy_level}
-                    onChange={(e) => setData(prev => ({ ...prev, energy_level: Number(e.target.value) }))}
-                    className="slider-track"
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', marginTop: '8px' }}>
-                    <span>Drained</span>
-                    <span>Energised</span>
-                  </div>
-                </div>
-              </div>
+            <div style={{ background: '#EDF4EF', borderLeft: '3px solid #6B9E7F', padding: '16px 20px', borderRadius: '6px 12px 12px 6px', marginTop: '32px', marginBottom: '8px' }}>
+              <p style={{ fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontSize: '15px', color: '#3D4A52', lineHeight: 1.5, margin: 0 }}>GlowWise will now create your personalised wellness profile, along with your first insights and gentle recommendations to help you get started.</p>
             </div>
-          )}
 
-          {/* STEP 6 — STRESS */}
-          {step === 6 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Stress</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                How are <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>stress levels</em> right now?
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                Stress affects sleep, skin, hormones, and energy. Knowing your baseline helps us spot what's connected.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Current stress</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.stress_level}<span style={{ fontSize: '14px', color: '#A89968' }}>/10</span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={data.stress_level}
-                    onChange={(e) => setData(prev => ({ ...prev, stress_level: Number(e.target.value) }))}
-                    className="slider-track"
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', marginTop: '8px' }}>
-                    <span>Calm</span>
-                    <span>Overwhelmed</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>What triggers it? (optional)</label>
-                  <textarea
-                    value={data.stress_triggers}
-                    onChange={(e) => setData(prev => ({ ...prev, stress_triggers: e.target.value }))}
-                    placeholder="e.g. Work deadlines, relationship dynamics, financial pressure, health worries..."
-                    className="onboarding-textarea"
-                    style={{ minHeight: '90px' }}
-                  />
-                </div>
-              </div>
+            <div style={navButtonsStyle}>
+              <button style={buttonSecondaryStyle} onClick={handleBack} disabled={loading}><ChevronLeft size={18} /> Back</button>
+              <button style={{ ...buttonPrimaryStyle, opacity: loading ? 0.6 : 1 }} onClick={handleComplete} disabled={loading}>{loading ? 'Building your profile...' : 'Build my profile'} <ChevronRight size={18} /></button>
             </div>
-          )}
+          </>
+        )}
 
-          {/* STEP 7 — LIFESTYLE (DIET + EXERCISE + WATER) */}
-          {step === 7 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Lifestyle</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                Your <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>daily rhythm.</em>
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                A few quick details about how you eat, move, and hydrate.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '14px' }}>How would you describe your diet?</label>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {DIET_TYPES.map(diet => (
-                      <button
-                        key={diet.id}
-                        onClick={() => setData(prev => ({ ...prev, diet_type: diet.id }))}
-                        className={`choice-card ${data.diet_type === diet.id ? 'selected' : ''}`}
-                      >
-                        <div>
-                          <div style={{ fontWeight: 600 }}>{diet.label}</div>
-                          <div style={{ fontSize: '12px', color: '#A89968', marginTop: '2px', fontWeight: 400 }}>{diet.desc}</div>
-                        </div>
-                        {data.diet_type === diet.id && <Check size={18} strokeWidth={2} style={{ color: '#6B9E7F' }} />}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Exercise per week</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.exercise_per_week}<span style={{ fontSize: '14px', color: '#A89968' }}> {data.exercise_per_week === 1 ? 'day' : 'days'}</span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="7"
-                    value={data.exercise_per_week}
-                    onChange={(e) => setData(prev => ({ ...prev, exercise_per_week: Number(e.target.value) }))}
-                    className="slider-track"
-                  />
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Water per day</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.water_intake}<span style={{ fontSize: '14px', color: '#A89968' }}>L</span>
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.5"
-                    max="4"
-                    step="0.5"
-                    value={data.water_intake}
-                    onChange={(e) => setData(prev => ({ ...prev, water_intake: Number(e.target.value) }))}
-                    className="slider-track"
-                  />
-                  <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>Most adults need 2–3 litres a day.</p>
-                </div>
-
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Supplements you take (optional)</label>
-                  <textarea
-                    value={data.supplements}
-                    onChange={(e) => setData(prev => ({ ...prev, supplements: e.target.value }))}
-                    placeholder="e.g. Vitamin D, magnesium, omega-3, probiotic..."
-                    className="onboarding-textarea"
-                    style={{ minHeight: '80px' }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 8 — ALMOST THERE — HEALTH CONTEXT, NOTIFICATIONS, PHOTO */}
-          {step === 8 && (
-            <div>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Almost there</div>
-              <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                A few <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>final details.</em>
-              </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                These are all optional — but the more we know, the more personalised your guidance becomes.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Diagnoses or conditions (optional)</label>
-                  <textarea
-                    value={data.health_context}
-                    onChange={(e) => setData(prev => ({ ...prev, health_context: e.target.value }))}
-                    placeholder="e.g. PCOS, thyroid condition, IBS, anxiety..."
-                    className="onboarding-textarea"
-                    style={{ minHeight: '80px' }}
-                  />
-                </div>
-
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Current medications (optional)</label>
-                  <textarea
-                    value={data.medications}
-                    onChange={(e) => setData(prev => ({ ...prev, medications: e.target.value }))}
-                    placeholder="e.g. Birth control, thyroid medication..."
-                    className="onboarding-textarea"
-                    style={{ minHeight: '80px' }}
-                  />
-                </div>
-
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '14px' }}>How often should we check in?</label>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {[
-                      { id: 'daily', label: 'Daily reminders', desc: 'A gentle nudge each morning' },
-                      { id: 'weekly', label: 'Weekly summary', desc: 'A digest every Sunday' },
-                      { id: 'never', label: 'No reminders', desc: 'I\'ll come back when I want to' },
-                    ].map(opt => (
-                      <button
-                        key={opt.id}
-                        onClick={() => setData(prev => ({ ...prev, notification_frequency: opt.id }))}
-                        className={`choice-card ${data.notification_frequency === opt.id ? 'selected' : ''}`}
-                      >
-                        <div>
-                          <div style={{ fontWeight: 600 }}>{opt.label}</div>
-                          <div style={{ fontSize: '12px', color: '#A89968', marginTop: '2px', fontWeight: 400 }}>{opt.desc}</div>
-                        </div>
-                        {data.notification_frequency === opt.id && <Check size={18} strokeWidth={2} style={{ color: '#6B9E7F' }} />}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Baseline photo (optional)</label>
-                  <p style={{ fontSize: '13px', color: '#5A6770', marginBottom: '14px', lineHeight: 1.5 }}>
-                    A starting photo helps you track visual progress later — skin, hair, posture. Stays private and encrypted.
-                  </p>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px',
-                    padding: '20px',
-                    border: '2px dashed rgba(168, 153, 104, 0.4)',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    background: data.photo_uploaded ? 'rgba(212, 232, 221, 0.4)' : 'transparent',
-                  }}>
-                    <Camera size={20} strokeWidth={1.5} style={{ color: data.photo_uploaded ? '#6B9E7F' : '#A89968' }} />
-                    <span style={{ fontSize: '14px', color: data.photo_uploaded ? '#557E64' : '#5A6770', fontWeight: 500 }}>
-                      {data.photo_uploaded ? 'Photo selected ✓' : 'Choose a photo'}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                </div>
-
-                <div className="info-box">
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <Sparkles size={16} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
-                    <div>
-                      Once you finish, your coach will build a personalised wellness profile and suggest your first actions for today.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <div className="error-box" style={{ marginTop: '24px' }}>
-              <AlertCircle size={16} strokeWidth={2} style={{ flexShrink: 0, marginTop: '1px' }} />
-              <span>{error}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Navigation buttons */}
-        <div style={{
-          marginTop: '48px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '12px',
-        }}>
-          <button
-            onClick={handleBack}
-            disabled={step === 0}
-            className="btn-ghost"
-          >
-            <ChevronLeft size={16} strokeWidth={2} />
-            Back
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={saving}
-            className="btn-primary"
-          >
-            {saving ? (
-              'Saving your profile...'
-            ) : step === totalSteps - 1 ? (
-              <>Build my profile <Sparkles size={16} strokeWidth={2} /></>
-            ) : step === 0 ? (
-              <>Let's begin <ChevronRight size={16} strokeWidth={2} /></>
-            ) : (
-              <>Continue <ChevronRight size={16} strokeWidth={2} /></>
-            )}
-          </button>
-        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Onboarding;
