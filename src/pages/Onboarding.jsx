@@ -912,7 +912,7 @@ export default function Onboarding() {
 
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Exercise per week</label>
+                    <label className="eyebrow">How many days a week do you exercise?</label>
                     <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
                       {data.exercise_per_week}<span style={{ fontSize: '14px', color: '#A89968' }}> {data.exercise_per_week === 1 ? 'day' : 'days'}</span>
                     </span>
@@ -925,6 +925,9 @@ export default function Onboarding() {
                     onChange={(e) => setData(prev => ({ ...prev, exercise_per_week: Number(e.target.value) }))}
                     className="slider-track"
                   />
+                  <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>
+                    Counts walking, dancing, gym, sports, yoga, swimming, cycling — anything that gets you moving.
+                  </p>
                 </div>
 
                 <div>
