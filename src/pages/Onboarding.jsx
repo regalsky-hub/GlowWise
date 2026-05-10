@@ -887,7 +887,7 @@ export default function Onboarding() {
                 Your <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>daily rhythm.</em>
               </h2>
               <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                A few quick details about how you eat, move, and hydrate.
+                Small daily habits shape your energy, focus, stress, and recovery — often more than we realise.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
