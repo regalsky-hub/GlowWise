@@ -4,9 +4,9 @@ import { useUserData } from '../context/UserDataContext';
 import { ChevronRight, ChevronLeft, Check, AlertCircle, Camera, Sparkles, Shield, X } from 'lucide-react';
 
 const WELLNESS_TOPICS = [
-  { id: 'hormones', label: 'Hormones & Metabolism', icon: '◐' },
-  { id: 'fertility', label: 'Fertility', icon: '✦' },
-  { id: 'weight', label: 'Weight & Body Composition', icon: '◑' },
+  { id: 'hormones', label: 'Hormonal Balance', icon: '◐' },
+  { id: 'fertility', label: 'Fertility Wellness', icon: '✦' },
+  { id: 'weight', label: 'Body & Weight', icon: '◑' },
   { id: 'energy', label: 'Energy & Fatigue', icon: '◎' },
   { id: 'sleep', label: 'Sleep & Recovery', icon: '☾' },
   { id: 'stress', label: 'Stress & Anxiety', icon: '◉' },
@@ -14,7 +14,7 @@ const WELLNESS_TOPICS = [
   { id: 'gut', label: 'Gut & Digestion', icon: '◍' },
   { id: 'skin', label: 'Skin & Acne', icon: '◇' },
   { id: 'hair', label: 'Hair & Scalp', icon: '✧' },
-  { id: 'nutrition', label: 'Nutrition & Diet', icon: '◆' },
+  { id: 'nutrition', label: 'Nutrition & Eating Habits', icon: '◆' },
 ];
 
 const DIET_TYPES = [
