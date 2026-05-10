@@ -875,10 +875,10 @@ export default function Onboarding() {
     placeholder="Anything else you'd like to share? (optional)"
     className="onboarding-textarea"
     style={{ minHeight: '60px' }}
-  />
-</div>          
-)}
-
+            />
+          </div>
+         </div>
+          )}
           {/* STEP 7 — LIFESTYLE (DIET + EXERCISE + WATER) */}
           {step === 7 && (
             <div>
