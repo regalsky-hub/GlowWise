@@ -990,11 +990,11 @@ export default function Onboarding() {
                 </div>
 
                 <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Current medications (optional)</label>
+                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Current medications or treatments (optional)</label>
                   <textarea
                     value={data.medications}
                     onChange={(e) => setData(prev => ({ ...prev, medications: e.target.value }))}
-                    placeholder="e.g. Birth control, thyroid medication..."
+                    placeholder="e.g. Thyroid medication, antidepressants, blood pressure, birth control..."
                     className="onboarding-textarea"
                     style={{ minHeight: '80px' }}
                   />
