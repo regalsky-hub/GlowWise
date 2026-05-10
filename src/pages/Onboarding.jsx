@@ -560,17 +560,17 @@ export default function Onboarding() {
             <div style={{ textAlign: 'center' }}>
               <div className="eyebrow" style={{ marginBottom: '24px' }}>Welcome</div>
               <h1 className="display" style={{ fontSize: 'clamp(36px, 6vw, 56px)', lineHeight: 1.1, marginBottom: '24px', color: '#3D4A52' }}>
-                Let's get to know <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>each other.</em>
+                Let's get to know <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>you a little better.</em>
               </h1>
               <p style={{ fontSize: '17px', lineHeight: 1.65, color: '#5A6770', maxWidth: '480px', margin: '0 auto 40px' }}>
-                The next 9 questions help your AI Coach understand you. Your answers shape every recommendation, every insight, every conversation. Take your time — this is the foundation of your personalised wellness profile.
+                These next few questions help GlowWise personalise your experience — from wellness insights to daily guidance and recommendations. There are no right or wrong answers. Just answer honestly, based on how you actually feel.
               </p>
 
               <div className="info-box" style={{ textAlign: 'left', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                   <Shield size={18} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ fontWeight: 600 }}>Wellness, not medical advice.</strong> GlowWise gives lifestyle guidance based on your answers. It's not a substitute for a doctor — please always consult a qualified healthcare provider for medical concerns.
+                    <strong style={{ fontWeight: 600 }}>Wellness, not medical advice.</strong> GlowWise provides wellness guidance based on your responses. It's not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.
                   </div>
                 </div>
               </div>
@@ -579,7 +579,7 @@ export default function Onboarding() {
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                   <Sparkles size={18} strokeWidth={1.8} style={{ color: '#A89968', flexShrink: 0, marginTop: '2px' }} />
                   <div>
-                    <strong style={{ fontWeight: 600, color: '#3D4A52' }}>Your data is yours.</strong> Encrypted, private, never shared. Delete any answer, message, or your whole account whenever you want.
+                    <strong style={{ fontWeight: 600, color: '#3D4A52' }}>Your data stays private.</strong> Encrypted, and under your control. You can edit or delete your answers, messages, or account anytime.
                   </div>
                 </div>
               </div>
