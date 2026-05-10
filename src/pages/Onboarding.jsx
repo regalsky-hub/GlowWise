@@ -876,12 +876,9 @@ export default function Onboarding() {
     className="onboarding-textarea"
     style={{ minHeight: '60px' }}
   />
+</div>          
 </div>
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+)}
 
           {/* STEP 7 — LIFESTYLE (DIET + EXERCISE + WATER) */}
           {step === 7 && (
