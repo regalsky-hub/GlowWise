@@ -877,7 +877,6 @@ export default function Onboarding() {
     style={{ minHeight: '60px' }}
   />
 </div>          
-</div>
 )}
 
           {/* STEP 7 — LIFESTYLE (DIET + EXERCISE + WATER) */}
