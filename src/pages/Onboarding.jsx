@@ -18,12 +18,12 @@ const WELLNESS_TOPICS = [
 ];
 
 const DIET_TYPES = [
-  { id: 'Balanced', label: 'Balanced', desc: 'A bit of everything' },
-  { id: 'Plant-Based', label: 'Plant-based', desc: 'Vegetarian or vegan' },
-  { id: 'Mediterranean', label: 'Mediterranean', desc: 'Veggies, fish, olive oil' },
-  { id: 'Keto', label: 'Keto / low-carb', desc: 'High fat, low carb' },
-  { id: 'Paleo', label: 'Paleo', desc: 'Whole foods, no grains' },
-  { id: 'Other', label: 'Something else', desc: 'I\'ll tell my coach later' },
+  { id: 'home-cooked', label: 'Mostly home-cooked', desc: 'Varied, balanced meals at home' },
+  { id: 'mixed', label: 'A mix', desc: 'Home cooking + convenience foods' },
+  { id: 'takeaways', label: 'Often eat out', desc: 'Takeaways or restaurant meals' },
+  { id: 'on-the-go', label: 'On-the-go', desc: 'Mostly processed or quick foods' },
+  { id: 'specific', label: 'A specific approach', desc: 'Vegan, vegetarian, keto, Mediterranean, etc.' },
+  { id: 'other', label: 'Other', desc: "I'll tell my coach later" },
 ];
 
 const GENDER_OPTIONS = [
