@@ -971,7 +971,7 @@ export default function Onboarding() {
                 A few <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>final details.</em>
               </h2>
               <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                These are all optional — but the more we know, the more personalised your guidance becomes.
+                These are completely optional — they help GlowWise personalise your wellness insights more thoughtfully.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
