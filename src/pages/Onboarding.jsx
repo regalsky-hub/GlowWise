@@ -870,14 +870,15 @@ export default function Onboarding() {
     })}
   </div>
   <textarea
-    value={data.stress_triggers}
-    onChange={(e) => setData(prev => ({ ...prev, stress_triggers: e.target.value }))}
-    placeholder="Anything else you'd like to share? (optional)"
-    className="onboarding-textarea"
-    style={{ minHeight: '60px' }}
-            />
-          </div>
-         </div>
+                    value={data.stress_triggers}
+                    onChange={(e) => setData(prev => ({ ...prev, stress_triggers: e.target.value }))}
+                    placeholder="Anything else you'd like to share? (optional)"
+                    className="onboarding-textarea"
+                    style={{ minHeight: '60px' }}
+                  />
+                </div>
+              </div>
+            </div>
           )}
           {/* STEP 7 — LIFESTYLE (DIET + EXERCISE + WATER) */}
           {step === 7 && (
