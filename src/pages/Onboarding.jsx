@@ -717,13 +717,13 @@ export default function Onboarding() {
                 The <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>foundation</em> of everything.
               </h2>
               <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                Sleep and energy affect almost every other wellness area. Give us your honest baseline.
+                Sleep and energy shape how you feel physically, mentally, and emotionally — every day.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Sleep per night</label>
+                    <label className="eyebrow">On average, how many hours of sleep are you getting?</label>
                     <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
                       {data.sleep_hours}h
                     </span>
@@ -736,14 +736,33 @@ export default function Onboarding() {
                     onChange={(e) => setData(prev => ({ ...prev, sleep_hours: Number(e.target.value) }))}
                     className="slider-track"
                   />
-                  <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>
+               <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>
                     Most adults feel best with 7–9 hours.
                   </p>
                 </div>
-
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Energy level today</label>
+                    <label className="eyebrow">How restful is your sleep, typically?</label>
+                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F', fontStyle: 'italic' }}>
+                      {data.sleep_quality <= 3 ? 'Restless' : data.sleep_quality <= 5 ? 'Mixed' : data.sleep_quality <= 7 ? 'Fair' : 'Restful'}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={data.sleep_quality || 5}
+                    onChange={(e) => setData(prev => ({ ...prev, sleep_quality: Number(e.target.value) }))}
+                    className="slider-track"
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', marginTop: '8px' }}>
+                    <span>Restless</span>
+                    <span>Restful</span>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
+                    <label className="eyebrow">How's your energy on a typical day?</label>
                     <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
                       {data.energy_level}<span style={{ fontSize: '14px', color: '#A89968' }}>/10</span>
                     </span>
@@ -757,7 +776,7 @@ export default function Onboarding() {
                     className="slider-track"
                   />
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', marginTop: '8px' }}>
-                    <span>Drained</span>
+                    <span>Exhausted</span>
                     <span>Energised</span>
                   </div>
                 </div>
