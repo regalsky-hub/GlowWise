@@ -1023,36 +1023,6 @@ export default function Onboarding() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Baseline photo (optional)</label>
-                  <p style={{ fontSize: '13px', color: '#5A6770', marginBottom: '14px', lineHeight: 1.5 }}>
-                    A starting photo helps you track visual progress later — skin, hair, posture. Stays private and encrypted.
-                  </p>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px',
-                    padding: '20px',
-                    border: '2px dashed rgba(168, 153, 104, 0.4)',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    background: data.photo_uploaded ? 'rgba(212, 232, 221, 0.4)' : 'transparent',
-                  }}>
-                    <Camera size={20} strokeWidth={1.5} style={{ color: data.photo_uploaded ? '#6B9E7F' : '#A89968' }} />
-                    <span style={{ fontSize: '14px', color: data.photo_uploaded ? '#557E64' : '#5A6770', fontWeight: 500 }}>
-                      {data.photo_uploaded ? 'Photo selected ✓' : 'Choose a photo'}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                </div>
-
                 <div className="info-box">
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                     <Sparkles size={16} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
