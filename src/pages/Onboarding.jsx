@@ -863,7 +863,6 @@ export default function Onboarding() {
             transition: 'all 0.2s',
           }}
         >
-          {selected && <span style={{ color: '#6B9E7F', fontWeight: 'bold' }}>✓</span>}
           {trigger}
         </span>
       );
