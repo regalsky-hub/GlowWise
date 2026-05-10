@@ -678,7 +678,6 @@ export default function Onboarding() {
                     >
                       <span className="priority-chip-icon">{topic.icon}</span>
                       {topic.label}
-                      {selected && <X size={14} strokeWidth={2} />}
                     </button>
                   );
                 })}
