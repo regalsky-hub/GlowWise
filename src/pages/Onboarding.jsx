@@ -976,11 +976,14 @@ export default function Onboarding() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Diagnoses or conditions (optional)</label>
+              <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Health considerations (optional)</label>
+                  <p style={{ fontSize: '12px', color: '#A89968', marginBottom: '10px', fontStyle: 'italic' }}>
+                    Anything GlowWise should be aware of?
+                  </p>
                   <textarea
                     value={data.health_context}
                     onChange={(e) => setData(prev => ({ ...prev, health_context: e.target.value }))}
-                    placeholder="e.g. PCOS, thyroid condition, IBS, anxiety..."
+                    placeholder="e.g. IBS, thyroid issues, anxiety, hormonal changes, chronic fatigue..."
                     className="onboarding-textarea"
                     style={{ minHeight: '80px' }}
                   />
