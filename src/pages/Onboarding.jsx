@@ -51,6 +51,7 @@ export default function Onboarding() {
     body_signals: '',
     // Sleep & energy
     sleep_hours: 7,
+    sleep_quality: 5,
     energy_level: 7,
     // Stress
     stress_level: 5,
