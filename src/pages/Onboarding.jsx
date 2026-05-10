@@ -55,6 +55,7 @@ export default function Onboarding() {
     energy_level: 7,
     // Stress
     stress_level: 5,
+    stress_trigger_list: [],
     stress_triggers: '',
     // Nutrition
     diet_type: 'Balanced',
@@ -790,19 +791,19 @@ export default function Onboarding() {
             <div>
               <div className="eyebrow" style={{ marginBottom: '20px' }}>Stress</div>
               <h2 className="display" style={{ fontSize: 'clamp(28px, 4.5vw, 42px)', lineHeight: 1.15, marginBottom: '14px', color: '#3D4A52' }}>
-                How are <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>stress levels</em> right now?
+                How have <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>things felt</em> lately?
               </h2>
               <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770', marginBottom: '40px' }}>
-                Stress affects sleep, skin, hormones, and energy. Knowing your baseline helps us spot what's connected.
+                Stress quietly shapes sleep, focus, energy, mood, and recovery — even when we don't notice it.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '14px' }}>
-                    <label className="eyebrow">Current stress</label>
-                    <span className="display" style={{ fontSize: '24px', color: '#6B9E7F' }}>
-                      {data.stress_level}<span style={{ fontSize: '14px', color: '#A89968' }}>/10</span>
-                    </span>
+                    <label className="eyebrow">Current stress level</label>
+<span className="display" style={{ fontSize: '24px', color: '#6B9E7F', fontStyle: 'italic' }}>
+  {data.stress_level <= 3 ? 'Calm' : data.stress_level <= 5 ? 'Manageable' : data.stress_level <= 7 ? 'Elevated' : data.stress_level <= 9 ? 'Pressured' : 'Overwhelmed'}
+</span>
                   </div>
                   <input
                     type="range"
@@ -819,13 +820,63 @@ export default function Onboarding() {
                 </div>
 
                 <div>
-                  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>What triggers it? (optional)</label>
-                  <textarea
-                    value={data.stress_triggers}
-                    onChange={(e) => setData(prev => ({ ...prev, stress_triggers: e.target.value }))}
-                    placeholder="e.g. Work deadlines, relationship dynamics, financial pressure, health worries..."
-                    className="onboarding-textarea"
-                    style={{ minHeight: '90px' }}
+  <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>What tends to trigger your stress? (optional)</label>
+  <p style={{ fontSize: '12px', color: '#A89968', marginBottom: '14px', fontStyle: 'italic' }}>
+    Tap any that apply.
+  </p>
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+    {[
+      'Work pressure',
+      'Mentally overloaded',
+      'Sleep difficulties',
+      'Relationships',
+      'Financial concerns',
+      'Health worries',
+      'Caregiver demands',
+      'Shift work',
+      'Lack of time',
+    ].map(trigger => {
+      const triggers = data.stress_trigger_list || [];
+      const selected = triggers.includes(trigger);
+      return (
+        <span
+          key={trigger}
+          onClick={() => {
+            const current = data.stress_trigger_list || [];
+            const updated = current.includes(trigger)
+              ? current.filter(t => t !== trigger)
+              : [...current, trigger];
+            setData(prev => ({ ...prev, stress_trigger_list: updated }));
+          }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '8px 14px',
+            border: selected ? '1.5px solid #6B9E7F' : '1px solid rgba(168, 153, 104, 0.3)',
+            borderRadius: '100px',
+            background: selected ? '#EDF4EF' : '#FAF8F5',
+            cursor: 'pointer',
+            fontSize: '13px',
+            color: '#3D4A52',
+            fontWeight: selected ? 600 : 400,
+            transition: 'all 0.2s',
+          }}
+        >
+          {selected && <span style={{ color: '#6B9E7F', fontWeight: 'bold' }}>✓</span>}
+          {trigger}
+        </span>
+      );
+    })}
+  </div>
+  <textarea
+    value={data.stress_triggers}
+    onChange={(e) => setData(prev => ({ ...prev, stress_triggers: e.target.value }))}
+    placeholder="Anything else you'd like to share? (optional)"
+    className="onboarding-textarea"
+    style={{ minHeight: '60px' }}
+  />
+</div>
                   />
                 </div>
               </div>
