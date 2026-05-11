@@ -134,61 +134,6 @@ alignItems: 'flex-start', position: 'relative' }}>
 </div>
 </section>
 
-        {/* Snapshot or Check-in CTA */}
-        {hasCheckedIn ? (
-          <section className="fade-up delay-2" style={{ marginBottom: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '20px' }}>
-              <div>
-                <div className="eyebrow" style={{ marginBottom: '6px' }}>Today</div>
-                <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52' }}>Your snapshot</h2>
-              </div>
-              <button onClick={() => navigate('/checkin')} className="btn-ghost">Update <ChevronRight size={14} strokeWidth={2} /></button>
-            </div>
-           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-              {(() => {
-                const energy = todayCheckIn.energy;
-                const sleep = todayCheckIn.sleep_hours;
-                const stress = todayCheckIn.stress_level;
-                const mood = todayCheckIn.mood || 7;
-
-                const energyLabel = energy <= 3 ? 'Low' : energy <= 5 ? 'Building' : energy <= 7 ? 'Steady' : energy <= 9 ? 'Energised' : 'Vibrant';
-                const sleepLabel = sleep < 5 ? 'Restless' : sleep < 6 ? 'Light' : sleep < 7 ? 'Fair' : sleep < 9 ? 'Restful' : 'Deep';
-                const stressLabel = stress <= 3 ? 'Calm' : stress <= 5 ? 'Manageable' : stress <= 7 ? 'Elevated' : stress <= 9 ? 'Pressured' : 'Overwhelmed';
-                const moodLabel = mood <= 3 ? 'Low' : mood <= 5 ? 'Mixed' : mood <= 7 ? 'Balanced' : mood <= 9 ? 'Bright' : 'Radiant';
-
-                return [
-                  { icon: Zap, label: 'Energy', value: energy, suffix: '/10', emotional: energyLabel, bg: '#FAF3DC', border: 'rgba(212, 165, 92, 0.2)', accent: '#A07E3D', text: '#8B6A30' },
-                  { icon: Moon, label: 'Sleep', value: sleep, suffix: 'h', emotional: sleepLabel, bg: '#EDE2EC', border: 'rgba(155, 123, 150, 0.2)', accent: '#7A5C77', text: '#5D4459' },
-                  { icon: Activity, label: 'Stress', value: stress, suffix: '/10', emotional: stressLabel, bg: '#F5DDD0', border: 'rgba(201, 123, 92, 0.2)', accent: '#A85A3D', text: '#8B4A30' },
-                  { icon: Heart, label: 'Mood', value: mood, suffix: '/10', emotional: moodLabel, bg: '#D4E8DD', border: 'rgba(107, 158, 127, 0.2)', accent: '#557E64', text: '#3D5E48' },
-                ].map((s, i) => {
-                  const Icon = s.icon;
-                  return (
-                    <div key={i} style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: '12px', padding: '18px 16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
-                        <Icon size={14} strokeWidth={1.8} style={{ color: s.accent }} />
-                        <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: s.accent }}>{s.label}</span>
-                      </div>
-                      <div className="display" style={{ fontSize: '28px', fontWeight: 400, color: s.text, lineHeight: 1, marginBottom: '6px' }}>
-                        {s.value}<span style={{ fontSize: '13px', color: s.accent, marginLeft: '2px' }}>{s.suffix}</span>
-                      </div>
-                      <div className="display" style={{ fontStyle: 'italic', fontSize: '14px', color: s.accent }}>{s.emotional}</div>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-          </section>
-        ) : (
-          <section className="fade-up delay-2 card" style={{ marginBottom: '32px', padding: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: '240px' }}>
-              <div className="eyebrow" style={{ marginBottom: '8px' }}>Daily check-in</div>
-              <h3 className="display" style={{ fontSize: '22px', color: '#3D4A52', marginBottom: '8px', fontWeight: 500 }}>How are you feeling today?</h3>
-              <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#5A6770' }}>60 seconds. Energy, sleep, stress, mood. The foundation of every insight.</p>
-            </div>
-            <button onClick={() => navigate('/checkin')} className="btn-primary">Check in <ChevronRight size={14} strokeWidth={2} /></button>
-          </section>
-        )}
 {/* Today's Focus Hero */}
 {hasCheckedIn && (
   <section className="fade-up delay-1" style={{ marginBottom: '56px' }}>
@@ -292,7 +237,61 @@ alignItems: 'flex-start', position: 'relative' }}>
     </div>
   </section>
 )}
+{/* Snapshot or Check-in CTA */}
+        {hasCheckedIn ? (
+          <section className="fade-up delay-2" style={{ marginBottom: '32px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '20px' }}>
+              <div>
+                <div className="eyebrow" style={{ marginBottom: '6px' }}>Today</div>
+                <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52' }}>Your snapshot</h2>
+              </div>
+              <button onClick={() => navigate('/checkin')} className="btn-ghost">Update <ChevronRight size={14} strokeWidth={2} /></button>
+            </div>
+           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+              {(() => {
+                const energy = todayCheckIn.energy;
+                const sleep = todayCheckIn.sleep_hours;
+                const stress = todayCheckIn.stress_level;
+                const mood = todayCheckIn.mood || 7;
 
+                const energyLabel = energy <= 3 ? 'Low' : energy <= 5 ? 'Building' : energy <= 7 ? 'Steady' : energy <= 9 ? 'Energised' : 'Vibrant';
+                const sleepLabel = sleep < 5 ? 'Restless' : sleep < 6 ? 'Light' : sleep < 7 ? 'Fair' : sleep < 9 ? 'Restful' : 'Deep';
+                const stressLabel = stress <= 3 ? 'Calm' : stress <= 5 ? 'Manageable' : stress <= 7 ? 'Elevated' : stress <= 9 ? 'Pressured' : 'Overwhelmed';
+                const moodLabel = mood <= 3 ? 'Low' : mood <= 5 ? 'Mixed' : mood <= 7 ? 'Balanced' : mood <= 9 ? 'Bright' : 'Radiant';
+
+                return [
+                  { icon: Zap, label: 'Energy', value: energy, suffix: '/10', emotional: energyLabel, bg: '#FAF3DC', border: 'rgba(212, 165, 92, 0.2)', accent: '#A07E3D', text: '#8B6A30' },
+                  { icon: Moon, label: 'Sleep', value: sleep, suffix: 'h', emotional: sleepLabel, bg: '#EDE2EC', border: 'rgba(155, 123, 150, 0.2)', accent: '#7A5C77', text: '#5D4459' },
+                  { icon: Activity, label: 'Stress', value: stress, suffix: '/10', emotional: stressLabel, bg: '#F5DDD0', border: 'rgba(201, 123, 92, 0.2)', accent: '#A85A3D', text: '#8B4A30' },
+                  { icon: Heart, label: 'Mood', value: mood, suffix: '/10', emotional: moodLabel, bg: '#D4E8DD', border: 'rgba(107, 158, 127, 0.2)', accent: '#557E64', text: '#3D5E48' },
+                ].map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <div key={i} style={{ background: s.bg, border: `1px solid ${s.border}`, borderRadius: '12px', padding: '18px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                        <Icon size={14} strokeWidth={1.8} style={{ color: s.accent }} />
+                        <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: s.accent }}>{s.label}</span>
+                      </div>
+                      <div className="display" style={{ fontSize: '28px', fontWeight: 400, color: s.text, lineHeight: 1, marginBottom: '6px' }}>
+                        {s.value}<span style={{ fontSize: '13px', color: s.accent, marginLeft: '2px' }}>{s.suffix}</span>
+                      </div>
+                      <div className="display" style={{ fontStyle: 'italic', fontSize: '14px', color: s.accent }}>{s.emotional}</div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </section>
+        ) : (
+          <section className="fade-up delay-2 card" style={{ marginBottom: '32px', padding: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '240px' }}>
+              <div className="eyebrow" style={{ marginBottom: '8px' }}>Daily check-in</div>
+              <h3 className="display" style={{ fontSize: '22px', color: '#3D4A52', marginBottom: '8px', fontWeight: 500 }}>How are you feeling today?</h3>
+              <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#5A6770' }}>60 seconds. Energy, sleep, stress, mood. The foundation of every insight.</p>
+            </div>
+            <button onClick={() => navigate('/checkin')} className="btn-primary">Check in <ChevronRight size={14} strokeWidth={2} /></button>
+          </section>
+        )}
         {/* Glow Score + Glow Type */}
         <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '20px', marginBottom: '32px' }}>
           {/* Glow Score - Terracotta */}
