@@ -102,8 +102,8 @@ export default function Dashboard() {
         {/* AI Coach Welcome */}
         <section className="fade-up delay-1 card" style={{ marginBottom: '32px', padding: '28px 32px', background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)', border: 'none', color: '#FAF8F5', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: '-40px', right: '-40px', fontFamily: "'Fraunces', serif", fontSize: '200px', color: 'rgba(250, 248, 245, 0.06)', lineHeight: 1, pointerEvents: 'none' }}>g</div>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', position: 'relative' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#FAF8F5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#557E64', fontFamily: "'Fraunces', serif", fontSize: '20px', fontWeight: 500, flexShrink: 0 }}>g</div>
+          <div style={{ display: 'flex',
+alignItems: 'flex-start', position: 'relative' }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "'Manrope', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250, 248, 245, 0.7)', marginBottom: '8px' }}>Your wellness coach</div>
               <p className="display" style={{ fontSize: '20px', lineHeight: 1.45, color: '#FAF8F5', fontStyle: 'italic', marginBottom: '18px', fontWeight: 400 }}>
