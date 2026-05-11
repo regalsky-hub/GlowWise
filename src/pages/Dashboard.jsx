@@ -307,7 +307,16 @@ export default function Dashboard() {
         {/* Glow Score + Glow Type */}
         <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '20px', marginBottom: '32px' }}>
           {/* Glow Score - Terracotta */}
-          <div className="card" style={{ padding: '28px 32px', background: '#F5DDD0', border: '1px solid rgba(201, 123, 92, 0.25)' }}>
+<div
+  className="card"
+  style={{
+    padding: '28px 32px',
+    background: '#F5DDD0',
+    border: '1px solid rgba(201, 123, 92, 0.25)',
+    borderRadius: '28px',
+    boxShadow: '0 18px 50px -28px rgba(168,90,61,0.25)',
+  }}
+>
             <div className="eyebrow" style={{ marginBottom: '20px', color: '#A85A3D' }}>Glow Score</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '20px' }}>
               <div className="display" style={{ fontSize: '64px', lineHeight: 1, color: '#A85A3D', fontWeight: 400 }}>
@@ -332,7 +341,16 @@ export default function Dashboard() {
           </div>
 
           {/* Glow Type - Plum */}
-          <div className="card" style={{ padding: '28px 32px', background: '#EDE2EC', border: '1px solid rgba(155, 123, 150, 0.3)' }}>
+<div
+  className="card"
+  style={{
+    padding: '28px 32px',
+    background: '#EDE2EC',
+    border: '1px solid rgba(155, 123, 150, 0.3)',
+    borderRadius: '28px',
+    boxShadow: '0 18px 50px -28px rgba(122,92,119,0.22)',
+  }}
+>
             <div className="eyebrow" style={{ marginBottom: '12px', color: '#7A5C77' }}>Your Glow Type</div>
             <h3 className="display" style={{ fontSize: '24px', lineHeight: 1.15, color: '#3D4A52', fontWeight: 500, fontStyle: 'italic', marginBottom: '14px' }}>
               {glowType || 'Balanced Wellness Glow'}
@@ -369,7 +387,8 @@ export default function Dashboard() {
         style={{
           background: item.bg,
           border: `1px solid ${item.border}`,
-          borderRadius: '12px',
+          borderRadius: '24px',
+          boxShadow: '0 18px 50px -28px rgba(122,92,119,0.22)',
           padding: '20px',
         }}
       >
