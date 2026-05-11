@@ -191,7 +191,7 @@ export default function Dashboard() {
           </section>
         )}
 {/* Today's Focus Hero */}
-{hasCheckedIn && (
+(
   <section className="fade-up delay-1" style={{ marginBottom: '56px' }}>
     <div
       style={{
@@ -292,7 +292,7 @@ export default function Dashboard() {
       </div>
     </div>
   </section>
-)}
+)
 
         {/* Glow Score + Glow Type */}
         <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '20px', marginBottom: '32px' }}>
