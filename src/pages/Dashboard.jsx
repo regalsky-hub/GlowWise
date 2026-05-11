@@ -458,45 +458,7 @@ export default function Dashboard() {
     ))}
   </div>
 </section>
-        {/* Insights preview */}
-        {streak > 0 && (
-          <section className="fade-up delay-4 card" style={{ padding: '28px 32px', marginBottom: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
-              <div>
-                <div className="eyebrow" style={{ marginBottom: '6px' }}>This week</div>
-                <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', fontWeight: 500 }}>Patterns emerging</h2>
-              </div>
-              <button onClick={() => navigate('/insights')} className="btn-ghost"><BarChart3 size={14} strokeWidth={2} />Full insights</button>
-            </div>
-            {streak < 3 ? (
-              <div className="insight-row">
-                <div className="check-circle"><Sparkles size={11} strokeWidth={2} /></div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>Building your baseline</div>
-                  <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Patterns become clearer after 5+ check-ins. You're {streak}/5 there.</div>
-                </div>
-              </div>
-            ) : (
-              <div className="insight-row">
-                <div className="check-circle"><span style={{ fontSize: '10px' }}>↑</span></div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>Tracking is paying off</div>
-                  <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>You're building real data. Visit Insights to see your patterns.</div>
-                </div>
-              </div>
-            )}
-            <div className="insight-row">
-              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#F5E8D0', border: '1.5px solid #D4A55C', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#A07E3D', flexShrink: 0 }}>
-                <Sparkles size={11} strokeWidth={2} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>Recent wellness activity</div>
-                <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Each check-in helps GlowWise understand your wellbeing more clearly. You're building something real.</div>
-              </div>
-            </div>
-          </section>
-        )}
-
+      
         {/* Focus areas */}
         {focusAreas.length > 0 && (
           <section className="fade-up delay-5 card" style={{ padding: '28px 32px', marginBottom: '32px' }}>
