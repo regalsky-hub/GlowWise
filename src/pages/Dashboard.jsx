@@ -383,10 +383,10 @@ export default function Dashboard() {
   </div>
 
   <div style={{
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'
-    gap: '16px'
-  }}>
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gap: '16px'
+}}>
     {wellnessPlan.map((item, i) => (
       <div
         key={i}
