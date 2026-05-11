@@ -99,41 +99,6 @@ export default function Dashboard() {
           </p>
         </section>
 
-        {/* AI Coach Welcome */}
-        <section className="fade-up delay-1 card" style={{ marginBottom: '32px', padding: '28px 32px', background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)', border: 'none', color: '#FAF8F5', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: '-40px', right: '-40px', fontFamily: "'Fraunces', serif", fontSize: '200px', color: 'rgba(250, 248, 245, 0.06)', lineHeight: 1, pointerEvents: 'none' }}>g</div>
-          <div style={{ display: 'flex',
-alignItems: 'flex-start', position: 'relative' }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "'Manrope', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250, 248, 245, 0.7)', marginBottom: '8px' }}>Your wellness coach</div>
-              <p className="display" style={{ fontSize: '20px', lineHeight: 1.45, color: '#FAF8F5', fontStyle: 'italic', marginBottom: '18px', fontWeight: 400 }}>
-                {(() => {
-                  if (streak === 0 && !hasCheckedIn) {
-                    return `"Welcome, ${userName}. I'm here whenever you need me. Ready when you are."`;
-                  }
-                  if (hasCheckedIn) {
-                    const messages = [
-                      `"Thanks for checking in, ${userName}. Your insights are taking shape — let me know if anything's on your mind."`,
-                      `"Good to hear from you, ${userName}. Every check-in helps me understand you better."`,
-                      `"Today's snapshot is in, ${userName}. Tap chat anytime — I'm right here."`,
-                    ];
-                    return messages[streak % messages.length];
-                  }
-                  if (streak >= 5) {
-                    return `"Welcome back, ${userName}. ${streak} check-ins in — you're building something real. Ready for today's?"`;
-                  }
-                  return `"Welcome back, ${userName}. Ready when you are — let's see how today is feeling."`;
-                })()}
-              </p>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <button onClick={() => navigate('/ai-coach')} style={{ background: '#FAF8F5', color: '#557E64', border: 'none', padding: '10px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-  <MessageCircle size={14} strokeWidth={2} />Open chat
-</button>
-</div>
-</div>
-</div>
-</section>
-
 {/* Today's Focus Hero */}
 {hasCheckedIn && (
   <section className="fade-up delay-1" style={{ marginBottom: '56px' }}>
@@ -237,6 +202,40 @@ alignItems: 'flex-start', position: 'relative' }}>
     </div>
   </section>
 )}
+        {/* AI Coach Welcome */}
+        <section className="fade-up delay-1 card" style={{ marginBottom: '32px', padding: '28px 32px', background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)', border: 'none', color: '#FAF8F5', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: '-40px', right: '-40px', fontFamily: "'Fraunces', serif", fontSize: '200px', color: 'rgba(250, 248, 245, 0.06)', lineHeight: 1, pointerEvents: 'none' }}>g</div>
+          <div style={{ display: 'flex',
+alignItems: 'flex-start', position: 'relative' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: "'Manrope', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250, 248, 245, 0.7)', marginBottom: '8px' }}>Your wellness coach</div>
+              <p className="display" style={{ fontSize: '20px', lineHeight: 1.45, color: '#FAF8F5', fontStyle: 'italic', marginBottom: '18px', fontWeight: 400 }}>
+                {(() => {
+                  if (streak === 0 && !hasCheckedIn) {
+                    return `"Welcome, ${userName}. I'm here whenever you need me. Ready when you are."`;
+                  }
+                  if (hasCheckedIn) {
+                    const messages = [
+                      `"Thanks for checking in, ${userName}. Your insights are taking shape — let me know if anything's on your mind."`,
+                      `"Good to hear from you, ${userName}. Every check-in helps me understand you better."`,
+                      `"Today's snapshot is in, ${userName}. Tap chat anytime — I'm right here."`,
+                    ];
+                    return messages[streak % messages.length];
+                  }
+                  if (streak >= 5) {
+                    return `"Welcome back, ${userName}. ${streak} check-ins in — you're building something real. Ready for today's?"`;
+                  }
+                  return `"Welcome back, ${userName}. Ready when you are — let's see how today is feeling."`;
+                })()}
+              </p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button onClick={() => navigate('/ai-coach')} style={{ background: '#FAF8F5', color: '#557E64', border: 'none', padding: '10px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+  <MessageCircle size={14} strokeWidth={2} />Open chat
+</button>
+</div>
+</div>
+</div>
+</section>
 {/* Snapshot or Check-in CTA */}
         {hasCheckedIn ? (
           <section className="fade-up delay-2" style={{ marginBottom: '32px' }}>
