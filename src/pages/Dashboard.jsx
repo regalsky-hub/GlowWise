@@ -86,7 +86,7 @@ export default function Dashboard() {
   border: 1px solid rgba(168, 153, 104, 0.08);
   border-radius: 12px;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 40px -32px rgba(61, 74, 82, 0.18);
+  boxShadow: '0 10px 40px -32px rgba(61, 74, 82, 0.18)',
 }
         .card-hover { cursor: pointer; }
         .card-hover:hover { border-color: #6B9E7F; transform: translateY(-2px); box-shadow: 0 12px 32px -16px rgba(61, 74, 82, 0.15); }
@@ -346,7 +346,7 @@ export default function Dashboard() {
             <p style={{ fontSize: '12px', color: '#8B4A30', lineHeight: 1.5, opacity: 0.75 }}>Based on sleep, energy, stress, and mood across recent check-ins.</p>
           </div>
 
-          {/* Glow Type - Plum */}
+  {/* Glow Type - Plum */}
 <div
   className="card"
   style={{
