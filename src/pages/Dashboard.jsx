@@ -192,17 +192,17 @@ export default function Dashboard() {
         )}
 {/* Today's Focus Hero */}
 {hasCheckedIn && (
-  <section className="fade-up delay-3" style={{ marginBottom: '40px' }}>
+  <section className="fade-up delay-1" style={{ marginBottom: '56px' }}>
     <div
       style={{
         position: 'relative',
         overflow: 'hidden',
-        padding: '40px 36px',
+        padding: '56px 48px',
         borderRadius: '32px',
         background:
-          'linear-gradient(135deg, rgba(107,158,127,0.16) 0%, rgba(237,226,236,0.45) 100%)',
-        border: '1px solid rgba(107,158,127,0.12)',
-        boxShadow: '0 20px 60px -30px rgba(61,74,82,0.18)',
+          'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
+        border: '1px solid rgba(107,158,127,0.10)',
+        boxShadow: '0 24px 80px -40px rgba(61,74,82,0.22)',
       }}
     >
 
@@ -210,11 +210,11 @@ export default function Dashboard() {
       <div
         style={{
           position: 'absolute',
-          width: '280px',
-          height: '280px',
+          width: '320px',
+          height: '320px',
           borderRadius: '50%',
-          background: 'rgba(107,158,127,0.10)',
-          filter: 'blur(60px)',
+          background: 'rgba(107,158,127,0.12)',
+          filter: 'blur(70px)',
           top: '-120px',
           right: '-80px',
         }}
@@ -224,7 +224,7 @@ export default function Dashboard() {
         <div
           className="eyebrow"
           style={{
-            marginBottom: '14px',
+            marginBottom: '16px',
             color: '#557E64',
           }}
         >
@@ -234,11 +234,11 @@ export default function Dashboard() {
         <h2
           className="display"
           style={{
-            fontSize: 'clamp(30px, 4vw, 42px)',
-            lineHeight: 1.08,
+            fontSize: 'clamp(38px, 5vw, 56px)',
+            lineHeight: 1.04,
             color: '#3D4A52',
-            marginBottom: '18px',
-            maxWidth: '700px',
+            marginBottom: '22px',
+            maxWidth: '760px',
             fontWeight: 400,
           }}
         >
@@ -266,10 +266,10 @@ export default function Dashboard() {
         <p
           style={{
             fontSize: '17px',
-            lineHeight: 1.7,
+            lineHeight: 1.75,
             color: '#5A6770',
             maxWidth: '620px',
-            marginBottom: '28px',
+            marginBottom: '30px',
           }}
         >
           {(() => {
