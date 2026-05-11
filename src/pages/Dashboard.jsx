@@ -167,7 +167,7 @@ export default function Dashboard() {
           </section>
         )}
 {/* Today's Focus */}
-        {hasCheckedIn && (
+        {true && (
           <section className="fade-up delay-3" style={{ marginBottom: '32px' }}>
             <div style={{ background: '#EDF4EF', borderLeft: '3px solid #6B9E7F', borderRadius: '6px 12px 12px 6px', padding: '20px 24px' }}>
               <div className="eyebrow" style={{ marginBottom: '8px', color: '#557E64' }}>Today's Focus</div>
