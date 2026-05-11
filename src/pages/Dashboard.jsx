@@ -260,7 +260,96 @@ export default function Dashboard() {
             </button>
           </div>
         </section>
+{/* Wellness Plan */}
+<section className="fade-up delay-4 card" style={{ padding: '28px 32px', marginBottom: '32px' }}>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
+    <div>
+      <div className="eyebrow" style={{ marginBottom: '6px' }}>Your plan</div>
+      <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', fontWeight: 500 }}>
+        Your wellness plan
+      </h2>
+    </div>
 
+    <button className="btn-ghost">
+      Edit
+    </button>
+  </div>
+
+  <div style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '16px'
+  }}>
+    {wellnessPlan.map((item, i) => (
+      <div
+        key={i}
+        style={{
+          background: item.bg,
+          border: `1px solid ${item.border}`,
+          borderRadius: '12px',
+          padding: '20px',
+        }}
+      >
+        <div style={{
+          fontSize: '11px',
+          fontWeight: 700,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          color: item.accent,
+          marginBottom: '10px'
+        }}>
+          {item.title}
+        </div>
+
+        <div
+          className="display"
+          style={{
+            fontSize: '20px',
+            color: '#3D4A52',
+            marginBottom: '18px',
+            lineHeight: 1.3,
+          }}
+        >
+          {item.habit}
+        </div>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{
+            fontSize: '12px',
+            color: item.accent,
+            fontWeight: 600,
+          }}>
+            {item.progress}
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '4px',
+          }}>
+            {[1,2,3,4,5].map((dot) => (
+              <div
+                key={dot}
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background:
+                    dot <= parseInt(item.progress)
+                      ? item.accent
+                      : 'rgba(0,0,0,0.08)'
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
         {/* Insights preview */}
         {streak > 0 && (
           <section className="fade-up delay-4 card" style={{ padding: '28px 32px', marginBottom: '32px' }}>
@@ -293,8 +382,8 @@ export default function Dashboard() {
                 <Sparkles size={11} strokeWidth={2} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>{streak} check-{streak === 1 ? 'in' : 'ins'} this week</div>
-                <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Consistency is the foundation of personalised insight. You're building something real.</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>Recent wellness activity</div>
+                <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Each check-in helps GlowWise understand your wellbeing more clearly. You're building something real.</div>
               </div>
             </div>
           </section>
@@ -331,7 +420,54 @@ export default function Dashboard() {
             </div>
           </section>
         )}
+{/* Coming Soon */}
+<section
+  className="fade-up delay-5 card"
+  style={{
+    padding: '28px 32px',
+    marginBottom: '32px',
+    background: 'linear-gradient(135deg, #FAF8F5 0%, #F3EFE8 100%)',
+  }}
+>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '20px',
+    flexWrap: 'wrap',
+  }}>
+    <div style={{ flex: 1, minWidth: '240px' }}>
+      <div className="eyebrow" style={{ marginBottom: '8px' }}>
+        Coming soon
+      </div>
 
+      <h2
+        className="display"
+        style={{
+          fontSize: '24px',
+          color: '#3D4A52',
+          marginBottom: '10px',
+          fontWeight: 500,
+        }}
+      >
+        Visual wellness tracking
+      </h2>
+
+      <p style={{
+        fontSize: '14px',
+        lineHeight: 1.6,
+        color: '#5A6770',
+        maxWidth: '520px',
+      }}>
+        Privately track gradual changes in skin, hair, posture, and overall glow with secure progress photos.
+      </p>
+    </div>
+
+    <button className="btn-primary">
+      Notify me
+    </button>
+  </div>
+</section>
         {/* Quick navigation - desktop */}
         <section className="fade-up delay-5 desktop-only" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
           {[
