@@ -71,7 +71,7 @@ export default function Dashboard() {
             Hello, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>{userName}.</em>
           </h1>
           <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#5A6770', maxWidth: '560px' }}>
-            {hasCheckedIn ? `You've checked in ${streak} ${streak === 1 ? 'day' : 'days'} so far. Here's how today is shaping up.` : `It's a new day. When you're ready, take 60 seconds to check in.`}
+            {hasCheckedIn ? `You've checked in ${streak} ${streak === 1 ? 'time' : 'times'} this week. Here's how today's shaping up.` : `When you're ready, take a minute to check in. The more you share, the sharper your insights become.`}
           </p>
         </section>
 
@@ -253,7 +253,7 @@ export default function Dashboard() {
             { icon: Calendar, label: 'Daily check-in', desc: '60-second snapshot', path: '/checkin' },
             { icon: MessageCircle, label: 'AI Coach', desc: 'Ask anything', path: '/ai-coach' },
             { icon: BarChart3, label: 'Insights', desc: 'See your patterns', path: '/insights' },
-            { icon: Settings, label: 'Settings', desc: 'Profile & privacy', path: '/settings' },
+            { icon: Settings, label: 'Profile', desc: 'Settings & privacy', path: '/settings' },
           ].map((item, i) => {
             const Icon = item.icon;
             return (
