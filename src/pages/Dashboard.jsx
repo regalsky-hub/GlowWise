@@ -200,29 +200,112 @@ export default function Dashboard() {
             <button onClick={() => navigate('/checkin')} className="btn-primary">Check in <ChevronRight size={14} strokeWidth={2} /></button>
           </section>
         )}
-{/* Today's Focus */}
-        {hasCheckedIn && (
-          <section className="fade-up delay-3" style={{ marginBottom: '32px' }}>
-            <div style={{ background: '#EDF4EF', borderLeft: '3px solid #6B9E7F', borderRadius: '6px 12px 12px 6px', padding: '20px 24px' }}>
-              <div className="eyebrow" style={{ marginBottom: '8px', color: '#557E64' }}>Today's Focus</div>
-              <p className="display" style={{ fontSize: '17px', lineHeight: 1.5, color: '#3D4A52', fontWeight: 400, margin: 0 }}>
-                {(() => {
-                  const energy = todayCheckIn.energy || 5;
-                  const sleep = todayCheckIn.sleep_hours || 7;
-                  const stress = todayCheckIn.stress_level || 5;
+{/* Today's Focus Hero */}
+{hasCheckedIn && (
+  <section className="fade-up delay-3" style={{ marginBottom: '40px' }}>
+    <div
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        padding: '40px 36px',
+        borderRadius: '32px',
+        background:
+          'linear-gradient(135deg, rgba(107,158,127,0.16) 0%, rgba(237,226,236,0.45) 100%)',
+        border: '1px solid rgba(107,158,127,0.12)',
+        boxShadow: '0 20px 60px -30px rgba(61,74,82,0.18)',
+      }}
+    >
 
-                  if (stress >= 7) return "Prioritise slower pacing and a moment of stillness — your stress is signalling.";
-                  if (sleep < 6) return "Focus on hydration and rest today — your sleep was lighter than usual.";
-                  if (energy <= 4) return "Gentle movement and sunlight today — your body's asking for support.";
-                  if (stress <= 3 && energy >= 7) return "You're in a good rhythm. Carry this calm into your day.";
-                  return "Small, consistent steps today. Your foundation is building.";
-                })()}
-              </p>
-            </div>
-          </section>
-        )}
+      {/* Ambient glow */}
+      <div
+        style={{
+          position: 'absolute',
+          width: '280px',
+          height: '280px',
+          borderRadius: '50%',
+          background: 'rgba(107,158,127,0.10)',
+          filter: 'blur(60px)',
+          top: '-120px',
+          right: '-80px',
+        }}
+      />
+
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div
+          className="eyebrow"
+          style={{
+            marginBottom: '14px',
+            color: '#557E64',
+          }}
+        >
+          Today’s Focus
+        </div>
+
+        <h2
+          className="display"
+          style={{
+            fontSize: 'clamp(30px, 4vw, 42px)',
+            lineHeight: 1.08,
+            color: '#3D4A52',
+            marginBottom: '18px',
+            maxWidth: '700px',
+            fontWeight: 400,
+          }}
+        >
+          {(() => {
+            const energy = todayCheckIn.energy || 5;
+            const sleep = todayCheckIn.sleep_hours || 7;
+            const stress = todayCheckIn.stress_level || 5;
+
+            if (stress >= 7)
+              return 'Slow down your nervous system today.';
+
+            if (sleep < 6)
+              return 'Your body may need deeper recovery today.';
+
+            if (energy <= 4)
+              return 'Gentle support and softer pacing may help today.';
+
+            if (stress <= 3 && energy >= 7)
+              return 'You seem more balanced today, protect that feeling.';
+
+            return 'Small supportive steps matter more than perfection.';
+          })()}
+        </h2>
+
+        <p
+          style={{
+            fontSize: '17px',
+            lineHeight: 1.7,
+            color: '#5A6770',
+            maxWidth: '620px',
+            marginBottom: '28px',
+          }}
+        >
+          {(() => {
+            const stress = todayCheckIn.stress_level || 5;
+            const sleep = todayCheckIn.sleep_hours || 7;
+
+            if (stress >= 7)
+              return 'A calmer pace, deeper breathing, and less overstimulation may help you feel more grounded.';
+
+            if (sleep < 6)
+              return 'Hydration, slower movement, and earlier rest tonight could support recovery.';
+
+            return 'GlowWise is here to support your wellbeing gently and consistently, one day at a time.';
+          })()}
+        </p>
+
+        <button className="btn-primary">
+          Open wellness support
+        </button>
+      </div>
+    </div>
+  </section>
+)}
+
         {/* Glow Score + Glow Type */}
-        <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+        <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '20px', marginBottom: '32px' }}>
           {/* Glow Score - Terracotta */}
           <div className="card" style={{ padding: '28px 32px', background: '#F5DDD0', border: '1px solid rgba(201, 123, 92, 0.25)' }}>
             <div className="eyebrow" style={{ marginBottom: '20px', color: '#A85A3D' }}>Glow Score</div>
