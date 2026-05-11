@@ -224,8 +224,8 @@ export default function Dashboard() {
                 <Sparkles size={11} strokeWidth={2} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>{streak}-day check-in streak</div>
-                <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Consistency is the foundation of personalised insight. Keep going.</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#3D4A52', marginBottom: '2px' }}>{streak} check-{streak === 1 ? 'in' : 'ins'} this week</div>
+                <div style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.5 }}>Consistency is the foundation of personalised insight. You're building something real.</div>
               </div>
             </div>
           </section>
