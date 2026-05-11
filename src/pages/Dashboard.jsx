@@ -166,7 +166,27 @@ export default function Dashboard() {
             <button onClick={() => navigate('/checkin')} className="btn-primary">Check in <ChevronRight size={14} strokeWidth={2} /></button>
           </section>
         )}
+{/* Today's Focus */}
+        {hasCheckedIn && (
+          <section className="fade-up delay-3" style={{ marginBottom: '32px' }}>
+            <div style={{ background: '#EDF4EF', borderLeft: '3px solid #6B9E7F', borderRadius: '6px 12px 12px 6px', padding: '20px 24px' }}>
+              <div className="eyebrow" style={{ marginBottom: '8px', color: '#557E64' }}>Today's Focus</div>
+              <p className="display" style={{ fontSize: '17px', lineHeight: 1.5, color: '#3D4A52', fontWeight: 400, margin: 0 }}>
+                {(() => {
+                  const energy = todayCheckIn.energy || 5;
+                  const sleep = todayCheckIn.sleep_hours || 7;
+                  const stress = todayCheckIn.stress_level || 5;
 
+                  if (stress >= 7) return "Prioritise slower pacing and a moment of stillness — your stress is signalling.";
+                  if (sleep < 6) return "Focus on hydration and rest today — your sleep was lighter than usual.";
+                  if (energy <= 4) return "Gentle movement and sunlight today — your body's asking for support.";
+                  if (stress <= 3 && energy >= 7) return "You're in a good rhythm. Carry this calm into your day.";
+                  return "Small, consistent steps today. Your foundation is building.";
+                })()}
+              </p>
+            </div>
+          </section>
+        )}
         {/* Glow Score + Glow Type */}
         <section className="fade-up delay-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '32px' }}>
           {/* Glow Score - Terracotta */}
