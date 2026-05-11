@@ -33,6 +33,40 @@ export default function Dashboard() {
   const focusAreas = profile?.focusAreas || [];
   const immediateActions = profile?.immediateActions || [];
   const glowTypeDesc = profile?.glowTypeDescription || 'Your personalised wellness profile.';
+  const wellnessPlan = [
+  {
+    title: 'Sleep Support',
+    habit: 'Consistent bedtime',
+    progress: '3 / 5 days',
+    bg: '#EDE2EC',
+    border: 'rgba(155, 123, 150, 0.2)',
+    accent: '#7A5C77',
+  },
+  {
+    title: 'Stress Recovery',
+    habit: 'Daily breathing',
+    progress: '4 / 5 days',
+    bg: '#EDF4EF',
+    border: 'rgba(107, 158, 127, 0.2)',
+    accent: '#557E64',
+  },
+  {
+    title: 'Energy Foundations',
+    habit: 'Morning sunlight',
+    progress: '2 / 5 days',
+    bg: '#FAF3DC',
+    border: 'rgba(212, 165, 92, 0.2)',
+    accent: '#A07E3D',
+  },
+  {
+    title: 'Nutrition Focus',
+    habit: 'Balanced meals',
+    progress: '3 / 5 days',
+    bg: '#F5DDD0',
+    border: 'rgba(201, 123, 92, 0.2)',
+    accent: '#A85A3D',
+  },
+];
 
   // Mock weekly trend until real data exists
   const weekData = checkIns && checkIns.length >= 2
