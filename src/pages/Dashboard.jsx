@@ -81,7 +81,13 @@ export default function Dashboard() {
         .fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .delay-1 { animation-delay: 0.08s; } .delay-2 { animation-delay: 0.16s; } .delay-3 { animation-delay: 0.24s; } .delay-4 { animation-delay: 0.32s; } .delay-5 { animation-delay: 0.40s; }
-        .card { background: #FAF8F5; border: 1px solid rgba(168, 153, 104, 0.15); border-radius: 12px; transition: all 0.3s ease; }
+        .card {
+  background: #FAF8F5;
+  border: 1px solid rgba(168, 153, 104, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 40px -32px rgba(61, 74, 82, 0.18);
+}
         .card-hover { cursor: pointer; }
         .card-hover:hover { border-color: #6B9E7F; transform: translateY(-2px); box-shadow: 0 12px 32px -16px rgba(61, 74, 82, 0.15); }
         .btn-primary { background: #6B9E7F; color: #FAF8F5; padding: 12px 24px; border: none; border-radius: 100px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
@@ -378,7 +384,7 @@ export default function Dashboard() {
 
   <div style={{
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'
     gap: '16px'
   }}>
     {wellnessPlan.map((item, i) => (
