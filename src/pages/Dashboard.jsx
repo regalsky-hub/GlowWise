@@ -127,10 +127,12 @@ export default function Dashboard() {
               </p>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <button onClick={() => navigate('/ai-coach')} style={{ background: '#FAF8F5', color: '#557E64', border: 'none', padding: '10px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <MessageCircle size={14} strokeWidth={2} />Open chat
-                </button>
-          </div>
-        </section>
+  <MessageCircle size={14} strokeWidth={2} />Open chat
+</button>
+</div>
+</div>
+</div>
+</section>
 
         {/* Snapshot or Check-in CTA */}
         {hasCheckedIn ? (
