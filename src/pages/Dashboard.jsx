@@ -417,26 +417,6 @@ export default function Dashboard() {
           }}>
             {item.progress}
           </div>
-
-          <div style={{
-            display: 'flex',
-            gap: '4px',
-          }}>
-            {[1,2,3,4,5].map((dot) => (
-              <div
-                key={dot}
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background:
-                    dot <= parseInt(item.progress)
-                      ? item.accent
-                      : 'rgba(0,0,0,0.08)'
-                }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     ))}
