@@ -102,7 +102,7 @@ export default function Dashboard() {
         @media (max-width: 768px) { .container-inner { padding: 32px 18px !important; } }
       `}</style>
 
-      <div className="container-inner" style={{ maxWidth: '1080px', margin: '0 auto', padding: '40px 32px' }}>
+      <div className="container-inner" style={{ maxWidth: '1080px', margin: '0 auto', padding: '56px 32px 80px' }}>
 
         {/* Greeting */}
         <section className="fade-up" style={{ marginBottom: '40px' }}>
