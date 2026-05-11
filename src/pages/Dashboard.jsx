@@ -198,7 +198,7 @@ export default function Dashboard() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
               <div>
                 <div className="eyebrow" style={{ marginBottom: '6px' }}>This week</div>
-                <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', fontWeight: 500 }}>What we're noticing</h2>
+                <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', fontWeight: 500 }}>Patterns emerging</h2>
               </div>
               <button onClick={() => navigate('/insights')} className="btn-ghost"><BarChart3 size={14} strokeWidth={2} />Full insights</button>
             </div>
