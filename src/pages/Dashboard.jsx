@@ -129,9 +129,6 @@ export default function Dashboard() {
                 <button onClick={() => navigate('/ai-coach')} style={{ background: '#FAF8F5', color: '#557E64', border: 'none', padding: '10px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                   <MessageCircle size={14} strokeWidth={2} />Open chat
                 </button>
-                <button onClick={() => navigate('/ai-coach')} style={{ background: 'transparent', color: '#FAF8F5', border: '1px solid rgba(250, 248, 245, 0.4)', padding: '10px 20px', borderRadius: '100px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Ask a question</button>
-              </div>
-            </div>
           </div>
         </section>
 
