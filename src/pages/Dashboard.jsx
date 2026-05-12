@@ -447,9 +447,7 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
                 stroke={theme.primary}
                 strokeWidth="5"
                 strokeLinecap="round"
-                strokeDasharray={`${
-                  2 * Math.PI * 42 * (score / 100)
-                } ${2 * Math.PI * 42}`}
+                strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`}
                 style={{
                   transition: 'all 0.6s ease',
                   filter: `drop-shadow(0 0 2px ${theme.primary})`,
