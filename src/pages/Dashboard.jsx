@@ -259,298 +259,73 @@ const Header = ({ name }) => {
 };
 
 // ============ HERO FOCUS ============
-const HeroFocus = ({ score = 78, state = 'calm' }) => {
-
-  // ===== Adaptive emotional states =====
-  const moodThemes = {
-    calm: {
-      primary: '#6B9E7F',
-      secondary: '#B7D8C3',
-      glow: 'rgba(107,158,127,0.30)',
-      pulse: 'rgba(107,158,127,0.18)',
-      label: 'Thriving',
-    },
-    stressed: {
-      primary: '#7E8D9B',
-      secondary: '#D6DEE5',
-      glow: 'rgba(126,141,155,0.28)',
-      pulse: 'rgba(126,141,155,0.18)',
-      label: 'Recovering',
-    },
-    energized: {
-      primary: '#D4A55C',
-      secondary: '#F3D8A6',
-      glow: 'rgba(212,165,92,0.30)',
-      pulse: 'rgba(212,165,92,0.18)',
-      label: 'Energised',
-    },
-    restorative: {
-      primary: '#8A6F86',
-      secondary: '#DCCFDB',
-      glow: 'rgba(138,111,134,0.28)',
-      pulse: 'rgba(138,111,134,0.18)',
-      label: 'Restoring',
-    },
-  };
-
-  const theme = moodThemes[state] || moodThemes.calm;
-
-  return (
-    <div
-      className="gw-hero-pad"
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        padding: '52px 48px',
-        borderRadius: 28,
-        background:
-          'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
-        border: '1px solid rgba(107,158,127,0.10)',
-        boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
-        marginBottom: 28,
-      }}
-    >
-
-      {/* ===== Animated background glow ===== */}
-      <div
-        style={{
-          position: 'absolute',
-          width: 360,
-          height: 360,
-          borderRadius: '50%',
-          background: theme.glow,
-          filter: 'blur(90px)',
-          top: -120,
-          right: -80,
-          animation: 'gwFloat 10s ease-in-out infinite',
-        }}
-      />
-
-      <div
-        className="gw-hero-grid"
-        style={{
-          position: 'relative',
-          display: 'grid',
-          gridTemplateColumns: '1.5fr 1fr',
-          gap: 40,
-          alignItems: 'center',
-        }}
-      >
-
-        {/* ===== LEFT SIDE ===== */}
-        <div>
-          <div
-            style={{
-              ...eyebrow(C.sageDark),
-              marginBottom: 16,
-            }}
-          >
-            Today's focus
-          </div>
-
-          <h2
-            className="gw-hero-title"
-            style={{
-              ...display(44),
-              margin: 0,
-              marginBottom: 22,
-              maxWidth: 540,
-            }}
-          >
-            A balanced day.{' '}
-            <em style={{ fontStyle: 'italic', color: C.sage }}>
-              Protect that feeling
-            </em>{' '}
-            with gentle movement and a slow lunch.
-          </h2>
-
-          <p
-            style={{
-              ...bodyText(16),
-              maxWidth: 480,
-              marginBottom: 28,
-            }}
-          >
-            Your stress is low and energy is steady — a good day for the harder
-            task you've been putting off. Hydrate before 11am.
-          </p>
-
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Link to="/ai-coach" style={btnPrimary}>
-              Open coach <ChevronRight size={12} strokeWidth={2} />
-            </Link>
-
-            <button style={btnGhost}>
-              See full plan
-            </button>
-          </div>
+const HeroFocus = ({ score = 78 }) => (
+  <div className="gw-hero-pad" style={{
+    position: 'relative', overflow: 'hidden',
+    padding: '52px 48px',
+    borderRadius: 28,
+    background: 'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
+    border: '1px solid rgba(107,158,127,0.10)',
+    boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
+    marginBottom: 28,
+  }}>
+    <div style={{
+      position: 'absolute', width: 320, height: 320, borderRadius: '50%',
+      background: 'rgba(107,158,127,0.12)', filter: 'blur(70px)',
+      top: -120, right: -80,
+    }} />
+    <div className="gw-hero-grid" style={{
+      position: 'relative', display: 'grid',
+      gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
+    }}>
+      <div>
+        <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
+        <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
+          A balanced day.{' '}
+          <em style={{ fontStyle: 'italic', color: C.sage }}>Protect that feeling</em>
+          {' '}with gentle movement and a slow lunch.
+        </h2>
+        <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 28 }}>
+          Your stress is low and energy is steady — a good day for the harder
+          task you've been putting off. Hydrate before 11am.
+        </p>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <Link to="/ai-coach" style={btnPrimary}>
+            Open coach <ChevronRight size={12} strokeWidth={2} />
+          </Link>
+          <button style={btnGhost}>See full plan</button>
         </div>
+      </div>
 
-        {/* ===== RIGHT SIDE / AURA SCORE ===== */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-
-          <div
-            className="gw-score-ring"
-            style={{
-              position: 'relative',
-              width: 240,
-              height: 240,
-            }}
-          >
-
-            {/* ===== OUTER BREATHING AURA ===== */}
-            <div
-  style={{
-    position: 'absolute',
-    inset: 18,
-    borderRadius: '50%',
-    background: theme.glow,
-    opacity: 0.22,
-    filter: 'blur(22px)',
-    animation: 'gwPulseSoft 8s ease-in-out infinite',
-  }}
-/>
-            {/* ===== SVG RING ===== */}
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 100 100"
-              style={{
-                transform: 'rotate(-90deg)',
-                position: 'relative',
-                zIndex: 2,
-              }}
-            >
-
-              {/* Background track */}
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
-                fill="none"
-                stroke="rgba(255,255,255,0.22)"
-                strokeWidth="5"
-              />
-
-              {/* Active ring */}
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
-                fill="none"
-                stroke={theme.primary}
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`}
-                style={{
-                  transition: 'all 0.6s ease',
-                  filter: `drop-shadow(0 0 2px ${theme.primary})`,
-                }}
-              />
-
-              {/* Endpoint dot */}
-              <circle
-                cx={
-                  50 +
-                  42 *
-                    Math.cos(
-                      (score / 100) * 2 * Math.PI - Math.PI / 2
-                    )
-                }
-                cy={
-                  50 +
-                  42 *
-                    Math.sin(
-                      (score / 100) * 2 * Math.PI - Math.PI / 2
-                    )
-                }
-                r="3.8"
-                fill={theme.primary}
-                style={{
-                  filter: `drop-shadow(0 0 6px ${theme.primary})`,
-                }}
-              />
-            </svg>
-
-            {/* ===== SCORE CONTENT ===== */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                zIndex: 3,
-              }}
-            >
-              <div
-                style={{
-                  ...eyebrow(theme.primary),
-                  marginBottom: 6,
-                }}
-              >
-                Glow score
-              </div>
-
-              <div
-                style={{
-                  ...display(58),
-                  color: theme.primary,
-                  textShadow: '0 1px 2px rgba(0,0,0,0.04)',
-                }}
-              >
-                {score}
-              </div>
-
-              <div
-                style={{
-                  fontFamily: FF_UI,
-                  fontSize: 12,
-                  color: theme.primary,
-                  fontWeight: 600,
-                  letterSpacing: '0.03em',
-                }}
-              >
-                {theme.label}
-              </div>
+      {/* Glow Score ring */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
+          <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
+            <circle cx="50" cy="50" r="42" fill="none"
+              stroke={C.sage} strokeWidth="6" strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
+            <circle
+              cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
+              cy={50 + 42 * Math.sin((score / 100) * 2 * Math.PI - Math.PI / 2)}
+              r="3.5" fill={C.terracottaMid}
+            />
+          </svg>
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+          }}>
+            <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
+            <div style={{ ...display(56), color: C.sageDark }}>{score}</div>
+            <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
+              Thriving
             </div>
           </div>
         </div>
       </div>
-
-      {/* ===== KEYFRAMES ===== */}
-      <style>{`
-         100% {
-    transform: scale(0.985);
-    opacity: 0.16;
-  }
-}
-
-@keyframes gwFloat {
-  0% {
-    transform: translateY(0px) translateX(0px);
-  }
-
-  50% {
-    transform: translateY(12px) translateX(-8px);
-  }
-
-  100% {
-    transform: translateY(0px) translateX(0px);
-  }
-}
-      `}</style>
     </div>
-  );
-};
+  </div>
+);
 
 // ============ VITALS ============
 const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
@@ -845,7 +620,7 @@ export default function Dashboard() {
             maxWidth: 1280, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} />
-            <HeroFocus score={score} state="calm" />
+            <HeroFocus score={score} />
             <Vitals today={today} />
             <div className="gw-twocol" style={{
               display: 'grid', gridTemplateColumns: '1.5fr 1fr',
