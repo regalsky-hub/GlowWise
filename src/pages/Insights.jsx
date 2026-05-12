@@ -667,11 +667,7 @@ export default function Insights() {
     ))}
   </div>
 </section>
-      </div>
-    </AppLayout>
-  );
-}
-<section className="fade-up" style={{ marginBottom: '48px' }}>
+        <section className="fade-up" style={{ marginBottom: '48px' }}>
   <div
     style={{
       position: 'relative',
@@ -739,3 +735,8 @@ export default function Insights() {
     </div>
   </div>
 </section>
+
+      </div>
+    </AppLayout>
+  );
+}
