@@ -671,3 +671,71 @@ export default function Insights() {
     </AppLayout>
   );
 }
+<section className="fade-up" style={{ marginBottom: '48px' }}>
+  <div
+    style={{
+      position: 'relative',
+      overflow: 'hidden',
+      padding: '36px 34px',
+      borderRadius: '28px',
+      background:
+        'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.42) 100%)',
+      border: '1px solid rgba(107,158,127,0.08)',
+    }}
+  >
+    <div
+      style={{
+        position: 'absolute',
+        width: '220px',
+        height: '220px',
+        borderRadius: '50%',
+        background: 'rgba(107,158,127,0.10)',
+        filter: 'blur(60px)',
+        top: '-80px',
+        right: '-40px',
+      }}
+    />
+
+    <div style={{ position: 'relative', zIndex: 2 }}>
+      <div
+        className="eyebrow"
+        style={{
+          marginBottom: '12px',
+          color: '#557E64',
+        }}
+      >
+        Weekly reflection
+      </div>
+
+      <h2
+        className="display"
+        style={{
+          fontSize: '30px',
+          color: '#3D4A52',
+          lineHeight: 1.2,
+          marginBottom: '18px',
+          maxWidth: '700px',
+        }}
+      >
+        Your recent check-ins suggest a more{' '}
+        <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
+          balanced rhythm
+        </em>
+        {' '}than last week.
+      </h2>
+
+      <p
+        style={{
+          fontSize: '15px',
+          lineHeight: 1.8,
+          color: '#5A6770',
+          maxWidth: '620px',
+        }}
+      >
+        Slower mornings, steadier sleep, and reduced stress levels may be
+        helping your energy feel more supported lately. Small consistent
+        habits are beginning to compound gently over time.
+      </p>
+    </div>
+  </div>
+</section>
