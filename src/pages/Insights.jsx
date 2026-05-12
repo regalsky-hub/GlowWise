@@ -80,18 +80,100 @@ export default function Insights() {
   };
 
   const Metric = ({ label, value, isStress }) => {
-    const isPositive = (value > 0 && !isStress) || (value < 0 && isStress);
-    const color = isPositive ? '#6B9E7F' : '#CC4444';
-    return (
-      <div style={{ background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.15)', borderRadius: '10px', padding: '18px' }}>
-        <div style={{ fontFamily: "'Manrope', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A89968', marginBottom: '10px' }}>{label}</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: "'Fraunces', serif", fontSize: '24px', fontWeight: 500, color }}>{value > 0 ? '+' : ''}{Math.abs(value).toFixed(1)}%</span>
-          {isPositive ? <TrendingUp size={16} strokeWidth={2} style={{ color }} /> : <TrendingDown size={16} strokeWidth={2} style={{ color }} />}
+  const positive =
+    (value > 0 && !isStress) || (value < 0 && isStress);
+
+  const config = positive
+    ? {
+        tone: 'Improving',
+        bg: '#EDF4EF',
+        accent: '#557E64',
+        glow: 'rgba(107,158,127,0.18)',
+      }
+    : {
+        tone: 'Needs support',
+        bg: '#FAF8F5',
+        accent: '#A85A3D',
+        glow: 'rgba(201,123,92,0.12)',
+      };
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        background: config.bg,
+        border: '1px solid rgba(168,153,104,0.10)',
+        borderRadius: '18px',
+        padding: '24px',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          width: '120px',
+          height: '120px',
+          borderRadius: '50%',
+          background: config.glow,
+          filter: 'blur(40px)',
+          top: '-40px',
+          right: '-30px',
+        }}
+      />
+
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div
+          style={{
+            fontFamily: "'Manrope', sans-serif",
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: '#A89968',
+            marginBottom: '16px',
+          }}
+        >
+          {label}
+        </div>
+
+        <div
+          style={{
+            fontFamily: "'Fraunces', serif",
+            fontSize: '34px',
+            color: config.accent,
+            marginBottom: '10px',
+            lineHeight: 1,
+          }}
+        >
+          {value > 0 ? '+' : ''}
+          {Math.abs(value).toFixed(0)}%
+        </div>
+
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            borderRadius: '999px',
+            background: 'rgba(255,255,255,0.55)',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: config.accent,
+          }}
+        >
+          {positive ? (
+            <TrendingUp size={13} strokeWidth={2} />
+          ) : (
+            <TrendingDown size={13} strokeWidth={2} />
+          )}
+
+          {config.tone}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   const Chart = ({ title, dataKey, stroke, domain }) => (
     <div style={{ background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.15)', borderRadius: '12px', padding: '24px' }}>
