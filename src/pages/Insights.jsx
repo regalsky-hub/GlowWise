@@ -128,12 +128,115 @@ export default function Insights() {
         {chartData.length > 0 && (
           <section className="fade-up" style={{ marginBottom: '40px' }}>
             <h2 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '16px' }}>Wellness signals over time</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <Chart title="Energy" dataKey="energy" stroke="#6B9E7F" domain={[0, 10]} />
-              <Chart title="Sleep hours" dataKey="sleep" stroke="#A89968" domain={[0, 12]} />
-              <Chart title="Stress" dataKey="stress" stroke="#C97B5C" domain={[0, 10]} />
-              <Chart title="Mood" dataKey="mood" stroke="#9B7B96" domain={[0, 10]} />
-            </div>
+            <div style={{
+  background: '#FAF8F5',
+  border: '1px solid rgba(168, 153, 104, 0.12)',
+  borderRadius: '18px',
+  padding: '28px',
+}}>
+  <ResponsiveContainer width="100%" height={320}>
+    <LineChart data={chartData}>
+      <CartesianGrid
+        strokeDasharray="3 3"
+        stroke="rgba(168,153,104,0.08)"
+        vertical={false}
+      />
+
+      <XAxis
+        dataKey="date"
+        stroke="#A89968"
+        style={{
+          fontSize: '11px',
+          fontFamily: 'Manrope',
+        }}
+      />
+
+      <YAxis
+        stroke="#A89968"
+        style={{
+          fontSize: '11px',
+          fontFamily: 'Manrope',
+        }}
+        domain={[0, 10]}
+      />
+
+      <Tooltip
+        contentStyle={{
+          backgroundColor: '#FAF8F5',
+          border: '1px solid rgba(168,153,104,0.18)',
+          borderRadius: '12px',
+          fontFamily: 'Manrope',
+        }}
+      />
+
+      <Line
+        type="monotone"
+        dataKey="energy"
+        stroke="#A07E3D"
+        strokeWidth={2.2}
+        dot={false}
+      />
+
+      <Line
+        type="monotone"
+        dataKey="sleep"
+        stroke="#7A5C77"
+        strokeWidth={2.2}
+        dot={false}
+      />
+
+      <Line
+        type="monotone"
+        dataKey="stress"
+        stroke="#6B9E7F"
+        strokeWidth={2.2}
+        dot={false}
+      />
+
+      <Line
+        type="monotone"
+        dataKey="mood"
+        stroke="#C97B5C"
+        strokeWidth={2.2}
+        dot={false}
+      />
+    </LineChart>
+  </ResponsiveContainer>
+
+  <div style={{
+    display: 'flex',
+    gap: '18px',
+    flexWrap: 'wrap',
+    marginTop: '18px',
+  }}>
+    {[
+      ['Energy', '#A07E3D'],
+      ['Sleep', '#7A5C77'],
+      ['Stress', '#6B9E7F'],
+      ['Mood', '#C97B5C'],
+    ].map(([label, color]) => (
+      <div
+        key={label}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontSize: '12px',
+          color: '#5A6770',
+          fontWeight: 500,
+        }}
+      >
+        <div style={{
+          width: '10px',
+          height: '10px',
+          borderRadius: '50%',
+          background: color,
+        }} />
+        {label}
+      </div>
+    ))}
+  </div>
+</div>
           </section>
         )}
 
