@@ -1,8 +1,6 @@
-// src/pages/Dashboard.jsx — GlowWise dashboard (v2)
-// Layout inspired by Claude Design draft.
-// Locked font system: Fraunces (display) + Manrope (UI).
-// Locked surfaces: cream #FAF8F5, ink #3D4A52, body #5A6770, taupe #A89968.
-// Extended accents from your palette: sage, terracotta, plum, amber.
+// src/pages/Dashboard.jsx — GlowWise dashboard (v2.1 responsive)
+// Desktop: left sidebar. Mobile: bottom nav bar.
+// Locked: Fraunces + Manrope, #FAF8F5, sage gradient coach.
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -40,6 +38,38 @@ const C = {
 const FF_DISPLAY = "'Fraunces', Georgia, serif";
 const FF_UI = "'Manrope', system-ui, sans-serif";
 
+// ============ RESPONSIVE STYLES ============
+const responsiveCSS = `
+  @media (max-width: 900px) {
+    .gw-hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+    .gw-hero-pad { padding: 36px 28px !important; }
+    .gw-hero-title { font-size: 32px !important; }
+    .gw-score-ring { width: 180px !important; height: 180px !important; }
+    .gw-header-h1 { font-size: 36px !important; }
+    .gw-twocol { grid-template-columns: 1fr !important; }
+    .gw-vitals { grid-template-columns: repeat(2, 1fr) !important; }
+    .gw-plan-grid { grid-template-columns: 1fr !important; }
+    .gw-main { padding: 32px 24px 100px !important; }
+  }
+  @media (max-width: 768px) {
+    .gw-sidebar { display: none !important; }
+    .gw-bottomnav { display: flex !important; }
+    .gw-main { padding: 24px 18px 100px !important; }
+    .gw-header { flex-direction: column !important; align-items: flex-start !important; }
+    .gw-header-actions { width: 100% !important; }
+    .gw-hero-pad { padding: 28px 22px !important; }
+    .gw-hero-title { font-size: 26px !important; }
+    .gw-header-h1 { font-size: 30px !important; }
+    .gw-card-pad { padding: 22px !important; }
+    .gw-vitals { gap: 10px !important; }
+  }
+  @media (max-width: 480px) {
+    .gw-hero-title { font-size: 23px !important; }
+    .gw-header-h1 { font-size: 26px !important; }
+    .gw-score-ring { width: 160px !important; height: 160px !important; }
+  }
+`;
+
 // ============ BRAND ============
 const Orbit = ({ size = 32, color = C.sageDark, tail = C.sage, accent = C.terracottaMid }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
@@ -76,8 +106,8 @@ const bodyText = (size = 14) => ({
   fontFamily: FF_UI, fontSize: size, lineHeight: 1.6, color: C.body,
 });
 
-const Card = ({ children, style = {}, bg = C.paper }) => (
-  <div style={{
+const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
+  <div className={`gw-card-pad ${className}`} style={{
     background: bg,
     border: `1px solid ${C.lineSoft}`,
     borderRadius: 16,
@@ -87,7 +117,16 @@ const Card = ({ children, style = {}, bg = C.paper }) => (
   }}>{children}</div>
 );
 
-// ============ SIDEBAR ============
+// ============ NAV ITEMS DATA ============
+const navItems = [
+  { Icon: Sun,           label: 'Dashboard',      to: '/dashboard' },
+  { Icon: Calendar,      label: 'Check-in',       to: '/checkin' },
+  { Icon: MessageCircle, label: 'Wellness Coach', to: '/ai-coach' },
+  { Icon: BarChart3,     label: 'Insights',       to: '/insights' },
+  { Icon: User,          label: 'Profile',        to: '/settings' },
+];
+
+// ============ DESKTOP SIDEBAR ============
 const NavItem = ({ Icon, label, to }) => {
   const { pathname } = useLocation();
   const active = pathname === to || (to !== '/' && pathname.startsWith(to));
@@ -110,7 +149,7 @@ const NavItem = ({ Icon, label, to }) => {
 };
 
 const Sidebar = () => (
-  <aside style={{
+  <aside className="gw-sidebar" style={{
     width: 240, padding: '32px 18px',
     borderRight: `1px solid ${C.lineSoft}`,
     background: C.paper,
@@ -125,12 +164,49 @@ const Sidebar = () => (
       <Orbit size={32} />
       <Wordmark size={22} />
     </div>
-    <NavItem Icon={Sun}           label="Dashboard"      to="/dashboard" />
-    <NavItem Icon={Calendar}      label="Check-in"       to="/checkin" />
-    <NavItem Icon={MessageCircle} label="Wellness Coach" to="/ai-coach" />
-    <NavItem Icon={BarChart3}     label="Insights"       to="/insights" />
-    <NavItem Icon={User}          label="Profile"        to="/settings" />
+    {navItems.map((item) => (
+      <NavItem key={item.to} {...item} />
+    ))}
   </aside>
+);
+
+// ============ MOBILE BOTTOM NAV ============
+const BottomNavItem = ({ Icon, label, to }) => {
+  const { pathname } = useLocation();
+  const active = pathname === to || (to !== '/' && pathname.startsWith(to));
+  return (
+    <Link to={to} style={{
+      flex: 1, textDecoration: 'none',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      gap: 4, padding: '8px 4px',
+      color: active ? C.sageDark : C.body,
+    }}>
+      <Icon size={20} strokeWidth={active ? 2 : 1.6} />
+      <span style={{
+        fontFamily: FF_UI, fontSize: 10, fontWeight: active ? 700 : 500,
+        letterSpacing: '0.02em',
+      }}>{label}</span>
+    </Link>
+  );
+};
+
+const BottomNav = () => (
+  <nav className="gw-bottomnav" style={{
+    display: 'none', // shown via media query
+    position: 'fixed', bottom: 0, left: 0, right: 0,
+    background: C.paper,
+    borderTop: `1px solid ${C.lineSoft}`,
+    padding: '6px 4px calc(6px + env(safe-area-inset-bottom))',
+    zIndex: 100,
+    boxShadow: '0 -2px 12px -4px rgba(61,74,82,0.08)',
+  }}>
+    {navItems.map((item) => {
+      // Shorten labels for mobile
+      const shortLabel = item.label === 'Wellness Coach' ? 'Coach' : item.label;
+      return <BottomNavItem key={item.to} {...item} label={shortLabel} />;
+    })}
+  </nav>
 );
 
 // ============ BUTTONS ============
@@ -159,18 +235,18 @@ const Header = ({ name }) => {
   const monthDay = today.toLocaleDateString('en-GB', { month: 'long', day: 'numeric' });
 
   return (
-    <div style={{
+    <div className="gw-header" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       marginBottom: 36, flexWrap: 'wrap', gap: 16,
     }}>
       <div>
         <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>{weekday} · {monthDay}</div>
-        <h1 style={{ ...display(48), margin: 0 }}>
+        <h1 className="gw-header-h1" style={{ ...display(48), margin: 0 }}>
           Good morning,{' '}
           <em style={{ fontStyle: 'italic', color: C.sage }}>{name}.</em>
         </h1>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div className="gw-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <button style={{ ...btnGhost, padding: '10px 12px' }} aria-label="Notifications">
           <Bell size={16} strokeWidth={1.6} />
         </button>
@@ -184,7 +260,7 @@ const Header = ({ name }) => {
 
 // ============ HERO FOCUS ============
 const HeroFocus = ({ score = 78 }) => (
-  <div style={{
+  <div className="gw-hero-pad" style={{
     position: 'relative', overflow: 'hidden',
     padding: '52px 48px',
     borderRadius: 28,
@@ -198,13 +274,13 @@ const HeroFocus = ({ score = 78 }) => (
       background: 'rgba(107,158,127,0.12)', filter: 'blur(70px)',
       top: -120, right: -80,
     }} />
-    <div style={{
+    <div className="gw-hero-grid" style={{
       position: 'relative', display: 'grid',
       gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
     }}>
       <div>
         <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
-        <h2 style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
+        <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
           A balanced day.{' '}
           <em style={{ fontStyle: 'italic', color: C.sage }}>Protect that feeling</em>
           {' '}with gentle movement and a slow lunch.
@@ -223,8 +299,8 @@ const HeroFocus = ({ score = 78 }) => (
 
       {/* Glow Score ring */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ position: 'relative', width: 220, height: 220 }}>
-          <svg width="220" height="220" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+        <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
+          <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
             <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
             <circle cx="50" cy="50" r="42" fill="none"
               stroke={C.sage} strokeWidth="6" strokeLinecap="round"
@@ -275,7 +351,7 @@ const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
 
 const Vitals = ({ today }) => (
   <div style={{ marginBottom: 28 }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18, gap: 12 }}>
       <div>
         <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>This morning</div>
         <h3 style={{ ...display(26), margin: 0 }}>Your snapshot</h3>
@@ -284,7 +360,7 @@ const Vitals = ({ today }) => (
         Update <ChevronRight size={11} strokeWidth={2} />
       </Link>
     </div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+    <div className="gw-vitals" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
       <Vital Icon={Zap}   label="Energy" value={today.energy} suffix="/10" mood="Steady"  bg={C.amberBg}      accent={C.amber}      text="#8B6A30" />
       <Vital Icon={Moon}  label="Sleep"  value={today.sleep}  suffix="h"    mood="Restful" bg={C.plumBg}       accent={C.plum}       text="#5D4459" />
       <Vital Icon={Waves} label="Stress" value={today.stress} suffix="/10" mood="Calm"    bg={C.sageMint}     accent={C.sageDark}   text="#3D5E48" />
@@ -311,7 +387,7 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
 
   return (
     <Card>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
         <div>
           <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
           <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
@@ -349,9 +425,9 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   );
 };
 
-// ============ COACH (sage gradient — kept from your original) ============
+// ============ COACH ============
 const Coach = ({ name }) => (
-  <div style={{
+  <div className="gw-card-pad" style={{
     padding: '28px 32px',
     borderRadius: 16,
     background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
@@ -394,7 +470,7 @@ const Coach = ({ name }) => (
 
 // ============ GLOW TYPE ============
 const GlowType = () => (
-  <div style={{
+  <div className="gw-card-pad" style={{
     padding: '28px 32px',
     borderRadius: 16,
     background: C.plumBg,
@@ -442,14 +518,14 @@ const planItems = [
 
 const Plan = () => (
   <Card>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
       <div>
         <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Your plan</div>
         <h3 style={{ ...display(24), margin: 0 }}>Your wellness plan</h3>
       </div>
       <button style={{ ...btnGhost, padding: '8px 14px', fontSize: 12 }}>Edit</button>
     </div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+    <div className="gw-plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
       {planItems.map((p, i) => (
         <div key={i} style={{
           padding: '20px 20px 22px', borderRadius: 14,
@@ -504,47 +580,67 @@ const Actions = () => (
   </Card>
 );
 
+// ============ MOBILE HEADER LOGO ============
+const MobileLogo = () => (
+  <div className="gw-bottomnav" style={{
+    display: 'none',
+    position: 'sticky', top: 0, zIndex: 50,
+    background: C.paper,
+    padding: '14px 18px',
+    borderBottom: `1px solid ${C.lineSoft}`,
+    alignItems: 'center', gap: 10,
+  }}>
+    <Orbit size={28} />
+    <Wordmark size={20} />
+  </div>
+);
+
 // ============ DASHBOARD ============
 export default function Dashboard() {
   const { user } = useAuth();
   const { profile } = useUserData();
 
-  // Try profile first (onboarding), then auth displayName, then fallback
   const firstName =
     (profile?.name || profile?.firstName || profile?.first_name ||
      user?.displayName || '').split(' ')[0] || 'there';
 
-  // TODO: wire to UserDataContext once design is approved
   const today = { energy: 7, sleep: 7.2, stress: 4, mood: 8 };
   const score = 78;
   const weekScores = [62, 70, 65, 74, 71, 76, 78];
 
   return (
-    <div style={{ display: 'flex', background: C.paper, minHeight: '100vh' }}>
-      <Sidebar />
-      <main style={{
-        flex: 1, padding: '44px 48px 80px',
-        maxWidth: 1280, width: '100%', boxSizing: 'border-box',
-      }}>
-        <Header name={firstName} />
-        <HeroFocus score={score} />
-        <Vitals today={today} />
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1.5fr 1fr',
-          gap: 20, marginBottom: 28,
-        }}>
-          <WeekChart scores={weekScores} />
-          <Coach name={firstName} />
+    <>
+      <style>{responsiveCSS}</style>
+      <div style={{ display: 'flex', background: C.paper, minHeight: '100vh' }}>
+        <Sidebar />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <MobileLogo />
+          <main className="gw-main" style={{
+            padding: '44px 48px 80px',
+            maxWidth: 1280, width: '100%', boxSizing: 'border-box',
+          }}>
+            <Header name={firstName} />
+            <HeroFocus score={score} />
+            <Vitals today={today} />
+            <div className="gw-twocol" style={{
+              display: 'grid', gridTemplateColumns: '1.5fr 1fr',
+              gap: 20, marginBottom: 28,
+            }}>
+              <WeekChart scores={weekScores} />
+              <Coach name={firstName} />
+            </div>
+            <div className="gw-twocol" style={{
+              display: 'grid', gridTemplateColumns: '1fr 1.4fr',
+              gap: 20, marginBottom: 28,
+            }}>
+              <GlowType />
+              <Plan />
+            </div>
+            <Actions />
+          </main>
         </div>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1.4fr',
-          gap: 20, marginBottom: 28,
-        }}>
-          <GlowType />
-          <Plan />
-        </div>
-        <Actions />
-      </main>
-    </div>
+        <BottomNav />
+      </div>
+    </>
   );
 }
