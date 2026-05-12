@@ -473,7 +473,7 @@ const GlowType = () => (
   <div className="gw-card-pad" style={{
     padding: '28px 32px',
     borderRadius: 16,
-    background: C.terracottaBg,
+    background: C.terracotta,
     border: '1px solid rgba(168,90,61,0.16)',
     boxShadow: '0 18px 50px -32px rgba(168,90,61,0.18)',
   }}>
