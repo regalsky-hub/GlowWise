@@ -528,22 +528,29 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
 
       {/* ===== KEYFRAMES ===== */}
       <style>{`
-        @keyframes gwPulseSoft {
-  0% {
-    transform: scale(0.985);
-    opacity: 0.16;
-  }
-
-  50% {
-    transform: scale(1.015);
-    opacity: 0.24;
-  }
-
-  100% {
+         100% {
     transform: scale(0.985);
     opacity: 0.16;
   }
 }
+
+@keyframes gwFloat {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+
+  50% {
+    transform: translateY(12px) translateX(-8px);
+  }
+
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+}
+      `}</style>
+    </div>
+  );
+};
 
 // ============ VITALS ============
 const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
