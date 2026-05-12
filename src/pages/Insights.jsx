@@ -82,20 +82,28 @@ export default function Insights() {
   const Metric = ({ label, value, isStress }) => {
   const positive =
     (value > 0 && !isStress) || (value < 0 && isStress);
+    const isNeutral = Math.abs(value) < 1;
 
-  const config = positive
-    ? {
-        tone: 'Improving',
-        bg: '#EDF4EF',
-        accent: '#557E64',
-        glow: 'rgba(107,158,127,0.18)',
-      }
-    : {
-        tone: 'Needs support',
-        bg: '#FAF8F5',
-        accent: '#A85A3D',
-        glow: 'rgba(201,123,92,0.12)',
-      };
+  const config = isNeutral
+  ? {
+      tone: 'Building baseline',
+      bg: '#FAF8F5',
+      accent: '#A89968',
+      glow: 'rgba(168,153,104,0.10)',
+    }
+  : positive
+  ? {
+      tone: 'Improving',
+      bg: '#EDF4EF',
+      accent: '#557E64',
+      glow: 'rgba(107,158,127,0.18)',
+    }
+  : {
+      tone: 'Needs support',
+      bg: '#FAF8F5',
+      accent: '#A85A3D',
+      glow: 'rgba(201,123,92,0.12)',
+    };
 
   return (
     <div
@@ -162,18 +170,13 @@ export default function Insights() {
             color: config.accent,
           }}
         >
-          {positive ? (
-            <TrendingUp size={13} strokeWidth={2} />
-          ) : (
-            <TrendingDown size={13} strokeWidth={2} />
-          )}
-
-          {config.tone}
-        </div>
-      </div>
-    </div>
-  );
-};
+          {isNeutral ? (
+  <Sparkles size={13} strokeWidth={2} />
+) : positive ? (
+  <TrendingUp size={13} strokeWidth={2} />
+) : (
+  <TrendingDown size={13} strokeWidth={2} />
+)}
 
   const Chart = ({ title, dataKey, stroke, domain }) => (
     <div style={{ background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.15)', borderRadius: '12px', padding: '24px' }}>
