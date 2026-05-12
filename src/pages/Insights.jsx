@@ -33,23 +33,35 @@ export default function Insights() {
       const avgStress = data.reduce((s, c) => s + (c.stress_level || 0), 0) / data.length;
 
       if (avgSleep < 7 && avgEnergy < 6) {
-        p.push({ title: 'Sleep is affecting your energy', desc: `You're averaging ${avgSleep.toFixed(1)}h of sleep and ${avgEnergy.toFixed(1)}/10 energy. Adding 30 minutes could lift energy by 1–2 points.`, tone: 'warning' });
-      }
+  p.push({
+    title: 'Your energy may respond well to deeper rest',
+    desc: `Your recent check-ins suggest that lighter sleep could be affecting how steady your energy feels throughout the day.`,
+    tone: 'neutral'
+  });
+}
       if (avgStress > 7 && avgSleep < 8) {
-        p.push({ title: 'High stress is disrupting sleep', desc: `Stress at ${avgStress.toFixed(1)}/10 is likely affecting sleep quality. A 5-minute breathing routine before bed often helps.`, tone: 'warning' });
-      }
+  p.push({
+    title: 'Your nervous system may be asking for slower recovery',
+    desc: `Stress levels have been slightly elevated lately, which can sometimes make rest feel less restorative.`,
+    tone: 'neutral'
+  });
+}
       if (data.length >= 7) {
         const last7 = data.slice(-7);
         const first7 = data.slice(0, 7);
         const lastEnergy = last7.reduce((s, c) => s + (c.energy || 0), 0) / 7;
         const firstEnergy = first7.reduce((s, c) => s + (c.energy || 0), 0) / 7;
         if (lastEnergy > firstEnergy + 0.5) {
-          p.push({ title: 'Energy is improving', desc: `You're up ${(lastEnergy - firstEnergy).toFixed(1)} points this week. Whatever you're doing — keep going.`, tone: 'positive' });
+          p.push({
+  title: 'Your rhythm seems steadier this week',
+  desc: `Recent check-ins suggest your energy has been feeling more supported and consistent lately.`,
+  tone: 'positive'
+});
         }
       }
     }
     if (p.length === 0) {
-      p.push({ title: 'Building your baseline', desc: 'Patterns become clearer after 5+ check-ins. Stay consistent and insights will follow.', tone: 'neutral' });
+      p.push({ title: 'Your patterns are beginning to take shape', desc: 'The more you check in, the more GlowWise can gently understand your wellbeing rhythms over time.', tone: 'neutral' });
     }
     setPatterns(p);
   };
