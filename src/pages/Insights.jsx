@@ -406,111 +406,130 @@ export default function Insights() {
           </section>
         )}
 
-        <section className="fade-up" style={{ marginBottom: '40px' }}>
-          <h2 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '16px' }}>Patterns</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div
-  key={i}
-  style={{
-    position: 'relative',
-    overflow: 'hidden',
-    background:
-      p.tone === 'positive'
-        ? '#EDF4EF'
-        : p.tone === 'warning'
-        ? '#F5DDD0'
-        : '#FAF8F5',
-    border: '1px solid rgba(168,153,104,0.10)',
-    borderRadius: '22px',
-    padding: '28px',
-  }}
->
-  <div
-    style={{
-      position: 'absolute',
-      width: '160px',
-      height: '160px',
-      borderRadius: '50%',
-      background:
-        p.tone === 'positive'
-          ? 'rgba(107,158,127,0.12)'
-          : p.tone === 'warning'
-          ? 'rgba(201,123,92,0.10)'
-          : 'rgba(168,153,104,0.08)',
-      filter: 'blur(50px)',
-      top: '-50px',
-      right: '-30px',
-    }}
-  />
+        <section className="fade-up" style={{ marginBottom: '48px' }}>
+  <div style={{ marginBottom: '18px' }}>
+    <div className="eyebrow" style={{ marginBottom: '8px' }}>
+      Patterns emerging
+    </div>
 
-  <div
-    style={{
-      position: 'relative',
-      zIndex: 2,
-      display: 'flex',
-      gap: '16px',
-      alignItems: 'flex-start',
-    }}
-  >
-    <div
+    <h2
+      className="display"
       style={{
-        width: '38px',
-        height: '38px',
-        borderRadius: '50%',
-        background:
-          p.tone === 'positive'
-            ? 'rgba(107,158,127,0.14)'
-            : p.tone === 'warning'
-            ? 'rgba(201,123,92,0.14)'
-            : 'rgba(168,153,104,0.10)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
+        fontSize: '26px',
+        color: '#3D4A52',
+        fontWeight: 500,
       }}
     >
-      <Sparkles
-        size={17}
-        strokeWidth={1.8}
-        style={{
-          color:
-            p.tone === 'positive'
-              ? '#557E64'
-              : p.tone === 'warning'
-              ? '#A85A3D'
-              : '#A89968',
-        }}
-      />
-    </div>
-
-    <div>
-      <h3
-        className="display"
-        style={{
-          fontSize: '22px',
-          color: '#3D4A52',
-          fontWeight: 500,
-          marginBottom: '10px',
-          lineHeight: 1.25,
-        }}
-      >
-        {p.title}
-      </h3>
-
-      <p
-        style={{
-          fontSize: '15px',
-          color: '#5A6770',
-          lineHeight: 1.75,
-          maxWidth: '620px',
-        }}
-      >
-        {p.desc}
-      </p>
-    </div>
+      What your check-ins may be revealing
+    </h2>
   </div>
-</div>
-        </section>
+
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+    {patterns.map((p, i) => (
+      <div
+        key={i}
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          background:
+            p.tone === 'positive'
+              ? '#EDF4EF'
+              : p.tone === 'warning'
+              ? '#F5DDD0'
+              : '#FAF8F5',
+          border: '1px solid rgba(168,153,104,0.10)',
+          borderRadius: '22px',
+          padding: '28px',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            width: '160px',
+            height: '160px',
+            borderRadius: '50%',
+            background:
+              p.tone === 'positive'
+                ? 'rgba(107,158,127,0.12)'
+                : p.tone === 'warning'
+                ? 'rgba(201,123,92,0.10)'
+                : 'rgba(168,153,104,0.08)',
+            filter: 'blur(50px)',
+            top: '-50px',
+            right: '-30px',
+          }}
+        />
+
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'flex-start',
+          }}
+        >
+          <div
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background:
+                p.tone === 'positive'
+                  ? 'rgba(107,158,127,0.14)'
+                  : p.tone === 'warning'
+                  ? 'rgba(201,123,92,0.14)'
+                  : 'rgba(168,153,104,0.10)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Sparkles
+              size={17}
+              strokeWidth={1.8}
+              style={{
+                color:
+                  p.tone === 'positive'
+                    ? '#557E64'
+                    : p.tone === 'warning'
+                    ? '#A85A3D'
+                    : '#A89968',
+              }}
+            />
+          </div>
+
+          <div>
+            <h3
+              className="display"
+              style={{
+                fontSize: '22px',
+                color: '#3D4A52',
+                fontWeight: 500,
+                marginBottom: '10px',
+                lineHeight: 1.25,
+              }}
+            >
+              {p.title}
+            </h3>
+
+            <p
+              style={{
+                fontSize: '15px',
+                color: '#5A6770',
+                lineHeight: 1.75,
+                maxWidth: '620px',
+              }}
+            >
+              {p.desc}
+            </p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
         <section className="fade-up">
           <h2 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '16px' }}>Recommendations</h2>
