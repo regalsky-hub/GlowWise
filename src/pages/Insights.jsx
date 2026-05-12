@@ -118,12 +118,73 @@ export default function Insights() {
       `}</style>
 
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '40px 24px' }}>
-        <div className="fade-up" style={{ marginBottom: '40px' }}>
-          <div className="eyebrow" style={{ marginBottom: '12px' }}>Your insights</div>
-          <h1 className="display" style={{ fontSize: 'clamp(32px, 5vw, 44px)', lineHeight: 1.1, color: '#3D4A52' }}>
-            What we're <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>noticing.</em>
-          </h1>
-        </div>
+        <section
+  className="fade-up"
+  style={{
+    marginBottom: '48px',
+    padding: '42px 38px',
+    borderRadius: '28px',
+    background:
+      'linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.50) 100%)',
+    border: '1px solid rgba(107,158,127,0.08)',
+    position: 'relative',
+    overflow: 'hidden',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '260px',
+      height: '260px',
+      borderRadius: '50%',
+      background: 'rgba(107,158,127,0.10)',
+      filter: 'blur(70px)',
+      top: '-100px',
+      right: '-60px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      className="eyebrow"
+      style={{
+        marginBottom: '14px',
+        color: '#557E64',
+      }}
+    >
+      Your insights
+    </div>
+
+    <h1
+      className="display"
+      style={{
+        fontSize: 'clamp(36px, 5vw, 52px)',
+        lineHeight: 1.06,
+        color: '#3D4A52',
+        marginBottom: '18px',
+        maxWidth: '720px',
+      }}
+    >
+      Understanding your{' '}
+      <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
+        wellness rhythms
+      </em>
+      {' '}over time.
+    </h1>
+
+    <p
+      style={{
+        fontSize: '16px',
+        lineHeight: 1.75,
+        color: '#5A6770',
+        maxWidth: '620px',
+      }}
+    >
+      Small shifts become clearer with consistency. Your insights help reveal
+      what may support your energy, mood, stress, and recovery most gently.
+    </p>
+  </div>
+</section>
 
         {Object.keys(trends).length > 0 && (
           <section className="fade-up" style={{ marginBottom: '40px' }}>
