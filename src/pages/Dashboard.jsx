@@ -473,18 +473,18 @@ const GlowType = () => (
   <div className="gw-card-pad" style={{
     padding: '28px 32px',
     borderRadius: 16,
-    background: C.amberBg,
-    border: '1px solid rgba(160,126,61,0.18)',
-    boxShadow: '0 18px 50px -32px rgba(122,92,119,0.22)',
+    background: C.terracottaBg,
+    border: '1px solid rgba(168,90,61,0.16)',
+    boxShadow: '0 18px 50px -32px rgba(168,90,61,0.18)',
   }}>
-    <div style={{ ...eyebrow(C.amber), marginBottom: 12 }}>Your glow type</div>
+    <div style={{ ...eyebrow(C.terracotta), marginBottom: 12 }}>Your glow type</div>
     <h3 style={{
       ...display(26), margin: 0, marginBottom: 14,
       fontStyle: 'italic', fontWeight: 500,
     }}>
       The Steady Bloomer
     </h3>
-    <p style={{ ...bodyText(14), color: '#7B6534', marginBottom: 22 }}>
+    <p style={{ ...bodyText(14), color: '#8A4D38', marginBottom: 22 }}>
       You thrive on routine and small, consistent rituals. Big swings drain
       you — gentle daily care compounds beautifully.
     </p>
@@ -492,17 +492,17 @@ const GlowType = () => (
       {['Sleep-led', 'Consistency', 'Soft mornings'].map((t) => (
         <span key={t} style={{
           padding: '5px 12px', borderRadius: 999,
-          background: 'rgba(160,126,61,0.12)',
-          color: C.amber, fontSize: 11.5, fontWeight: 600,
+          background: 'rgba(168,90,61,0.10)',
+          color: C.terracotta, fontSize: 11.5, fontWeight: 600,
           fontFamily: FF_UI,
         }}>{t}</span>
       ))}
     </div>
     <button style={{
       background: 'none', border: 'none', padding: 0,
-      color: C.amber, fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
+      color: C.terracotta, fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4,
-      borderBottom: `1px solid ${C.amber}`, paddingBottom: 2,
+      borderBottom: `1px solid ${C.terracotta}`, paddingBottom: 2,
     }}>
       Learn about your type <ChevronRight size={11} strokeWidth={2} />
     </button>
