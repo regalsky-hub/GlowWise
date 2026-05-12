@@ -531,27 +531,142 @@ export default function Insights() {
   </div>
 </section>
 
-        <section className="fade-up">
-          <h2 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '16px' }}>Recommendations</h2>
-          <div style={{ background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.15)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {[
-              { icon: Droplet, title: 'Stay hydrated', desc: 'Aim for 2–3L of water daily. Dehydration often shows up as fatigue first.' },
-              { icon: Activity, title: 'Manage stress', desc: 'Try a 5-minute breathing exercise daily. Consistency matters more than length.' },
-              { icon: Salad, title: 'Nutrition support', desc: 'Add protein and iron-rich foods to support energy and overall wellness.' },
-            ].map((r, i) => {
-              const Icon = r.icon;
-              return (
-                <div key={i} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                  <Icon size={20} strokeWidth={1.6} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
-                  <div>
-                    <h3 className="display" style={{ fontSize: '16px', color: '#3D4A52', fontWeight: 500, marginBottom: '4px' }}>{r.title}</h3>
-                    <p style={{ fontSize: '13px', color: '#5A6770', lineHeight: 1.55 }}>{r.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
+        <section className="fade-up" style={{ marginBottom: '48px' }}>
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      marginBottom: '20px',
+      gap: '12px',
+      flexWrap: 'wrap',
+    }}
+  >
+    <div>
+      <div className="eyebrow" style={{ marginBottom: '8px' }}>
+        Your support plan
+      </div>
+
+      <h2
+        className="display"
+        style={{
+          fontSize: '26px',
+          color: '#3D4A52',
+          fontWeight: 500,
+        }}
+      >
+        Your wellness plan
+      </h2>
+    </div>
+
+    <button
+      style={{
+        background: 'transparent',
+        border: '1px solid #6B9E7F',
+        color: '#557E64',
+        padding: '10px 16px',
+        borderRadius: '999px',
+        fontSize: '12px',
+        fontWeight: 600,
+        cursor: 'pointer',
+      }}
+    >
+      Adjust plan
+    </button>
+  </div>
+
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      gap: '16px',
+    }}
+  >
+    {[
+      {
+        eyebrow: 'Sleep Support',
+        title: 'Consistent bedtime by 10:30pm',
+        note: 'Building consistency',
+        bg: '#EDE2EC',
+        accent: '#7A5C77',
+      },
+      {
+        eyebrow: 'Stress Recovery',
+        title: '10 minute nervous system reset',
+        note: 'Steady progress',
+        bg: '#EDF4EF',
+        accent: '#557E64',
+      },
+      {
+        eyebrow: 'Movement Rhythm',
+        title: 'Walk after lunch most days',
+        note: '5 / 7 days this week',
+        bg: '#F5DDD0',
+        accent: '#A85A3D',
+      },
+    ].map((item, i) => (
+      <div
+        key={i}
+        style={{
+          background: item.bg,
+          border: '1px solid rgba(168,153,104,0.10)',
+          borderRadius: '22px',
+          padding: '24px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            width: '120px',
+            height: '120px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.16)',
+            filter: 'blur(40px)',
+            top: '-40px',
+            right: '-20px',
+          }}
+        />
+
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div
+            className="eyebrow"
+            style={{
+              marginBottom: '14px',
+              color: item.accent,
+              fontSize: '10px',
+            }}
+          >
+            {item.eyebrow}
           </div>
-        </section>
+
+          <h3
+            className="display"
+            style={{
+              fontSize: '22px',
+              color: '#3D4A52',
+              lineHeight: 1.3,
+              marginBottom: '18px',
+            }}
+          >
+            {item.title}
+          </h3>
+
+          <div
+            style={{
+              fontSize: '13px',
+              color: item.accent,
+              fontWeight: 600,
+            }}
+          >
+            {item.note}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
       </div>
     </AppLayout>
   );
