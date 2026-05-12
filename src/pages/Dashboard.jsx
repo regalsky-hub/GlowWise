@@ -406,30 +406,16 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
 
             {/* ===== OUTER BREATHING AURA ===== */}
             <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: '50%',
-                background: theme.pulse,
-                filter: 'blur(28px)',
-                animation: 'gwPulse 5s ease-in-out infinite',
-                transformOrigin: 'center',
-              }}
-            />
-
-            {/* ===== SECONDARY AURA ===== */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 20,
-                borderRadius: '50%',
-                background: theme.glow,
-                filter: 'blur(18px)',
-                opacity: 0.8,
-                animation: 'gwPulse 7s ease-in-out infinite',
-              }}
-            />
-
+  style={{
+    position: 'absolute',
+    inset: 18,
+    borderRadius: '50%',
+    background: theme.glow,
+    opacity: 0.22,
+    filter: 'blur(22px)',
+    animation: 'gwPulseSoft 8s ease-in-out infinite',
+  }}
+/>
             {/* ===== SVG RING ===== */}
             <svg
               width="100%"
@@ -466,7 +452,7 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
                 } ${2 * Math.PI * 42}`}
                 style={{
                   transition: 'all 0.6s ease',
-                  filter: `drop-shadow(0 0 6px ${theme.primary})`,
+                  filter: `drop-shadow(0 0 2px ${theme.primary})`,
                 }}
               />
 
@@ -520,7 +506,7 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
                 style={{
                   ...display(58),
                   color: theme.primary,
-                  textShadow: `0 0 14px ${theme.glow}`,
+                  textShadow: '0 1px 2px rgba(0,0,0,0.04)',
                 }}
               >
                 {score}
@@ -544,40 +530,22 @@ const HeroFocus = ({ score = 78, state = 'calm' }) => {
 
       {/* ===== KEYFRAMES ===== */}
       <style>{`
-        @keyframes gwPulse {
-          0% {
-            transform: scale(0.96);
-            opacity: 0.55;
-          }
+        @keyframes gwPulseSoft {
+  0% {
+    transform: scale(0.985);
+    opacity: 0.16;
+  }
 
-          50% {
-            transform: scale(1.05);
-            opacity: 1;
-          }
+  50% {
+    transform: scale(1.015);
+    opacity: 0.24;
+  }
 
-          100% {
-            transform: scale(0.96);
-            opacity: 0.55;
-          }
-        }
-
-        @keyframes gwFloat {
-          0% {
-            transform: translateY(0px) translateX(0px);
-          }
-
-          50% {
-            transform: translateY(12px) translateX(-8px);
-          }
-
-          100% {
-            transform: translateY(0px) translateX(0px);
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
+  100% {
+    transform: scale(0.985);
+    opacity: 0.16;
+  }
+}
 
 // ============ VITALS ============
 const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
