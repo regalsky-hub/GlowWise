@@ -233,7 +233,6 @@ export default function DailyCheckin() {
           )}
 
           {/* Energy */}
-          {/* Energy */}
 <div
   className="fade-up"
   style={{
@@ -325,7 +324,6 @@ export default function DailyCheckin() {
   </div>
 </div>
 
-          {/* Sleep */}
           {/* Sleep */}
 <div
   className="fade-up"
@@ -452,7 +450,6 @@ export default function DailyCheckin() {
 </div>
 
           {/* Stress */}
-          {/* Stress */}
 <div
   className="fade-up"
   style={{
@@ -545,13 +542,96 @@ export default function DailyCheckin() {
 </div>
 
           {/* Mood */}
-          <div className="fade-up">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <Heart size={18} strokeWidth={1.6} className="field-icon" />
-              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Overall mood</label>
-            </div>
-            <Scale value={mood} onChange={setMood} leftLabel="Low" rightLabel="Great" />
-          </div>
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(245,221,208,0.72) 0%, rgba(255,255,255,0.94) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    padding: '30px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '180px',
+      height: '180px',
+      borderRadius: '50%',
+      background: 'rgba(201,123,92,0.10)',
+      filter: 'blur(55px)',
+      top: '-60px',
+      right: '-40px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '14px',
+      }}
+    >
+      <div
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: 'rgba(201,123,92,0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Heart size={16} strokeWidth={1.8} style={{ color: '#A85A3D' }} />
+      </div>
+
+      <div
+        className="eyebrow"
+        style={{
+          color: '#A85A3D',
+        }}
+      >
+        Mood
+      </div>
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '28px',
+        color: '#3D4A52',
+        marginBottom: '10px',
+        lineHeight: 1.2,
+      }}
+    >
+      Emotionally, how does today feel so far?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        marginBottom: '26px',
+        maxWidth: '540px',
+      }}
+    >
+      Mood can reflect recovery, hormones, stress, sleep quality, and emotional wellbeing.
+    </p>
+
+    <Scale
+      value={mood}
+      onChange={setMood}
+      leftLabel="Low"
+      rightLabel="Bright"
+    />
+  </div>
+</div>
 
           {/* Symptoms */}
           <div className="fade-up">
