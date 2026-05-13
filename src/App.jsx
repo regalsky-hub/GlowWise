@@ -128,8 +128,7 @@ function AppRoutes() {
           <ProtectedRoute>
             <Settings />
           </ProtectedRoute>
-
-              }
+        }
       />
       <Route
         path="/wellness-plan"
@@ -137,8 +136,8 @@ function AppRoutes() {
           <ProtectedRoute>
             <WellnessPlan />
           </ProtectedRoute>
+        }
       />
-
       {/* Catch all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
