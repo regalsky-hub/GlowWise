@@ -128,7 +128,15 @@ function AppRoutes() {
           <ProtectedRoute>
             <Settings />
           </ProtectedRoute>
-        }
+
+              }
+      />
+      <Route
+        path="/wellness-plan"
+        element={
+          <ProtectedRoute>
+            <WellnessPlan />
+          </ProtectedRoute>
       />
 
       {/* Catch all */}
