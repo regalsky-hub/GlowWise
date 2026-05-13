@@ -49,24 +49,66 @@ export default function DailyCheckin() {
   };
 
   const Scale = ({ value, onChange, leftLabel, rightLabel }) => (
-    <div>
-      <div style={{ display: 'flex', gap: '6px', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap' }}>
-        {[1,2,3,4,5,6,7,8,9,10].map(i => (
-          <button key={i} type="button" onClick={() => onChange(i)} style={{
-            width: '38px', height: '38px', borderRadius: '50%',
-            border: 'none', cursor: 'pointer', fontFamily: "'Manrope', sans-serif",
-            fontSize: '14px', fontWeight: 600, transition: 'all 0.2s',
-            background: value === i ? '#6B9E7F' : '#EDF4EF',
-            color: value === i ? '#FAF8F5' : '#557E64',
-            boxShadow: value === i ? '0 4px 12px rgba(107, 158, 127, 0.3)' : 'none',
-          }}>{i}</button>
-        ))}
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', letterSpacing: '0.05em' }}>
-        <span>{leftLabel}</span><span>{rightLabel}</span>
-      </div>
+  <div>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: '10px',
+        marginBottom: '16px',
+      }}
+    >
+      {[1,2,3,4,5,6,7,8,9,10].map(i => {
+        const active = value === i;
+
+        return (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onChange(i)}
+            style={{
+              height: '52px',
+              borderRadius: '18px',
+              border: active
+                ? '1px solid rgba(107,158,127,0.22)'
+                : '1px solid rgba(168,153,104,0.10)',
+              cursor: 'pointer',
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: '15px',
+              fontWeight: active ? 700 : 600,
+              transition: 'all 0.22s ease',
+              background: active
+                ? 'linear-gradient(135deg, rgba(107,158,127,0.16) 0%, rgba(237,226,236,0.40) 100%)'
+                : 'rgba(255,255,255,0.72)',
+              color: active ? '#557E64' : '#6D7680',
+              boxShadow: active
+                ? '0 10px 24px -14px rgba(107,158,127,0.28)'
+                : 'none',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            {i}
+          </button>
+        );
+      })}
     </div>
-  );
+
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: '11px',
+        color: '#A89968',
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        fontWeight: 600,
+      }}
+    >
+      <span>{leftLabel}</span>
+      <span>{rightLabel}</span>
+    </div>
+  </div>
+);
 
   return (
     <AppLayout>
