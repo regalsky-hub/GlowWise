@@ -94,19 +94,38 @@ export default function DailyCheckin() {
     </div>
 
     <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: '11px',
-        color: '#A89968',
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        fontWeight: 600,
-      }}
-    >
-      <span>{leftLabel}</span>
-      <span>{rightLabel}</span>
-    </div>
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '2px',
+    padding: '0 4px',
+  }}
+>
+  <span
+    style={{
+      fontSize: '11px',
+      color: '#A89968',
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      fontWeight: 600,
+    }}
+  >
+    {leftLabel}
+  </span>
+
+  <span
+    style={{
+      fontSize: '11px',
+      color: '#A89968',
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      fontWeight: 600,
+    }}
+  >
+    {rightLabel}
+  </span>
+</div>
   </div>
 );
 
