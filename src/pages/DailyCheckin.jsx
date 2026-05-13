@@ -774,8 +774,8 @@ export default function DailyCheckin() {
       What is your body trying to{' '}
       <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
         communicate
-      </em>
-      {' '}today?
+      </em>{' '}
+      today?
     </h2>
 
     <p
@@ -787,8 +787,8 @@ export default function DailyCheckin() {
         marginBottom: '26px',
       }}
     >
-      You can mention symptoms, emotions, cravings, low motivation,
-      supplements, medications, or anything else influencing how you feel.
+      You can mention symptoms, emotions, cravings, supplements,
+      medications, or anything else influencing how you feel.
     </p>
 
     <textarea
