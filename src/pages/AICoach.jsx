@@ -524,9 +524,19 @@ export default function AICoach() {
           border-bottom-right-radius: 6px;
         }
         .msg-bubble.assistant {
-          background: #EDF4EF; color: #3D4A52;
-          border-bottom-left-radius: 6px;
-        }
+  background:
+    linear-gradient(
+      135deg,
+      rgba(237,244,239,0.95) 0%,
+      rgba(250,248,245,0.98) 100%
+    );
+  color: #3D4A52;
+  border-bottom-left-radius: 6px;
+  border: 1px solid rgba(107,158,127,0.08);
+  box-shadow:
+    0 12px 32px -24px rgba(61,74,82,0.16);
+  backdrop-filter: blur(12px);
+}
         .msg-time {
           font-family: 'Manrope', sans-serif; font-size: 10.5px;
           color: #A89968; margin-top: 4px; padding: 0 6px;
@@ -753,7 +763,7 @@ export default function AICoach() {
                         <div className="typing-dot" style={{ animationDelay: '0.15s' }}></div>
                         <div className="typing-dot" style={{ animationDelay: '0.3s' }}></div>
                       </div>
-                      <span className="typing-text">thinking…</span>
+                      <span className="typing-text">Reflecting…</span>
                     </div>
                   </div>
                 </div>
