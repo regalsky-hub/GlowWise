@@ -307,17 +307,130 @@ export default function DailyCheckin() {
 </div>
 
           {/* Sleep */}
-          <div className="fade-up">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <Moon size={18} strokeWidth={1.6} className="field-icon" />
-              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Hours of sleep last night</label>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              <input type="range" min="3" max="12" value={sleepHours} onChange={(e) => setSleepHours(Number(e.target.value))} className="slider" />
-              <span className="display" style={{ fontSize: '28px', color: '#6B9E7F', minWidth: '60px', textAlign: 'right' }}>{sleepHours}h</span>
-            </div>
-            <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>Most adults feel best with 7–9 hours.</p>
-          </div>
+          {/* Sleep */}
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(237,226,236,0.72) 0%, rgba(255,255,255,0.94) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    padding: '30px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '180px',
+      height: '180px',
+      borderRadius: '50%',
+      background: 'rgba(122,92,119,0.10)',
+      filter: 'blur(55px)',
+      top: '-60px',
+      right: '-40px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '14px',
+      }}
+    >
+      <div
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: 'rgba(122,92,119,0.10)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Moon size={16} strokeWidth={1.8} style={{ color: '#7A5C77' }} />
+      </div>
+
+      <div
+        className="eyebrow"
+        style={{
+          color: '#7A5C77',
+        }}
+      >
+        Sleep
+      </div>
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '28px',
+        color: '#3D4A52',
+        marginBottom: '10px',
+        lineHeight: 1.2,
+      }}
+    >
+      How much sleep did your body get last night?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        marginBottom: '28px',
+        maxWidth: '520px',
+      }}
+    >
+      Sleep quality often shapes energy, recovery, mood, and stress resilience.
+    </p>
+
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '22px',
+      }}
+    >
+      <input
+        type="range"
+        min="3"
+        max="12"
+        value={sleepHours}
+        onChange={(e) => setSleepHours(Number(e.target.value))}
+        className="slider"
+      />
+
+      <div
+        className="display"
+        style={{
+          fontSize: '34px',
+          color: '#7A5C77',
+          minWidth: '72px',
+          textAlign: 'right',
+        }}
+      >
+        {sleepHours}h
+      </div>
+    </div>
+
+    <p
+      style={{
+        fontSize: '12px',
+        color: '#A89968',
+        marginTop: '16px',
+        letterSpacing: '0.04em',
+      }}
+    >
+      Most adults feel best with around 7–9 hours of sleep.
+    </p>
+  </div>
+</div>
 
           {/* Stress */}
           <div className="fade-up">
