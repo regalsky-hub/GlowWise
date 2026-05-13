@@ -433,13 +433,97 @@ export default function DailyCheckin() {
 </div>
 
           {/* Stress */}
-          <div className="fade-up">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <Activity size={18} strokeWidth={1.6} className="field-icon" />
-              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Stress level</label>
-            </div>
-            <Scale value={stressLevel} onChange={setStressLevel} leftLabel="Calm" rightLabel="Overwhelmed" />
-          </div>
+          {/* Stress */}
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(237,244,239,0.72) 0%, rgba(255,255,255,0.94) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    padding: '30px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '180px',
+      height: '180px',
+      borderRadius: '50%',
+      background: 'rgba(107,158,127,0.10)',
+      filter: 'blur(55px)',
+      top: '-60px',
+      right: '-40px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '14px',
+      }}
+    >
+      <div
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: 'rgba(107,158,127,0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Activity size={16} strokeWidth={1.8} style={{ color: '#557E64' }} />
+      </div>
+
+      <div
+        className="eyebrow"
+        style={{
+          color: '#557E64',
+        }}
+      >
+        Stress
+      </div>
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '28px',
+        color: '#3D4A52',
+        marginBottom: '10px',
+        lineHeight: 1.2,
+      }}
+    >
+      How overwhelmed does your nervous system feel today?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        marginBottom: '26px',
+        maxWidth: '540px',
+      }}
+    >
+      Stress affects recovery, focus, digestion, sleep, and emotional balance.
+    </p>
+
+    <Scale
+      value={stressLevel}
+      onChange={setStressLevel}
+      leftLabel="Calm"
+      rightLabel="Overwhelmed"
+    />
+  </div>
+</div>
 
           {/* Mood */}
           <div className="fade-up">
