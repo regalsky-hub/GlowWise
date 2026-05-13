@@ -145,8 +145,7 @@ export default function DailyCheckin() {
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .field-icon { color: #6B9E7F; flex-shrink: 0; }
       `}</style>
-
-      <form
+      
   <form
   onSubmit={handleSubmit}
   style={{
