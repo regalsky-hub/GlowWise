@@ -86,15 +86,73 @@ export default function DailyCheckin() {
       `}</style>
 
       <div style={{ maxWidth: '720px', margin: '0 auto', padding: '40px 24px' }}>
-        <div className="fade-up" style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div className="eyebrow" style={{ marginBottom: '12px' }}>Daily check-in</div>
-          <h1 className="display" style={{ fontSize: 'clamp(32px, 5vw, 44px)', lineHeight: 1.1, color: '#3D4A52', marginBottom: '12px' }}>
-            How are you <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>feeling today?</em>
-          </h1>
-          <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770' }}>
-            60 seconds. Honest answers build the most accurate insights.
-          </p>
-        </div>
+        <div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    padding: '52px 42px',
+    borderRadius: '32px',
+    background:
+      'linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.50) 100%)',
+    border: '1px solid rgba(107,158,127,0.08)',
+    marginBottom: '42px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '260px',
+      height: '260px',
+      borderRadius: '50%',
+      background: 'rgba(107,158,127,0.10)',
+      filter: 'blur(70px)',
+      top: '-120px',
+      right: '-60px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      className="eyebrow"
+      style={{
+        marginBottom: '14px',
+        color: '#557E64',
+      }}
+    >
+      Daily check-in
+    </div>
+
+    <h1
+      className="display"
+      style={{
+        fontSize: 'clamp(36px, 5vw, 52px)',
+        lineHeight: 1.05,
+        color: '#3D4A52',
+        marginBottom: '18px',
+        maxWidth: '700px',
+      }}
+    >
+      Your daily wellness{' '}
+      <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
+        ritual
+      </em>
+      {' '}starts here.
+    </h1>
+
+    <p
+      style={{
+        fontSize: '16px',
+        lineHeight: 1.8,
+        color: '#5A6770',
+        maxWidth: '620px',
+      }}
+    >
+      A few gentle reflections to help GlowWise understand how your
+      body, mind, and energy are responding today.
+    </p>
+  </div>
+</div>
 
         {success && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(61, 74, 82, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
