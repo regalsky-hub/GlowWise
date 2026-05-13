@@ -866,9 +866,60 @@ export default function DailyCheckin() {
 </div>
 </label>
 
-          <button type="submit" disabled={loading} className="btn-primary">
-            {loading ? 'Saving...' : (<>Save check-in <Check size={16} strokeWidth={2} /></>)}
-          </button>
+          <button
+  type="submit"
+  disabled={loading}
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    width: '100%',
+    background:
+      'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
+    color: '#FAF8F5',
+    padding: '18px 24px',
+    border: 'none',
+    borderRadius: '999px',
+    fontFamily: "'Manrope', sans-serif",
+    fontSize: '15px',
+    fontWeight: 600,
+    cursor: loading ? 'not-allowed' : 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    boxShadow: '0 18px 40px -18px rgba(85,126,100,0.45)',
+    opacity: loading ? 0.7 : 1,
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '200px',
+      height: '200px',
+      borderRadius: '50%',
+      background: 'rgba(255,255,255,0.10)',
+      filter: 'blur(50px)',
+      top: '-120px',
+      right: '-40px',
+    }}
+  />
+
+  <span style={{ position: 'relative', zIndex: 2 }}>
+    {loading ? 'Saving your check-in...' : 'Complete today’s check-in'}
+  </span>
+
+  {!loading && (
+    <Check
+      size={17}
+      strokeWidth={2.2}
+      style={{
+        position: 'relative',
+        zIndex: 2,
+      }}
+    />
+  )}
+</button>
 
           <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968' }}>Takes about 60 seconds · Your data is private and encrypted</p>
         </form>
