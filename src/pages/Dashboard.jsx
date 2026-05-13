@@ -470,79 +470,117 @@ const Coach = ({ name }) => (
 
 // ============ GLOW TYPE ============
 const GlowType = () => (
-  <div className="gw-card-pad" style={{
-    padding: '28px 32px',
-    borderRadius: 16,
-    background:
-  'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
-border: '1px solid rgba(107,158,127,0.08)',
-boxShadow: '0 24px 60px -36px rgba(61,74,82,0.16)',
-position: 'relative',
-overflow: 'hidden',
-  }}>
+  <div
+    className="gw-card-pad"
+    style={{
+      padding: '28px 32px',
+      borderRadius: 16,
+      background:
+        'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
+      border: '1px solid rgba(107,158,127,0.08)',
+      boxShadow: '0 24px 60px -36px rgba(61,74,82,0.16)',
+      position: 'relative',
+      overflow: 'hidden',
+    }}
+  >
     <div
-  style={{
-    position: 'absolute',
-    width: '220px',
-    height: '220px',
-    borderRadius: '50%',
-    background: 'rgba(107,158,127,0.10)',
-    filter: 'blur(60px)',
-    top: '-80px',
-    right: '-40px',
-  }}
-/>
+      style={{
+        position: 'absolute',
+        width: '220px',
+        height: '220px',
+        borderRadius: '50%',
+        background: 'rgba(107,158,127,0.10)',
+        filter: 'blur(60px)',
+        top: '-80px',
+        right: '-40px',
+      }}
+    />
+
     <div
-  style={{
-    ...eyebrow(C.sageDark),
-    marginBottom: 12,
-    position: 'relative',
-    zIndex: 2,
-  }}
->
-    <h3 style={{
-      ...display(26), margin: 0, marginBottom: 14,
-      fontStyle: 'italic', fontWeight: 500,
-    }}>
+      style={{
+        ...eyebrow(C.sageDark),
+        marginBottom: 12,
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
+      Your glow type
+    </div>
+
+    <h3
+      style={{
+        ...display(26),
+        margin: 0,
+        marginBottom: 14,
+        fontStyle: 'italic',
+        fontWeight: 500,
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
       The Steady Bloomer
     </h3>
+
     <p
-  style={{
-    ...bodyText(14),
-    color: C.body,
-    marginBottom: 22,
-    position: 'relative',
-    zIndex: 2,
-  }}
->
+      style={{
+        ...bodyText(14),
+        color: C.body,
+        marginBottom: 22,
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
       You thrive on routine and small, consistent rituals. Big swings drain
       you — gentle daily care compounds beautifully.
     </p>
+
     <div
-  style={{
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 22,
-    position: 'relative',
-    zIndex: 2,
-  }}
->
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginBottom: 22,
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
       {['Sleep-led', 'Consistency', 'Soft mornings'].map((t) => (
-        <span key={t} style={{
-          padding: '5px 12px', borderRadius: 999,
-          background: 'rgba(122,92,119,0.14)',
-          color: C.plum, fontSize: 11.5, fontWeight: 600,
-          fontFamily: FF_UI,
-        }}>{t}</span>
+        <span
+          key={t}
+          style={{
+            padding: '5px 12px',
+            borderRadius: 999,
+            background: 'rgba(107,158,127,0.12)',
+            color: C.sageDark,
+            fontSize: 11.5,
+            fontWeight: 600,
+            fontFamily: FF_UI,
+          }}
+        >
+          {t}
+        </span>
       ))}
     </div>
-    <button style={{
-      background: 'none', border: 'none', padding: 0,
-      color: C.plum, fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
-      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4,
-      borderBottom: `1px solid ${C.plum}`, paddingBottom: 2,
-    }}>
+
+    <button
+      style={{
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        color: C.sageDark,
+        fontFamily: FF_UI,
+        fontSize: 13,
+        fontWeight: 600,
+        cursor: 'pointer',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        borderBottom: `1px solid ${C.sageDark}`,
+        paddingBottom: 2,
+        position: 'relative',
+        zIndex: 2,
+      }}
+    >
       Learn about your type <ChevronRight size={11} strokeWidth={2} />
     </button>
   </div>
