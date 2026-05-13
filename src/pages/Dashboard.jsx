@@ -729,26 +729,37 @@ const Plan = () => (
       </div>
       <button style={{ ...btnGhost, padding: '8px 14px', fontSize: 12 }}>Edit</button>
     </div>
-    <div className="gw-plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-      {planItems.map((p, i) => (
-        <div key={i} style={{
-          padding: '20px 20px 22px', borderRadius: 14,
-          background: p.bg, border: `1px solid ${C.lineSoft}`,
-        }}>
-          <div style={{ ...eyebrow(p.accent), marginBottom: 12, fontSize: 10 }}>{p.eyebrow}</div>
-          <div style={{
-            fontFamily: FF_DISPLAY, fontSize: 19,
-            color: C.ink, lineHeight: 1.3, marginBottom: 16,
-            letterSpacing: '-0.01em',
+    <Link to="/wellness-plan" style={{ textDecoration: 'none' }}>
+      <div className="gw-plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, cursor: 'pointer' }}>
+        {planItems.map((p, i) => (
+          <div key={i} style={{
+            padding: '20px 20px 22px', borderRadius: 14,
+            background: p.bg, border: `1px solid ${C.lineSoft}`,
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = 'none';
+            e.currentTarget.style.transform = 'translateY(0)';
           }}>
-            {p.title}
+            <div style={{ ...eyebrow(p.accent), marginBottom: 12, fontSize: 10 }}>{p.eyebrow}</div>
+            <div style={{
+              fontFamily: FF_DISPLAY, fontSize: 19,
+              color: C.ink, lineHeight: 1.3, marginBottom: 16,
+              letterSpacing: '-0.01em',
+            }}>
+              {p.title}
+            </div>
+            <div style={{ fontFamily: FF_UI, fontSize: 12, color: p.accent, fontWeight: 600 }}>
+              {p.note}
+            </div>
           </div>
-          <div style={{ fontFamily: FF_UI, fontSize: 12, color: p.accent, fontWeight: 600 }}>
-            {p.note}
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </Link>
   </Card>
 );
 
