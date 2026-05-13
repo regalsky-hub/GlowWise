@@ -128,6 +128,35 @@ export default function DailyCheckin() {
 </div>
   </div>
 );
+  const getWellnessFeedback = () => {
+  if (stressLevel >= 8 && sleepHours <= 5) {
+    return {
+      title: 'Your nervous system may need gentler support today.',
+      desc: 'Low sleep combined with high stress can increase fatigue, emotional sensitivity, and brain fog. Prioritise slower pacing and recovery where possible.',
+    };
+  }
+
+  if (energy >= 8 && mood >= 8) {
+    return {
+      title: 'Your body seems more supported today.',
+      desc: 'Higher energy and emotional steadiness often reflect improving recovery, rhythm, and resilience.',
+    };
+  }
+
+  if (mood <= 4) {
+    return {
+      title: 'Your emotional wellbeing may need extra care today.',
+      desc: 'Lower mood can sometimes reflect stress load, hormones, sleep disruption, or emotional exhaustion.',
+    };
+  }
+
+  return {
+    title: 'Your daily patterns are beginning to form.',
+    desc: 'Small daily reflections help GlowWise understand what supports your wellbeing over time.',
+  };
+};
+
+const insight = getWellnessFeedback();
 
   return (
     <AppLayout>
@@ -144,6 +173,23 @@ export default function DailyCheckin() {
         .btn-primary:hover:not(:disabled) { background: #557E64; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(107, 158, 127, 0.25); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .field-icon { color: #6B9E7F; flex-shrink: 0; }
+
+.fade-up:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .checkin-input {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  form {
+    padding: 28px 18px !important;
+  }
+}
       `}</style>
       
   <form
@@ -417,10 +463,11 @@ export default function DailyCheckin() {
     </p>
 
     <Scale
-      value={energy}
-      onChange={setEnergy}
-      leftLabel="Drained"
-      rightLabel="Energised"
+  value={energy}
+  onChange={setEnergy}
+  leftLabel="Exhausted"
+  rightLabel="Energised"
+/>
     />
   </div>
 </div>
@@ -733,7 +780,69 @@ export default function DailyCheckin() {
     />
   </div>
 </div>
+    
+{/* AI Wellness Reflection */}
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    padding: '34px 30px',
+    borderRadius: '30px',
+    background:
+      'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.46) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '220px',
+      height: '220px',
+      borderRadius: '50%',
+      background: 'rgba(107,158,127,0.08)',
+      filter: 'blur(70px)',
+      top: '-100px',
+      right: '-40px',
+    }}
+  />
 
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      className="eyebrow"
+      style={{
+        marginBottom: '14px',
+        color: '#557E64',
+      }}
+    >
+      GlowWise insight
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '30px',
+        lineHeight: 1.2,
+        color: '#3D4A52',
+        marginBottom: '14px',
+        maxWidth: '620px',
+      }}
+    >
+      {insight.title}
+    </h2>
+
+    <p
+      style={{
+        fontSize: '15px',
+        lineHeight: 1.8,
+        color: '#5A6770',
+        maxWidth: '620px',
+      }}
+    >
+      {insight.desc}
+    </p>
+  </div>
+</div>
          {/* Reflection + Wellness Support */}
 <div
   className="fade-up"
@@ -804,7 +913,7 @@ export default function DailyCheckin() {
     <textarea
       value={symptoms}
       onChange={(e) => setSymptoms(e.target.value)}
-      placeholder="e.g. headache, bloating, magnesium, iron tablets, anxious thoughts, brain fog..."
+      placeholder="e.g. brain fog, anxious thoughts, magnesium glycinate, iron tablets, cravings, headaches, low motivation..."
       className="checkin-input"
       style={{
         minHeight: '140px',
