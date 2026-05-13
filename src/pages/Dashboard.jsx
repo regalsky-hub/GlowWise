@@ -1,6 +1,5 @@
 // src/pages/Dashboard.jsx — GlowWise dashboard (v2.1 responsive)
-// Desktop: left sidebar. Mobile: bottom nav bar.
-// NOW USES REAL DATA from UserDataContext instead of hardcoded values
+// WITH LINKS TO /insights on: vitals cards, glow trend, explore patterns
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +9,7 @@ import {
   Calendar, BarChart3, User, ChevronRight,
   Plus, Bell,
 } from 'lucide-react';
+
 // ============ PALETTE ============
 const C = {
   paper: '#FAF8F5',
@@ -32,8 +32,10 @@ const C = {
   line: 'rgba(168, 153, 104, 0.16)',
   lineSoft: 'rgba(168, 153, 104, 0.10)',
 };
+
 const FF_DISPLAY = "'Fraunces', Georgia, serif";
 const FF_UI = "'Manrope', system-ui, sans-serif";
+
 // ============ RESPONSIVE STYLES ============
 const responsiveCSS = `
   @media (max-width: 900px) {
@@ -41,6 +43,7 @@ const responsiveCSS = `
     .gw-hero-pad { padding: 36px 28px !important; }
     .gw-hero-title { font-size: 32px !important; }
     .gw-score-ring { width: 180px !important; height: 180px !important; }
+    .gw-score-text { font-size: 40px !important; }
     .gw-header-h1 { font-size: 36px !important; }
     .gw-twocol { grid-template-columns: 1fr !important; }
     .gw-vitals { grid-template-columns: repeat(2, 1fr) !important; }
@@ -66,6 +69,7 @@ const responsiveCSS = `
     .gw-score-text { font-size: 40px !important; }
   }
 `;
+
 // ============ BRAND ============
 const Orbit = ({ size = 32, color = C.sageDark, tail = C.sage, accent = C.terracottaMid }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
@@ -75,6 +79,7 @@ const Orbit = ({ size = 32, color = C.sageDark, tail = C.sage, accent = C.terrac
     <circle cx="78" cy="46" r="6" fill={accent} />
   </svg>
 );
+
 const Wordmark = ({ size = 22, color = C.sageDark }) => (
   <span style={{
     fontFamily: FF_DISPLAY,
@@ -84,19 +89,23 @@ const Wordmark = ({ size = 22, color = C.sageDark }) => (
     Glow<span style={{ fontStyle: 'italic' }}>Wise</span>
   </span>
 );
+
 // ============ STYLE HELPERS ============
 const eyebrow = (color = C.mute) => ({
   fontFamily: FF_UI, fontSize: 11, fontWeight: 600,
   letterSpacing: '0.18em', textTransform: 'uppercase',
   color, lineHeight: 1,
 });
+
 const display = (size = 28) => ({
   fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: size,
   lineHeight: 1.1, letterSpacing: '-0.02em', color: C.ink,
 });
+
 const bodyText = (size = 14) => ({
   fontFamily: FF_UI, fontSize: size, lineHeight: 1.6, color: C.body,
 });
+
 const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
   <div className={`gw-card-pad ${className}`} style={{
     background: bg,
@@ -107,6 +116,7 @@ const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
     ...style,
   }}>{children}</div>
 );
+
 // ============ NAV ITEMS DATA ============
 const navItems = [
   { Icon: Sun,           label: 'Dashboard',      to: '/dashboard' },
@@ -115,6 +125,7 @@ const navItems = [
   { Icon: BarChart3,     label: 'Insights',       to: '/insights' },
   { Icon: User,          label: 'Profile',        to: '/settings' },
 ];
+
 // ============ DESKTOP SIDEBAR ============
 const NavItem = ({ Icon, label, to }) => {
   const { pathname } = useLocation();
@@ -136,6 +147,7 @@ const NavItem = ({ Icon, label, to }) => {
     </Link>
   );
 };
+
 const Sidebar = () => (
   <aside className="gw-sidebar" style={{
     width: 240, padding: '32px 18px',
@@ -157,6 +169,7 @@ const Sidebar = () => (
     ))}
   </aside>
 );
+
 // ============ MOBILE BOTTOM NAV ============
 const BottomNavItem = ({ Icon, label, to }) => {
   const { pathname } = useLocation();
@@ -177,6 +190,7 @@ const BottomNavItem = ({ Icon, label, to }) => {
     </Link>
   );
 };
+
 const BottomNav = () => (
   <nav className="gw-bottomnav" style={{
     display: 'none',
@@ -193,6 +207,7 @@ const BottomNav = () => (
     })}
   </nav>
 );
+
 // ============ BUTTONS ============
 const btnPrimary = {
   display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -202,6 +217,7 @@ const btnPrimary = {
   fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
   textDecoration: 'none',
 };
+
 const btnGhost = {
   display: 'inline-flex', alignItems: 'center', gap: 6,
   padding: '10px 16px', borderRadius: 999,
@@ -210,11 +226,13 @@ const btnGhost = {
   fontFamily: FF_UI, fontSize: 12.5, fontWeight: 500,
   textDecoration: 'none',
 };
+
 // ============ HEADER ============
 const Header = ({ name }) => {
   const today = new Date();
   const weekday = today.toLocaleDateString('en-GB', { weekday: 'long' });
   const monthDay = today.toLocaleDateString('en-GB', { month: 'long', day: 'numeric' });
+
   return (
     <div className="gw-header" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -238,6 +256,7 @@ const Header = ({ name }) => {
     </div>
   );
 };
+
 // ============ HERO FOCUS ============
 const HeroFocus = ({ score = 78 }) => (
   <div className="gw-hero-pad" style={{
@@ -306,27 +325,41 @@ const HeroFocus = ({ score = 78 }) => (
     </div>
   </div>
 );
+
 // ============ VITALS ============
 const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
-  <div style={{
-    background: bg,
-    border: `1px solid ${C.lineSoft}`,
-    borderRadius: 14,
-    padding: '20px 20px 22px',
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, color: accent }}>
-      <Icon size={14} strokeWidth={1.6} />
-      <span style={{ ...eyebrow(accent), fontSize: 10 }}>{label}</span>
+  <Link to="/insights" style={{ textDecoration: 'none' }}>
+    <div style={{
+      background: bg,
+      border: `1px solid ${C.lineSoft}`,
+      borderRadius: 14,
+      padding: '20px 20px 22px',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
+      e.currentTarget.style.transform = 'translateY(-2px)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.boxShadow = 'none';
+      e.currentTarget.style.transform = 'translateY(0)';
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, color: accent }}>
+        <Icon size={14} strokeWidth={1.6} />
+        <span style={{ ...eyebrow(accent), fontSize: 10 }}>{label}</span>
+      </div>
+      <div style={{ ...display(32), color: text, marginBottom: 6 }}>
+        {value}
+        <span style={{ fontSize: 13, color: accent, marginLeft: 3 }}>{suffix}</span>
+      </div>
+      <div style={{ fontFamily: FF_DISPLAY, fontStyle: 'italic', fontSize: 14, color: accent }}>
+        {mood}
+      </div>
     </div>
-    <div style={{ ...display(32), color: text, marginBottom: 6 }}>
-      {value}
-      <span style={{ fontSize: 13, color: accent, marginLeft: 3 }}>{suffix}</span>
-    </div>
-    <div style={{ fontFamily: FF_DISPLAY, fontStyle: 'italic', fontSize: 14, color: accent }}>
-      {mood}
-    </div>
-  </div>
+  </Link>
 );
+
 const Vitals = ({ today }) => (
   <div style={{ marginBottom: 28 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18, gap: 12 }}>
@@ -346,6 +379,7 @@ const Vitals = ({ today }) => (
     </div>
   </div>
 );
+
 // ============ WEEK CHART ============
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   const max = Math.max(...scores);
@@ -361,45 +395,57 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   const area = `${path} L ${pts[pts.length - 1][0]} ${h - pad} L ${pts[0][0]} ${h - pad} Z`;
   const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T'];
   const delta = scores[scores.length - 1] - scores[0];
+
   return (
-    <Card>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
-        <div>
-          <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
-          <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
+    <Link to="/insights" style={{ textDecoration: 'none' }}>
+      <Card style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = '0 12px 32px rgba(61,74,82,0.16)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = '0 1px 0 rgba(0,0,0,0.02), 0 10px 30px -24px rgba(61,74,82,0.18)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
+            <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
+          </div>
+          <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
+            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from last week
+          </div>
         </div>
-        <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-          {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from last week
-        </div>
-      </div>
-      <p style={{ ...bodyText(12.5), marginBottom: 18, marginTop: 4, maxWidth: 360 }}>
-        How your overall wellbeing is trending — so daily ups and downs don't
-        cloud the bigger picture.
-      </p>
-      <svg width="100%" viewBox={`0 0 ${w} ${h}`} style={{ display: 'block' }}>
-        <defs>
-          <linearGradient id="gloGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={C.sage} stopOpacity="0.22" />
-            <stop offset="100%" stopColor={C.sage} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d={area} fill="url(#gloGrad)" />
-        <path d={path} fill="none" stroke={C.sageDark} strokeWidth="2"
-          strokeLinecap="round" strokeLinejoin="round" />
-        {pts.map(([x, y], i) => (
-          <g key={i}>
-            <circle cx={x} cy={y} r={i === pts.length - 1 ? 5 : 3}
-              fill={i === pts.length - 1 ? C.terracotta : C.sageDark} />
-            <text x={x} y={h - 6} textAnchor="middle" fontSize="10"
-              fill={C.mute} fontFamily={FF_UI} fontWeight="600">
-              {days[i]}
-            </text>
-          </g>
-        ))}
-      </svg>
-    </Card>
+        <p style={{ ...bodyText(12.5), marginBottom: 18, marginTop: 4, maxWidth: 360 }}>
+          How your overall wellbeing is trending — so daily ups and downs don't
+          cloud the bigger picture.
+        </p>
+        <svg width="100%" viewBox={`0 0 ${w} ${h}`} style={{ display: 'block' }}>
+          <defs>
+            <linearGradient id="gloGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={C.sage} stopOpacity="0.22" />
+              <stop offset="100%" stopColor={C.sage} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d={area} fill="url(#gloGrad)" />
+          <path d={path} fill="none" stroke={C.sageDark} strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round" />
+          {pts.map(([x, y], i) => (
+            <g key={i}>
+              <circle cx={x} cy={y} r={i === pts.length - 1 ? 5 : 3}
+                fill={i === pts.length - 1 ? C.terracotta : C.sageDark} />
+              <text x={x} y={h - 6} textAnchor="middle" fontSize="10"
+                fill={C.mute} fontFamily={FF_UI} fontWeight="600">
+                {days[i]}
+              </text>
+            </g>
+          ))}
+        </svg>
+      </Card>
+    </Link>
   );
 };
+
 // ============ COACH ============
 const Coach = ({ name }) => (
   <div
@@ -467,8 +513,7 @@ const Coach = ({ name }) => (
         />
         <div
           style={{
-            ...eyebrow('rgba(250,248,245,0.76)'),
-            fontSize: 10,
+            fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
           }}
         >
           Today's observation
@@ -530,26 +575,31 @@ const Coach = ({ name }) => (
           <MessageCircle size={14} strokeWidth={1.6} />
           Reflect with coach
         </Link>
-        <button
+        <Link
+          to="/insights"
           style={{
             background: 'transparent',
             color: 'rgba(250,248,245,0.92)',
-            border:
-              '1px solid rgba(250,248,245,0.22)',
+            border: '1px solid rgba(250,248,245,0.22)',
             padding: '11px 18px',
             borderRadius: 999,
             fontFamily: FF_UI,
             fontSize: 13,
             fontWeight: 600,
             cursor: 'pointer',
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
           }}
         >
-          Explore patterns
-        </button>
+          Explore patterns <ChevronRight size={12} strokeWidth={2} />
+        </Link>
       </div>
     </div>
   </div>
 );
+
 // ============ GLOW TYPE ============
 const GlowType = () => (
   <div
@@ -662,12 +712,14 @@ const GlowType = () => (
     </button>
   </div>
 );
+
 // ============ PLAN ============
 const planItems = [
   { eyebrow: 'Sleep Support',   title: 'Consistent bedtime by 10:30pm', note: '4 / 7 this week',     accent: C.plum,       bg: C.plumBg },
   { eyebrow: 'Stress Recovery', title: '10 min slow breathing',          note: 'Building consistency', accent: C.sageDark,   bg: C.sageMint },
   { eyebrow: 'Daily Movement',  title: 'Walk after lunch',               note: '5 / 7 this week',     accent: C.terracotta, bg: C.terracottaBg },
 ];
+
 const Plan = () => (
   <Card>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
@@ -699,12 +751,14 @@ const Plan = () => (
     </div>
   </Card>
 );
+
 // ============ SMALL STEPS ============
 const actions = [
   'Drink a glass of water in the next 30 min',
   'Step outside for 5 minutes of morning light',
   'Reply to coach about last night\'s sleep',
 ];
+
 const Actions = () => (
   <Card>
     <div style={{ marginBottom: 18 }}>
@@ -729,6 +783,7 @@ const Actions = () => (
     ))}
   </Card>
 );
+
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
   <div className="gw-bottomnav" style={{
@@ -743,17 +798,16 @@ const MobileLogo = () => (
     <Wordmark size={20} />
   </div>
 );
+
 // ============ DASHBOARD ============
 export default function Dashboard() {
   const { user } = useAuth();
   const { profile, checkIns, glowScore, loading, getTodayCheckIn } = useUserData();
 
-  // Get user's name
   const firstName =
     (profile?.name || profile?.firstName || profile?.first_name ||
      user?.displayName || '').split(' ')[0] || 'there';
 
-  // Get today's check-in or show defaults
   const todayCheckIn = getTodayCheckIn();
   const today = todayCheckIn ? {
     energy: todayCheckIn.energy || 7,
@@ -767,15 +821,12 @@ export default function Dashboard() {
     mood: 8,
   };
 
-  // Get glow score from context
   const score = glowScore || 78;
 
-  // Calculate week scores from last 7 check-ins
   const weekScores = checkIns
     .slice(0, 7)
     .reverse()
     .map(c => {
-      // Calculate a score from the check-in
       const energy = c.energy || 0;
       const sleep = (c.sleep_hours || 0) / 9 * 10;
       const stress = 10 - (c.stress_level || 0);
@@ -784,7 +835,6 @@ export default function Dashboard() {
     })
     .reverse();
 
-  // Fallback if not enough data
   const displayWeekScores = weekScores.length > 0 ? weekScores : [62, 70, 65, 74, 71, 76, 78];
 
   if (loading) {
