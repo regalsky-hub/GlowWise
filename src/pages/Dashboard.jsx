@@ -63,6 +63,7 @@ const responsiveCSS = `
     .gw-hero-title { font-size: 23px !important; }
     .gw-header-h1 { font-size: 26px !important; }
     .gw-score-ring { width: 160px !important; height: 160px !important; }
+    .gw-score-text { font-size: 40px !important; }
   }
 `;
 // ============ BRAND ============
@@ -295,7 +296,7 @@ const HeroFocus = ({ score = 78 }) => (
             alignItems: 'center', justifyContent: 'center', textAlign: 'center',
           }}>
             <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
-            <div style={{ ...display(56), color: C.sageDark }}>{score}</div>
+            <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
             <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
               Thriving
             </div>
