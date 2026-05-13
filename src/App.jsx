@@ -18,6 +18,7 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Cookies from './pages/Cookies';
 import Disclaimer from './pages/Disclaimer';
+import WellnessPlan from './pages/WellnessPlan';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
