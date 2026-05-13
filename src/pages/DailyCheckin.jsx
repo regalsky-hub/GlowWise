@@ -147,11 +147,15 @@ export default function DailyCheckin() {
       `}</style>
 
       <form
+  <form
   onSubmit={handleSubmit}
   style={{
     maxWidth: '720px',
     margin: '0 auto',
     padding: '40px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '28px',
   }}
 >
         <div
