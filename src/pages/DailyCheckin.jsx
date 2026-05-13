@@ -467,7 +467,6 @@ const insight = getWellnessFeedback();
   onChange={setEnergy}
   leftLabel="Exhausted"
   rightLabel="Energised"
-/>
     />
   </div>
 </div>
