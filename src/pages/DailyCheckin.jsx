@@ -809,7 +809,7 @@ export default function DailyCheckin() {
   </div>
 </div>
 
-          <button
+        <button
   type="submit"
   disabled={loading}
   style={{
@@ -849,7 +849,9 @@ export default function DailyCheckin() {
   />
 
   <span style={{ position: 'relative', zIndex: 2 }}>
-    {loading ? 'Saving your check-in...' : 'Complete today’s check-in'}
+    {loading
+      ? 'Saving your check-in...'
+      : 'Complete today’s check-in'}
   </span>
 
   {!loading && (
@@ -877,5 +879,5 @@ export default function DailyCheckin() {
 </form>
 </div>
 </AppLayout>
-);
+  );
 }
