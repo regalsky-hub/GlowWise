@@ -5,9 +5,10 @@ import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
 import { LogOut, AlertCircle, Download, Shield, Mail, Calendar, BellOff, Check } from 'lucide-react';
 import { db } from '../config/firebase';
+import { deleteUser } from 'firebase/auth';
 import { 
   collection, getDocs, deleteDoc, doc,
-  writeBatch, deleteUser 
+  writeBatch
 } from 'firebase/firestore';
 
 export default function Settings() {
