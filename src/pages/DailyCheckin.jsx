@@ -633,11 +633,83 @@ export default function DailyCheckin() {
   </div>
 </div>
 
-          {/* Symptoms */}
-          <div className="fade-up">
-            <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Anything you're noticing? (optional)</label>
-            <textarea value={symptoms} onChange={(e) => setSymptoms(e.target.value)} placeholder="e.g. headache, bloating, fatigue, breakouts..." className="checkin-input" />
-          </div>
+          {/* Reflection */}
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(250,248,245,0.95) 0%, rgba(237,226,236,0.34) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    padding: '30px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '200px',
+      height: '200px',
+      borderRadius: '50%',
+      background: 'rgba(168,153,104,0.06)',
+      filter: 'blur(60px)',
+      top: '-70px',
+      right: '-30px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      className="eyebrow"
+      style={{
+        marginBottom: '14px',
+        color: '#A89968',
+      }}
+    >
+      Reflection
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '28px',
+        color: '#3D4A52',
+        marginBottom: '10px',
+        lineHeight: 1.2,
+      }}
+    >
+      Anything your body is trying to tell you today?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        marginBottom: '24px',
+        maxWidth: '560px',
+      }}
+    >
+      Small observations often reveal the most meaningful wellness patterns over time.
+    </p>
+
+    <textarea
+      value={symptoms}
+      onChange={(e) => setSymptoms(e.target.value)}
+      placeholder="e.g. headache, bloating, low motivation, cravings, brain fog..."
+      className="checkin-input"
+      style={{
+        minHeight: '130px',
+        borderRadius: '20px',
+        background: 'rgba(255,255,255,0.72)',
+        border: '1px solid rgba(168,153,104,0.12)',
+        padding: '18px 18px',
+        lineHeight: 1.7,
+      }}
+    />
+  </div>
+</div>
 
           {/* Supplements */}
           <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '16px 18px', background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.25)', borderRadius: '8px' }}>
