@@ -712,10 +712,124 @@ export default function DailyCheckin() {
 </div>
 
           {/* Supplements */}
-          <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '16px 18px', background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.25)', borderRadius: '8px' }}>
-            <input type="checkbox" checked={supplementTaken} onChange={(e) => setSupplementTaken(e.target.checked)} style={{ width: '18px', height: '18px', accentColor: '#6B9E7F', cursor: 'pointer' }} />
-            <span style={{ fontSize: '15px', color: '#3D4A52', fontWeight: 500 }}>Took supplements today</span>
-          </label>
+<label
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '20px',
+    cursor: 'pointer',
+    padding: '28px 30px',
+    background:
+      supplementTaken
+        ? 'linear-gradient(135deg, rgba(107,158,127,0.14) 0%, rgba(237,244,239,0.72) 100%)'
+        : 'linear-gradient(135deg, rgba(250,248,245,0.96) 0%, rgba(237,226,236,0.20) 100%)',
+    border: supplementTaken
+      ? '1px solid rgba(107,158,127,0.18)'
+      : '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    transition: 'all 0.25s ease',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '180px',
+      height: '180px',
+      borderRadius: '50%',
+      background: 'rgba(107,158,127,0.08)',
+      filter: 'blur(60px)',
+      top: '-70px',
+      right: '-30px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      className="eyebrow"
+      style={{
+        marginBottom: '12px',
+        color: supplementTaken ? '#557E64' : '#A89968',
+      }}
+    >
+      Daily support
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '26px',
+        color: '#3D4A52',
+        marginBottom: '8px',
+        lineHeight: 1.2,
+      }}
+    >
+      Did you take your supplements today?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        maxWidth: '520px',
+      }}
+    >
+      Consistency helps GlowWise better understand how your routines may influence your wellbeing patterns.
+    </p>
+  </div>
+
+  <div
+    style={{
+      position: 'relative',
+      zIndex: 2,
+      flexShrink: 0,
+    }}
+  >
+    <div
+      style={{
+        width: '68px',
+        height: '38px',
+        borderRadius: '999px',
+        background: supplementTaken
+          ? '#6B9E7F'
+          : 'rgba(168,153,104,0.18)',
+        padding: '4px',
+        transition: 'all 0.25s ease',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          width: '30px',
+          height: '30px',
+          borderRadius: '50%',
+          background: '#FAF8F5',
+          transform: supplementTaken
+            ? 'translateX(30px)'
+            : 'translateX(0px)',
+          transition: 'all 0.25s ease',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.08)',
+        }}
+      />
+    </div>
+
+    <input
+      type="checkbox"
+      checked={supplementTaken}
+      onChange={(e) => setSupplementTaken(e.target.checked)}
+      style={{
+        position: 'absolute',
+        opacity: 0,
+        pointerEvents: 'none',
+      }}
+    />
+  </div>
+</label>
 
           <button type="submit" disabled={loading} className="btn-primary">
             {loading ? 'Saving...' : (<>Save check-in <Check size={16} strokeWidth={2} /></>)}
