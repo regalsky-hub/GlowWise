@@ -216,21 +216,112 @@ export default function DailyCheckin() {
 </div>
 
         {success && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(61, 74, 82, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-            <div className="fade-up" style={{ background: '#FAF8F5', borderRadius: '16px', padding: '40px', textAlign: 'center', maxWidth: '360px' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#6B9E7F', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                <Check size={32} strokeWidth={2.5} style={{ color: '#FAF8F5' }} />
-              </div>
-              <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', marginBottom: '8px' }}>Logged.</h2>
-              <p style={{ fontSize: '14px', color: '#5A6770' }}>You're building real awareness. See you tomorrow.</p>
-            </div>
-          </div>
-        )}
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(61,74,82,0.42)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 100,
+      backdropFilter: 'blur(10px)',
+      padding: '24px',
+    }}
+  >
+    <div
+      className="fade-up"
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        background:
+          'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
+        border: '1px solid rgba(168,153,104,0.10)',
+        borderRadius: '34px',
+        padding: '54px 42px',
+        width: '100%',
+        maxWidth: '520px',
+        textAlign: 'center',
+        boxShadow: '0 40px 90px -50px rgba(61,74,82,0.35)',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          width: '240px',
+          height: '240px',
+          borderRadius: '50%',
+          background: 'rgba(107,158,127,0.10)',
+          filter: 'blur(70px)',
+          top: '-120px',
+          right: '-40px',
+        }}
+      />
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
-          {error && (
-            <div style={{ background: 'rgba(204, 68, 68, 0.08)', borderLeft: '3px solid #CC4444', borderRadius: '4px', padding: '12px 16px', fontSize: '13px', color: '#CC4444' }}>{error}</div>
-          )}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div
+          style={{
+            width: '82px',
+            height: '82px',
+            borderRadius: '50%',
+            background:
+              'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 28px',
+            boxShadow: '0 18px 40px -18px rgba(85,126,100,0.45)',
+          }}
+        >
+          <Check
+            size={34}
+            strokeWidth={2.5}
+            style={{ color: '#FAF8F5' }}
+          />
+        </div>
+
+        <div
+          className="eyebrow"
+          style={{
+            marginBottom: '14px',
+            color: '#557E64',
+          }}
+        >
+          Check-in complete
+        </div>
+
+        <h2
+          className="display"
+          style={{
+            fontSize: '38px',
+            lineHeight: 1.1,
+            color: '#3D4A52',
+            marginBottom: '18px',
+          }}
+        >
+          Your wellness story is becoming{' '}
+          <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
+            clearer
+          </em>
+          .
+        </h2>
+
+        <p
+          style={{
+            fontSize: '15px',
+            lineHeight: 1.8,
+            color: '#5A6770',
+            maxWidth: '360px',
+            margin: '0 auto',
+          }}
+        >
+          Small reflections build meaningful patterns over time.
+          GlowWise is learning what helps you feel your best.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
 
           {/* Energy */}
 <div
