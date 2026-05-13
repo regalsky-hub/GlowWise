@@ -172,13 +172,97 @@ export default function DailyCheckin() {
           )}
 
           {/* Energy */}
-          <div className="fade-up">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <Zap size={18} strokeWidth={1.6} className="field-icon" />
-              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>How's your energy?</label>
-            </div>
-            <Scale value={energy} onChange={setEnergy} leftLabel="Drained" rightLabel="Energised" />
-          </div>
+          {/* Energy */}
+<div
+  className="fade-up"
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(250,243,220,0.72) 0%, rgba(255,255,255,0.92) 100%)',
+    border: '1px solid rgba(168,153,104,0.10)',
+    borderRadius: '28px',
+    padding: '30px',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      width: '180px',
+      height: '180px',
+      borderRadius: '50%',
+      background: 'rgba(212,165,92,0.10)',
+      filter: 'blur(55px)',
+      top: '-60px',
+      right: '-40px',
+    }}
+  />
+
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '14px',
+      }}
+    >
+      <div
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          background: 'rgba(212,165,92,0.12)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Zap size={16} strokeWidth={1.8} style={{ color: '#A07E3D' }} />
+      </div>
+
+      <div
+        className="eyebrow"
+        style={{
+          color: '#A07E3D',
+        }}
+      >
+        Energy
+      </div>
+    </div>
+
+    <h2
+      className="display"
+      style={{
+        fontSize: '28px',
+        color: '#3D4A52',
+        marginBottom: '10px',
+        lineHeight: 1.2,
+      }}
+    >
+      How supported does your energy feel today?
+    </h2>
+
+    <p
+      style={{
+        fontSize: '14px',
+        lineHeight: 1.7,
+        color: '#5A6770',
+        marginBottom: '26px',
+        maxWidth: '520px',
+      }}
+    >
+      Energy is often influenced by sleep, stress, nourishment, and recovery.
+    </p>
+
+    <Scale
+      value={energy}
+      onChange={setEnergy}
+      leftLabel="Drained"
+      rightLabel="Energised"
+    />
+  </div>
+</div>
 
           {/* Sleep */}
           <div className="fade-up">
