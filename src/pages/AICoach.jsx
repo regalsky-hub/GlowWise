@@ -597,17 +597,187 @@ export default function AICoach() {
           font-size: 14.5px; line-height: 1.6; color: #5A6770;
           max-width: 440px; margin: 0 0 32px;
         }
-        .suggestion-group { width: 100%; max-width: 520px; margin-bottom: 18px; }
-        .suggestion-group-label { display: block; text-align: left; margin-bottom: 8px; padding-left: 6px; }
-        .suggestion-list { display: flex; flex-direction: column; gap: 8px; }
-        .suggestion {
-          width: 100%; background: #FAF8F5;
-          border: 1px solid rgba(168, 153, 104, 0.22);
-          border-radius: 100px; padding: 12px 20px;
-          font-family: 'Manrope', sans-serif; font-size: 13.5px;
-          color: #3D4A52; cursor: pointer; transition: all 0.2s; text-align: left;
-        }
-        .suggestion:hover { border-color: #6B9E7F; background: #EDF4EF; color: #557E64; }
+        .insight-hero {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 760px;
+  margin-top: 10px;
+
+  padding: 34px;
+  border-radius: 32px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,248,244,0.96),
+      rgba(248,244,239,0.92)
+    );
+
+  border: 1px solid rgba(168,153,104,0.12);
+
+  box-shadow:
+    0 30px 80px -42px rgba(91,63,78,0.24);
+
+  backdrop-filter: blur(18px);
+}
+
+.insight-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.insight-glow-1 {
+  top: -100px;
+  right: -60px;
+  width: 260px;
+  height: 260px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(184,154,92,0.16),
+      transparent 72%
+    );
+}
+
+.insight-glow-2 {
+  bottom: -120px;
+  left: -80px;
+  width: 240px;
+  height: 240px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(122,92,119,0.14),
+      transparent 72%
+    );
+}
+
+.observation-label {
+  position: relative;
+  z-index: 2;
+
+  margin-bottom: 16px;
+
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: #A07E61;
+}
+
+.insight-title {
+  position: relative;
+  z-index: 2;
+
+  max-width: 620px;
+
+  margin: 0 0 18px;
+
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+
+  color: #3E3140;
+}
+
+.insight-sub {
+  position: relative;
+  z-index: 2;
+
+  max-width: 620px;
+
+  margin: 0 0 30px;
+
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+
+  color: #6F6272;
+}
+
+.insight-grid {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(210px, 1fr));
+
+  gap: 16px;
+}
+
+.insight-card {
+  text-align: left;
+
+  padding: 22px;
+
+  border-radius: 24px;
+
+  border:
+    1px solid rgba(168,153,104,0.10);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.60),
+      rgba(248,244,239,0.88)
+    );
+
+  backdrop-filter: blur(12px);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+
+  box-shadow:
+    0 18px 40px -30px rgba(61,74,82,0.16);
+}
+
+.insight-card:hover {
+  transform: translateY(-4px);
+
+  border-color:
+    rgba(107,158,127,0.24);
+
+  box-shadow:
+    0 24px 50px -30px rgba(91,63,78,0.22);
+}
+
+.insight-card-label {
+  margin-bottom: 12px;
+
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: #A07E61;
+}
+
+.insight-card-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #4B3F4E;
+}
       `}</style>
 
       {/* ---- Drawer (history) ---- */}
@@ -698,18 +868,76 @@ export default function AICoach() {
               <p className="welcome-sub">
                 Ask me anything about your wellness, the patterns you're noticing, or how to feel better day to day.
               </p>
-              {SUGGESTIONS.map(group => (
-                <div key={group.label} className="suggestion-group">
-                  <div className="eyebrow suggestion-group-label">{group.label}</div>
-                  <div className="suggestion-list">
-                    {group.items.map((s, i) => (
-                      <button key={i} className="suggestion" onClick={() => setInput(s)}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              <div className="insight-hero fade-up">
+
+  <div className="insight-glow insight-glow-1"></div>
+  <div className="insight-glow insight-glow-2"></div>
+
+  <div className="observation-label">
+    Today’s observation
+  </div>
+
+  <h2 className="insight-title">
+    Your recent wellness patterns suggest steadier energy,
+    though your nervous system may still benefit from slower,
+    more restorative rhythms.
+  </h2>
+
+  <p className="insight-sub">
+    GlowWise quietly observes emotional wellbeing, lifestyle rhythms,
+    recovery signals, and daily check-ins to offer more thoughtful
+    wellness support over time.
+  </p>
+
+  <div className="insight-grid">
+
+    <button
+      className="insight-card"
+      onClick={() =>
+        setInput('Can you help me understand my recent energy patterns?')
+      }
+    >
+      <div className="insight-card-label">
+        Recovery rhythm
+      </div>
+
+      <div className="insight-card-text">
+        Your recent check-ins suggest improved consistency in sleep and energy levels.
+      </div>
+    </button>
+
+    <button
+      className="insight-card"
+      onClick={() =>
+        setInput('Why have I been feeling emotionally overwhelmed lately?')
+      }
+    >
+      <div className="insight-card-label">
+        Emotional balance
+      </div>
+
+      <div className="insight-card-text">
+        Stress-related signals appear softer today compared to earlier this week.
+      </div>
+    </button>
+
+    <button
+      className="insight-card"
+      onClick={() =>
+        setInput('How can I gently improve my focus and mental clarity?')
+      }
+    >
+      <div className="insight-card-label">
+        Gentle focus
+      </div>
+
+      <div className="insight-card-text">
+        Small restorative habits may currently support concentration and mood stability.
+      </div>
+    </button>
+
+  </div>
+</div>
             </div>
           ) : (
             <div className="messages-list">
