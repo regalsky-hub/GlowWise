@@ -633,29 +633,29 @@ export default function DailyCheckin() {
   </div>
 </div>
 
-          {/* Reflection */}
+         {/* Reflection + Wellness Support */}
 <div
   className="fade-up"
   style={{
     position: 'relative',
     overflow: 'hidden',
+    padding: '34px 30px',
+    borderRadius: '30px',
     background:
-      'linear-gradient(135deg, rgba(250,248,245,0.95) 0%, rgba(237,226,236,0.34) 100%)',
+      'linear-gradient(135deg, rgba(107,158,127,0.08) 0%, rgba(237,226,236,0.38) 100%)',
     border: '1px solid rgba(168,153,104,0.10)',
-    borderRadius: '28px',
-    padding: '30px',
   }}
 >
   <div
     style={{
       position: 'absolute',
-      width: '200px',
-      height: '200px',
+      width: '220px',
+      height: '220px',
       borderRadius: '50%',
-      background: 'rgba(168,153,104,0.06)',
-      filter: 'blur(60px)',
-      top: '-70px',
-      right: '-30px',
+      background: 'rgba(107,158,127,0.08)',
+      filter: 'blur(70px)',
+      top: '-100px',
+      right: '-40px',
     }}
   />
 
@@ -673,198 +673,50 @@ export default function DailyCheckin() {
     <h2
       className="display"
       style={{
-        fontSize: '28px',
+        fontSize: '34px',
+        lineHeight: 1.15,
         color: '#3D4A52',
-        marginBottom: '10px',
-        lineHeight: 1.2,
+        marginBottom: '14px',
+        maxWidth: '620px',
       }}
     >
-      Anything your body is trying to tell you today?
+      What is your body trying to{' '}
+      <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
+        communicate
+      </em>
+      {' '}today?
     </h2>
 
     <p
       style={{
-        fontSize: '14px',
-        lineHeight: 1.7,
+        fontSize: '15px',
+        lineHeight: 1.8,
         color: '#5A6770',
-        marginBottom: '24px',
-        maxWidth: '560px',
+        maxWidth: '620px',
+        marginBottom: '26px',
       }}
     >
-      Small observations often reveal the most meaningful wellness patterns over time.
+      You can mention symptoms, emotions, cravings, low motivation,
+      supplements, medications, or anything else influencing how you feel.
     </p>
 
     <textarea
       value={symptoms}
       onChange={(e) => setSymptoms(e.target.value)}
-      placeholder="e.g. headache, bloating, low motivation, cravings, brain fog..."
+      placeholder="e.g. headache, bloating, magnesium, iron tablets, anxious thoughts, brain fog..."
       className="checkin-input"
       style={{
-        minHeight: '130px',
-        borderRadius: '20px',
-        background: 'rgba(255,255,255,0.72)',
+        minHeight: '140px',
+        borderRadius: '22px',
+        background: 'rgba(250,248,245,0.85)',
         border: '1px solid rgba(168,153,104,0.12)',
-        padding: '18px 18px',
+        padding: '22px',
+        fontSize: '15px',
         lineHeight: 1.7,
       }}
     />
   </div>
 </div>
-
-          {/* Supplements */}
-<label
-  className="fade-up"
-  style={{
-    position: 'relative',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '20px',
-    cursor: 'pointer',
-    padding: '28px 30px',
-    background:
-      supplementTaken
-        ? 'linear-gradient(135deg, rgba(107,158,127,0.14) 0%, rgba(237,244,239,0.72) 100%)'
-        : 'linear-gradient(135deg, rgba(250,248,245,0.96) 0%, rgba(237,226,236,0.20) 100%)',
-    border: supplementTaken
-      ? '1px solid rgba(107,158,127,0.18)'
-      : '1px solid rgba(168,153,104,0.10)',
-    borderRadius: '28px',
-    transition: 'all 0.25s ease',
-  }}
->
-  <div
-    style={{
-      position: 'absolute',
-      width: '180px',
-      height: '180px',
-      borderRadius: '50%',
-      background: 'rgba(107,158,127,0.08)',
-      filter: 'blur(60px)',
-      top: '-70px',
-      right: '-30px',
-    }}
-  />
-
-  <div style={{ position: 'relative', zIndex: 2 }}>
-    <div
-      className="eyebrow"
-      style={{
-        marginBottom: '12px',
-        color: supplementTaken ? '#557E64' : '#A89968',
-      }}
-    >
-      Wellness support
-    </div>
-
-    <h2
-      className="display"
-      style={{
-        fontSize: '26px',
-        color: '#3D4A52',
-        marginBottom: '8px',
-        lineHeight: 1.2,
-      }}
-    >
-      Did anything support your wellbeing today?
-    </h2>
-
-    <p
-      style={{
-        fontSize: '14px',
-        lineHeight: 1.7,
-        color: '#5A6770',
-        maxWidth: '520px',
-      }}
-    >
-      GlowWise uses lifestyle patterns and wellness habits to better understand what may be influencing how you feel over time.
-    </p>
-  </div>
-
-  <div
-    style={{
-      position: 'relative',
-      zIndex: 2,
-      flexShrink: 0,
-    }}
-  >
-    <div
-      style={{
-        width: '68px',
-        height: '38px',
-        borderRadius: '999px',
-        background: supplementTaken
-          ? '#6B9E7F'
-          : 'rgba(168,153,104,0.18)',
-        padding: '4px',
-        transition: 'all 0.25s ease',
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          width: '30px',
-          height: '30px',
-          borderRadius: '50%',
-          background: '#FAF8F5',
-          transform: supplementTaken
-            ? 'translateX(30px)'
-            : 'translateX(0px)',
-          transition: 'all 0.25s ease',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.08)',
-        }}
-      />
-    </div>
-
-    <input
-      type="checkbox"
-      checked={supplementTaken}
-      onChange={(e) => setSupplementTaken(e.target.checked)}
-      style={{
-        position: 'absolute',
-        opacity: 0,
-        pointerEvents: 'none',
-      }}
-    />
-  </div>
-  <div
-  style={{
-    position: 'relative',
-    zIndex: 2,
-    width: '100%',
-    marginTop: '24px',
-  }}
->
-  <div
-    className="eyebrow"
-    style={{
-      marginBottom: '10px',
-      color: '#A89968',
-    }}
-  >
-    Optional
-  </div>
-
-  <input
-    type="text"
-    placeholder="e.g. magnesium, collagen, green tea, electrolytes..."
-    style={{
-      width: '100%',
-      background: 'rgba(255,255,255,0.78)',
-      border: '1px solid rgba(168,153,104,0.12)',
-      borderRadius: '18px',
-      padding: '16px 18px',
-      fontSize: '14px',
-      color: '#3D4A52',
-      outline: 'none',
-      fontFamily: "'Manrope', sans-serif",
-      boxSizing: 'border-box',
-    }}
-  />
-</div>
-</label>
 
           <button
   type="submit"
