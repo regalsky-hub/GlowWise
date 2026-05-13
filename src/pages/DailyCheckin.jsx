@@ -864,9 +864,11 @@ export default function DailyCheckin() {
   )}
 </button>
 
-          <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968' }}>Takes about 60 seconds · Your data is private and encrypted</p>
-        </form>
-      </div>
-    </AppLayout>
-  );
+                  <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968' }}>
+          Takes about 60 seconds · Your data is private and encrypted
+        </p>
+      </form>
+    </div>
+  </AppLayout>
+);
 }
