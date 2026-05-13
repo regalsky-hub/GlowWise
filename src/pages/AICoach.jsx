@@ -36,12 +36,6 @@ async function getAIResponse(userMessage, history, profile) {
   }
 }
 
-const SUGGESTIONS = [
-  { label: 'Sleep',  items: ['Why do I wake up tired?', 'How can I fall asleep faster?'] },
-  { label: 'Stress', items: ['Why am I always anxious?', 'How do I lower cortisol naturally?'] },
-  { label: 'Skin',   items: ['What might be causing my breakouts?', 'How does stress affect my skin?'] },
-];
-
 // ---------- Date / time helpers ----------
 const toDate = (ts) => {
   if (!ts) return new Date();
@@ -524,19 +518,19 @@ export default function AICoach() {
           border-bottom-right-radius: 6px;
         }
         .msg-bubble.assistant {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(237,244,239,0.95) 0%,
-      rgba(250,248,245,0.98) 100%
-    );
-  color: #3D4A52;
-  border-bottom-left-radius: 6px;
-  border: 1px solid rgba(107,158,127,0.08);
-  box-shadow:
-    0 12px 32px -24px rgba(61,74,82,0.16);
-  backdrop-filter: blur(12px);
-}
+          background:
+            linear-gradient(
+              135deg,
+              rgba(237,244,239,0.95) 0%,
+              rgba(250,248,245,0.98) 100%
+            );
+          color: #3D4A52;
+          border-bottom-left-radius: 6px;
+          border: 1px solid rgba(107,158,127,0.08);
+          box-shadow:
+            0 12px 32px -24px rgba(61,74,82,0.16);
+          backdrop-filter: blur(12px);
+        }
         .msg-time {
           font-family: 'Manrope', sans-serif; font-size: 10.5px;
           color: #A89968; margin-top: 4px; padding: 0 6px;
@@ -595,66 +589,8 @@ export default function AICoach() {
         .welcome-sub {
           font-family: 'Manrope', sans-serif;
           font-size: 14.5px; line-height: 1.6; color: #5A6770;
-          max-width: 440px; margin: 0 0 32px;
+          max-width: 440px; margin: 0 auto;
         }
-        .coach-prompts {
-  width: 100%;
-  max-width: 620px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 10px;
-
-  margin-top: 8px;
-}
-
-.coach-prompt {
-  width: 100%;
-
-  text-align: left;
-
-  padding: 16px 18px;
-
-  border-radius: 18px;
-
-  background:
-    rgba(250,248,245,0.62);
-
-  border:
-    1px solid rgba(107,158,127,0.10);
-
-  backdrop-filter: blur(10px);
-
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-
-  color: #4B5B55;
-
-  cursor: pointer;
-
-  transition:
-    all 0.24s ease;
-
-  box-shadow:
-    0 10px 30px -24px rgba(61,74,82,0.12);
-}
-
-.coach-prompt:hover {
-  transform: translateY(-2px);
-
-  border-color:
-    rgba(107,158,127,0.24);
-
-  background:
-    rgba(237,244,239,0.75);
-
-  color: #3D5E48;
-
-  box-shadow:
-    0 18px 40px -28px rgba(61,74,82,0.18);
-}
       `}</style>
 
       {/* ---- Drawer (history) ---- */}
@@ -743,47 +679,8 @@ export default function AICoach() {
                 Hello, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>{userName}.</em>
               </h1>
               <p className="welcome-sub">
-                Ask me anything about your wellness, the patterns you're noticing, or how to feel better day to day.
+                Ask me anything about your wellness, the patterns you're noticing, or what helps you thrive.
               </p>
-              <div className="coach-prompts fade-up">
-
-  <button
-    className="coach-prompt"
-    onClick={() =>
-      setInput('Can you help me understand my recent energy patterns?')
-    }
-  >
-    Your recent energy patterns appear steadier this week.
-  </button>
-
-  <button
-    className="coach-prompt"
-    onClick={() =>
-      setInput('Why have I been feeling emotionally overwhelmed lately?')
-    }
-  >
-    You mentioned feeling emotionally overwhelmed recently.
-  </button>
-
-  <button
-    className="coach-prompt"
-    onClick={() =>
-      setInput('How can I improve my sleep consistency naturally?')
-    }
-  >
-    Your sleep rhythm may benefit from gentler evening recovery habits.
-  </button>
-
-  <button
-    className="coach-prompt"
-    onClick={() =>
-      setInput('Can stress affect my physical wellbeing?')
-    }
-  >
-    Stress patterns can sometimes quietly affect physical wellbeing.
-  </button>
-
-</div>
             </div>
           ) : (
             <div className="messages-list">
@@ -804,16 +701,16 @@ export default function AICoach() {
                   >
                     <div className={`msg-bubble ${m.role}`}>
                       <ReactMarkdown
-  components={{
-    p: ({children}) => <p style={{margin: '0 0 8px 0'}}>{children}</p>,
-    ul: ({children}) => <ul style={{margin: '6px 0', paddingLeft: '18px'}}>{children}</ul>,
-    li: ({children}) => <li style={{margin: '2px 0'}}>{children}</li>,
-    strong: ({children}) => <strong style={{fontWeight: 600}}>{children}</strong>,
-    em: ({children}) => <em style={{fontStyle: 'italic'}}>{children}</em>,
-  }}
->
-  {m.content}
-</ReactMarkdown>
+                        components={{
+                          p: ({children}) => <p style={{margin: '0 0 8px 0'}}>{children}</p>,
+                          ul: ({children}) => <ul style={{margin: '6px 0', paddingLeft: '18px'}}>{children}</ul>,
+                          li: ({children}) => <li style={{margin: '2px 0'}}>{children}</li>,
+                          strong: ({children}) => <strong style={{fontWeight: 600}}>{children}</strong>,
+                          em: ({children}) => <em style={{fontStyle: 'italic'}}>{children}</em>,
+                        }}
+                      >
+                        {m.content}
+                      </ReactMarkdown>
                       <div className={`msg-actions ${openMenu === m.id ? 'open' : ''}`}>
                         <button
                           className="action-btn"
