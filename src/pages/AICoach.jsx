@@ -600,26 +600,31 @@ export default function AICoach() {
         .insight-hero {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  max-width: 760px;
-  margin-top: 10px;
 
-  padding: 34px;
-  border-radius: 32px;
+  width: 100%;
+  max-width: 720px;
+
+  margin-top: 8px;
+  margin-bottom: 8px;
+
+  padding: 26px 28px;
+
+  border-radius: 28px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,248,244,0.96),
+      rgba(255,250,247,0.95),
       rgba(248,244,239,0.92)
     );
 
-  border: 1px solid rgba(168,153,104,0.12);
+  border:
+    1px solid rgba(168,153,104,0.10);
 
   box-shadow:
-    0 30px 80px -42px rgba(91,63,78,0.24);
+    0 18px 50px -36px rgba(91,63,78,0.18);
 
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(16px);
 }
 
 .insight-glow {
@@ -677,31 +682,31 @@ export default function AICoach() {
   position: relative;
   z-index: 2;
 
-  max-width: 620px;
+  max-width: 580px;
 
-  margin: 0 0 18px;
+  margin: 0 0 14px;
 
   font-family: 'Fraunces', serif;
-  font-size: clamp(28px, 4vw, 40px);
+  font-size: clamp(20px, 3vw, 30px);
   font-weight: 400;
 
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
 
-  color: #3E3140;
+  color: #403244;
 }
 
 .insight-sub {
   position: relative;
   z-index: 2;
 
-  max-width: 620px;
+  max-width: 560px;
 
-  margin: 0 0 30px;
+  margin: 0 0 20px;
 
   font-family: 'Manrope', sans-serif;
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.7;
 
   color: #6F6272;
 }
@@ -713,39 +718,39 @@ export default function AICoach() {
   display: grid;
 
   grid-template-columns:
-    repeat(auto-fit, minmax(210px, 1fr));
+    repeat(auto-fit, minmax(180px, 1fr));
 
-  gap: 16px;
+  gap: 12px;
 }
 
 .insight-card {
   text-align: left;
 
-  padding: 22px;
+  padding: 18px;
 
-  border-radius: 24px;
+  border-radius: 20px;
 
   border:
-    1px solid rgba(168,153,104,0.10);
+    1px solid rgba(168,153,104,0.08);
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,0.60),
-      rgba(248,244,239,0.88)
+      rgba(255,255,255,0.55),
+      rgba(248,244,239,0.85)
     );
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
 
   cursor: pointer;
 
   transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
 
   box-shadow:
-    0 18px 40px -30px rgba(61,74,82,0.16);
+    0 14px 34px -28px rgba(61,74,82,0.14);
 }
 
 .insight-card:hover {
