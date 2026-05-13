@@ -873,6 +873,8 @@ export default function DailyCheckin() {
 >
   Takes about 60 seconds · Your data is private and encrypted
 </p>
+</div>
+
 </form>
 </div>
 </AppLayout>
