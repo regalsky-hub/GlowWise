@@ -755,7 +755,7 @@ export default function DailyCheckin() {
         color: supplementTaken ? '#557E64' : '#A89968',
       }}
     >
-      Daily support
+      Wellness support
     </div>
 
     <h2
@@ -767,7 +767,7 @@ export default function DailyCheckin() {
         lineHeight: 1.2,
       }}
     >
-      Did you take your supplements today?
+      Did anything support your wellbeing today?
     </h2>
 
     <p
@@ -778,7 +778,7 @@ export default function DailyCheckin() {
         maxWidth: '520px',
       }}
     >
-      Consistency helps GlowWise better understand how your routines may influence your wellbeing patterns.
+      GlowWise uses lifestyle patterns and wellness habits to better understand what may be influencing how you feel over time.
     </p>
   </div>
 
@@ -829,6 +829,41 @@ export default function DailyCheckin() {
       }}
     />
   </div>
+  <div
+  style={{
+    position: 'relative',
+    zIndex: 2,
+    width: '100%',
+    marginTop: '24px',
+  }}
+>
+  <div
+    className="eyebrow"
+    style={{
+      marginBottom: '10px',
+      color: '#A89968',
+    }}
+  >
+    Optional
+  </div>
+
+  <input
+    type="text"
+    placeholder="e.g. magnesium, collagen, green tea, electrolytes..."
+    style={{
+      width: '100%',
+      background: 'rgba(255,255,255,0.78)',
+      border: '1px solid rgba(168,153,104,0.12)',
+      borderRadius: '18px',
+      padding: '16px 18px',
+      fontSize: '14px',
+      color: '#3D4A52',
+      outline: 'none',
+      fontFamily: "'Manrope', sans-serif",
+      boxSizing: 'border-box',
+    }}
+  />
+</div>
 </label>
 
           <button type="submit" disabled={loading} className="btn-primary">
