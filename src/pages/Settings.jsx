@@ -4,6 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
 import { LogOut, AlertCircle, Download, Shield, Mail, Calendar, BellOff, Check } from 'lucide-react';
+import { db } from '../config/firebase';
+import { 
+  collection, getDocs, deleteDoc, doc,
+  writeBatch, deleteUser 
+} from 'firebase/firestore';
 
 export default function Settings() {
   const { user, logout } = useAuth();
@@ -12,6 +17,8 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [notificationFrequency, setNotificationFrequency] = useState(profile?.notification_frequency || 'daily');
 
   const handleSavePreferences = async () => {
@@ -20,11 +27,109 @@ export default function Settings() {
       await updateProfile({ notification_frequency: notificationFrequency });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (e) { console.error(e); } finally { setSaving(false); }
+    } catch (e) { 
+      console.error(e); 
+    } finally { 
+      setSaving(false); 
+    }
+  };
+
+  const handleExportData = async () => {
+    if (!user) return;
+    setExporting(true);
+    try {
+      // Get profile
+      const profileData = profile || {};
+
+      // Get all check-ins
+      const checkInsRef = collection(db, 'users', user.uid, 'dailyCheckIns');
+      const checkInsSnap = await getDocs(checkInsRef);
+      const checkIns = checkInsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Get all conversations
+      const convsRef = collection(db, 'users', user.uid, 'conversations');
+      const convsSnap = await getDocs(convsRef);
+      const conversations = convsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      // Compile export
+      const exportData = {
+        exported_at: new Date().toISOString(),
+        user_email: user.email,
+        profile: profileData,
+        check_ins: checkIns,
+        conversations: conversations,
+      };
+
+      // Create downloadable file
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `glowwise-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error('Export failed:', err);
+      alert('Export failed. Please try again.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      // Delete all check-ins
+      const checkInsRef = collection(db, 'users', user.uid, 'dailyCheckIns');
+      const checkInsSnap = await getDocs(checkInsRef);
+      const batch1 = writeBatch(db);
+      checkInsSnap.docs.forEach(doc => {
+        batch1.delete(doc.ref);
+      });
+      await batch1.commit();
+
+      // Delete all conversations
+      const convsRef = collection(db, 'users', user.uid, 'conversations');
+      const convsSnap = await getDocs(convsRef);
+      const batch2 = writeBatch(db);
+      convsSnap.docs.forEach(doc => {
+        batch2.delete(doc.ref);
+      });
+      await batch2.commit();
+
+      // Delete user profile
+      await deleteDoc(doc(db, 'users', user.uid));
+
+      // Delete Firebase Auth account
+      await deleteUser(user);
+
+      // Clear localStorage
+      localStorage.clear();
+
+      // Redirect to home
+      navigate('/', { replace: true });
+    } catch (err) {
+      console.error('Delete account failed:', err);
+      alert('Failed to delete account. Please try again or contact support.');
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   const handleLogout = async () => {
-    try { await logout(); navigate('/'); } catch (e) { console.error(e); }
+    try { 
+      await logout(); 
+      navigate('/'); 
+    } catch (e) { 
+      console.error(e); 
+    }
   };
 
   const notifOptions = [
@@ -46,8 +151,10 @@ export default function Settings() {
         .choice-card.selected { background: #EDF4EF; border-color: #6B9E7F; color: #557E64; }
         .btn-primary { background: #6B9E7F; color: #FAF8F5; padding: 12px 24px; border: none; border-radius: 100px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s; }
         .btn-primary:hover:not(:disabled) { background: #557E64; }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-danger { background: transparent; color: #CC4444; padding: 14px 24px; border: 1px solid rgba(204, 68, 68, 0.4); border-radius: 100px; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-danger:hover { background: rgba(204, 68, 68, 0.08); border-color: #CC4444; }
+        .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
         .priority-pill { display: inline-flex; align-items: center; padding: 8px 14px; background: #EDF4EF; border: 1px solid rgba(107, 158, 127, 0.25); border-radius: 100px; font-size: 12px; font-weight: 500; color: #557E64; }
       `}</style>
 
@@ -127,10 +234,15 @@ export default function Settings() {
               <Shield size={16} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
               <div>All your data is encrypted. You can delete any message, export everything, or close your account anytime.</div>
             </div>
-            <button className="choice-card">
+            <button 
+              onClick={handleExportData} 
+              disabled={exporting}
+              className="choice-card"
+              style={{ marginBottom: '0' }}
+            >
               <Download size={18} strokeWidth={1.6} style={{ color: '#A89968' }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600 }}>Export my data</div>
+                <div style={{ fontWeight: 600 }}>{exporting ? 'Exporting...' : 'Export my data'}</div>
                 <div style={{ fontSize: '12px', color: '#A89968', marginTop: '2px', fontWeight: 400 }}>Download all your wellness data (GDPR)</div>
               </div>
             </button>
@@ -164,11 +276,28 @@ export default function Settings() {
               </div>
             </div>
             {!showDeleteConfirm ? (
-              <button onClick={() => setShowDeleteConfirm(true)} className="btn-danger" style={{ width: '100%', justifyContent: 'center' }}>Delete my account</button>
+              <button 
+                onClick={() => setShowDeleteConfirm(true)} 
+                className="btn-danger" 
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                Delete my account
+              </button>
             ) : (
               <div style={{ display: 'flex', gap: '10px' }}>
-                <button onClick={() => setShowDeleteConfirm(false)} style={{ flex: 1, background: 'transparent', color: '#5A6770', padding: '12px', border: '1px solid rgba(168, 153, 104, 0.4)', borderRadius: '100px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>Cancel</button>
-                <button onClick={handleLogout} style={{ flex: 1, background: '#CC4444', color: '#FAF8F5', padding: '12px', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Yes, delete</button>
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)} 
+                  style={{ flex: 1, background: 'transparent', color: '#5A6770', padding: '12px', border: '1px solid rgba(168, 153, 104, 0.4)', borderRadius: '100px', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteAccount} 
+                  disabled={deleting}
+                  style={{ flex: 1, background: '#CC4444', color: '#FAF8F5', padding: '12px', border: 'none', borderRadius: '100px', fontSize: '13px', fontWeight: 600, cursor: deleting ? 'not-allowed' : 'pointer', opacity: deleting ? 0.6 : 1 }}
+                >
+                  {deleting ? 'Deleting...' : 'Yes, delete'}
+                </button>
               </div>
             )}
           </div>
