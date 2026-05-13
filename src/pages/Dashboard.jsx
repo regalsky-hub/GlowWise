@@ -427,43 +427,189 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
 
 // ============ COACH ============
 const Coach = ({ name }) => (
-  <div className="gw-card-pad" style={{
-    padding: '28px 32px',
-    borderRadius: 16,
-    background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
-    color: C.paper, position: 'relative', overflow: 'hidden',
-    boxShadow: '0 18px 50px -28px rgba(85,126,100,0.5)',
-  }}>
-    <div style={{
-      position: 'absolute', top: -40, right: -40,
-      fontFamily: FF_DISPLAY, fontStyle: 'italic',
-      fontSize: 200, color: 'rgba(250,248,245,0.06)',
-      lineHeight: 1, pointerEvents: 'none',
-    }}>g</div>
-    <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-        <Orbit size={26} color={C.paper} tail="#C0DAC8" accent={C.terracottaMid} />
-        <div style={{ ...eyebrow('rgba(250,248,245,0.75)'), fontSize: 10 }}>
-          Your wellness coach
+  <div
+    className="gw-card-pad"
+    style={{
+      padding: '34px 34px',
+      borderRadius: 20,
+
+      background:
+        'linear-gradient(135deg, #6B9E7F 0%, #5B8D70 100%)',
+
+      color: C.paper,
+      position: 'relative',
+      overflow: 'hidden',
+
+      boxShadow:
+        '0 24px 60px -30px rgba(85,126,100,0.45)',
+
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      minHeight: '100%',
+    }}
+  >
+
+    {/* Ambient Glow */}
+    <div
+      style={{
+        position: 'absolute',
+        width: 260,
+        height: 260,
+        borderRadius: '50%',
+
+        background:
+          'rgba(250,248,245,0.06)',
+
+        filter: 'blur(60px)',
+
+        top: -120,
+        right: -100,
+      }}
+    />
+
+    {/* Decorative G */}
+    <div
+      style={{
+        position: 'absolute',
+        top: -30,
+        right: -20,
+
+        fontFamily: FF_DISPLAY,
+        fontStyle: 'italic',
+
+        fontSize: 220,
+
+        color: 'rgba(250,248,245,0.05)',
+
+        lineHeight: 1,
+        pointerEvents: 'none',
+      }}
+    >
+      g
+    </div>
+
+    <div style={{ position: 'relative', zIndex: 2 }}>
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          marginBottom: 18,
+        }}
+      >
+        <Orbit
+          size={26}
+          color={C.paper}
+          tail="#C0DAC8"
+          accent={C.terracottaMid}
+        />
+
+        <div
+          style={{
+            ...eyebrow('rgba(250,248,245,0.76)'),
+            fontSize: 10,
+          }}
+        >
+          Today’s observation
         </div>
       </div>
-      <p style={{
-        fontFamily: FF_DISPLAY, fontStyle: 'italic',
-        fontSize: 21, lineHeight: 1.4, color: C.paper,
-        margin: 0, marginBottom: 22, fontWeight: 400,
-      }}>
-        "Your sleep has been the steadiest it's been all month, {name}.
-        Want to talk about how to keep that going?"
+
+      <p
+        style={{
+          fontFamily: FF_DISPLAY,
+          fontSize: 30,
+          lineHeight: 1.22,
+          letterSpacing: '-0.03em',
+
+          color: C.paper,
+
+          margin: 0,
+          marginBottom: 18,
+
+          maxWidth: 520,
+        }}
+      >
+        Your recent patterns suggest steadier recovery this week,
+        especially around sleep consistency and emotional balance.
       </p>
-      <Link to="/ai-coach" style={{
-        background: C.paper, color: C.sageDark, border: 'none',
-        padding: '10px 20px', borderRadius: 999,
-        fontFamily: FF_UI, fontSize: 13, fontWeight: 600, cursor: 'pointer',
-        display: 'inline-flex', alignItems: 'center', gap: 8,
-        textDecoration: 'none',
-      }}>
-        <MessageCircle size={14} strokeWidth={1.6} /> Open chat
-      </Link>
+
+      <p
+        style={{
+          fontFamily: FF_UI,
+          fontSize: 14.5,
+          lineHeight: 1.75,
+
+          color: 'rgba(250,248,245,0.82)',
+
+          margin: 0,
+          marginBottom: 28,
+
+          maxWidth: 500,
+        }}
+      >
+        GlowWise has noticed calmer stress signals, more stable energy,
+        and improved evening recovery rhythms over the past few days.
+      </p>
+
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 10,
+        }}
+      >
+
+        <Link
+          to="/ai-coach"
+          style={{
+            background: C.paper,
+            color: C.sageDark,
+
+            border: 'none',
+
+            padding: '11px 20px',
+            borderRadius: 999,
+
+            fontFamily: FF_UI,
+            fontSize: 13,
+            fontWeight: 600,
+
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+
+            textDecoration: 'none',
+          }}
+        >
+          <MessageCircle size={14} strokeWidth={1.6} />
+          Reflect with coach
+        </Link>
+
+        <button
+          style={{
+            background: 'transparent',
+
+            color: 'rgba(250,248,245,0.92)',
+
+            border:
+              '1px solid rgba(250,248,245,0.22)',
+
+            padding: '11px 18px',
+            borderRadius: 999,
+
+            fontFamily: FF_UI,
+            fontSize: 13,
+            fontWeight: 600,
+
+            cursor: 'pointer',
+          }}
+        >
+          Explore patterns
+        </button>
+
+      </div>
     </div>
   </div>
 );
@@ -699,13 +845,19 @@ export default function Dashboard() {
             <Header name={firstName} />
             <HeroFocus score={score} />
             <Vitals today={today} />
-            <div className="gw-twocol" style={{
-              display: 'grid', gridTemplateColumns: '1.5fr 1fr',
-              gap: 20, marginBottom: 28,
-            }}>
-              <WeekChart scores={weekScores} />
-              <Coach name={firstName} />
-            </div>
+            <div
+  className="gw-twocol"
+  style={{
+    display: 'grid',
+    gridTemplateColumns: '1.15fr 1fr',
+    gap: 20,
+    marginBottom: 28,
+    alignItems: 'stretch',
+  }}
+>
+  <WeekChart scores={weekScores} />
+  <Coach name={firstName} />
+</div>
             <div className="gw-twocol" style={{
               display: 'grid', gridTemplateColumns: '1fr 1.4fr',
               gap: 20, marginBottom: 28,
