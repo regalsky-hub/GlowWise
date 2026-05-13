@@ -146,7 +146,14 @@ export default function DailyCheckin() {
         .field-icon { color: #6B9E7F; flex-shrink: 0; }
       `}</style>
 
-      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '40px 24px' }}>
+      <form
+  onSubmit={handleSubmit}
+  style={{
+    maxWidth: '720px',
+    margin: '0 auto',
+    padding: '40px 24px',
+  }}
+>
         <div
   className="fade-up"
   style={{
@@ -877,7 +884,6 @@ export default function DailyCheckin() {
 </p>
 
 </form>
-</div>
 </AppLayout>
   );
 }
