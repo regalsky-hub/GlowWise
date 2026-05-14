@@ -170,7 +170,7 @@ export default function GlowType() {
       ],
     },
     'The Resilient Achiever': {
-      description: 'You're driven and goal-oriented, with deep reserves of energy. Your challenge: remembering recovery is not laziness, it's fuel.',
+      description: "You are driven and goal-oriented, with deep reserves of energy. Your challenge: remembering recovery is not laziness, it is fuel.",
       icon: '🔥',
       color: C.terracotta,
       bg: C.terracottaBg,
@@ -182,7 +182,7 @@ export default function GlowType() {
         },
         {
           title: 'Track recovery metrics',
-          description: 'Monitor sleep, mood, and stress. Often you\'ll notice performance drops before you feel tired.',
+          description: 'Monitor sleep, mood, and stress. Often you will notice performance drops before you feel tired.',
         },
         {
           title: 'Build in deload weeks',
@@ -205,7 +205,7 @@ export default function GlowType() {
       ],
     },
     'The Intuitive Healer': {
-      description: 'You're deeply body-aware and trust your inner knowing. Your gift: tuning into subtle signals. Your practice: trusting without overthinking.',
+      description: "You are deeply body-aware and trust your inner knowing. Your gift: tuning into subtle signals. Your practice: trusting without overthinking.",
       icon: '💫',
       color: C.sage,
       bg: C.sageMint,
@@ -240,7 +240,7 @@ export default function GlowType() {
       ],
     },
     'The Social Butterfly': {
-      description: 'You\'re energised by connection and community. Isolation depletes you — movement with others is your natural medicine.',
+      description: "You are energised by connection and community. Isolation depletes you — movement with others is your natural medicine.",
       icon: '🦋',
       color: C.amber,
       bg: C.amberBg,
