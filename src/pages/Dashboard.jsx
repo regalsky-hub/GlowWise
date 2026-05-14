@@ -689,27 +689,29 @@ const GlowType = () => (
         </span>
       ))}
     </div>
-    <button
-      style={{
-        background: 'none',
-        border: 'none',
-        padding: 0,
-        color: C.sageDark,
-        fontFamily: FF_UI,
-        fontSize: 13,
-        fontWeight: 600,
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        borderBottom: `1px solid ${C.sageDark}`,
-        paddingBottom: 2,
-        position: 'relative',
-        zIndex: 2,
-      }}
-    >
-      Learn about your type <ChevronRight size={11} strokeWidth={2} />
-    </button>
+    <Link
+  to="/glow-type"
+  style={{
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    color: C.sageDark,
+    fontFamily: FF_UI,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
+    borderBottom: `1px solid ${C.sageDark}`,
+    paddingBottom: 2,
+    position: 'relative',
+    zIndex: 2,
+    textDecoration: 'none',
+  }}
+>
+  Learn about your type <ChevronRight size={11} strokeWidth={2} />
+</Link>
   </div>
 );
 
