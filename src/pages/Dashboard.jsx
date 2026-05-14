@@ -87,14 +87,11 @@ export default function Dashboard() {
   const today = getTodayCheckIn();
   const glowScore = calculateGlowScore();
   const dailyFocus = generateDailyFocus();
-
-  // Get trend data
   const energyTrend = analyzeEnergyTrend();
   const sleepTrend = analyzeSleepTrend();
   const stressTrend = analyzeStressTrend();
   const moodTrend = analyzeMoodTrend();
 
-  // Vital cards data
   const vitalCards = [
     {
       title: 'Energy',
@@ -135,7 +132,6 @@ export default function Dashboard() {
     },
   ];
 
-  // Plan items
   const planItems = [
     {
       eyebrow: 'Sleep Support',
@@ -167,7 +163,6 @@ export default function Dashboard() {
         @keyframes fu { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         .glow-card { transition: all 0.2s ease; }
         .glow-card:hover { transform: translateY(-4px); }
-        .link-card { text-decoration: none; cursor: pointer; }
         .mobile-logout-btn { display: none; }
         @media (max-width: 768px) {
           .mobile-logout-btn { display: flex; }
@@ -207,6 +202,7 @@ export default function Dashboard() {
               background: 'transparent',
               border: `1px solid ${C.lineSoft}`,
               cursor: 'pointer',
+              display: 'flex',
               alignItems: 'center',
               gap: 6,
               fontFamily: FF_UI,
@@ -248,10 +244,7 @@ export default function Dashboard() {
             >
               <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
               <h2 style={{ ...display(32), margin: '0 0 8px 0' }}>
-                {dailyFocus.title}{' '}
-                <em style={{ fontStyle: 'italic', color: C.sage }}>
-                  {dailyFocus.subtitle}
-                </em>
+                {dailyFocus.title} <em style={{ fontStyle: 'italic', color: C.sage }}>{dailyFocus.subtitle}</em>
               </h2>
               <p style={{ ...bodyText(16), margin: '0 0 20px 0', color: C.body }}>
                 {dailyFocus.guidance}
@@ -334,11 +327,11 @@ export default function Dashboard() {
                       transition: 'all 0.2s ease',
                       animationDelay: `${i * 0.08}s`,
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-4px)';
                       e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
@@ -375,9 +368,7 @@ export default function Dashboard() {
           >
             <div>
               <div style={{ ...eyebrow(C.sage), marginBottom: 6 }}>Anytime support</div>
-              <h3 style={{ ...display(18), margin: 0, fontWeight: 500 }}>
-                Ask your wellness coach
-              </h3>
+              <h3 style={{ ...display(18), margin: 0, fontWeight: 500 }}>Ask your wellness coach</h3>
               <p style={{ ...bodyText(13), color: C.body, margin: '4px 0 0 0' }}>
                 Questions about patterns, habits, or how to feel better
               </p>
@@ -429,11 +420,11 @@ export default function Dashboard() {
                       border: `1px solid ${C.lineSoft}`,
                       transition: 'all 0.2s ease',
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
                       e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
