@@ -6,17 +6,7 @@ import AppLayout from './AppLayout';
 import { LogOut } from 'lucide-react';
 
 export default function Dashboard() {
-  const {
-    profile,
-    getTodayCheckIn,
-    calculateGlowScore,
-    generateDailyFocus,
-    analyzeEnergyTrend,
-    analyzeSleepTrend,
-    analyzeStressTrend,
-    analyzeMoodTrend,
-    loading,
-  } = useUserData();
+  const { profile, checkIns, loading } = useUserData();
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -84,53 +74,8 @@ export default function Dashboard() {
     color: C.body,
   });
 
-  const today = getTodayCheckIn();
-  const glowScore = calculateGlowScore();
-  const dailyFocus = generateDailyFocus();
-  const energyTrend = analyzeEnergyTrend();
-  const sleepTrend = analyzeSleepTrend();
-  const stressTrend = analyzeStressTrend();
-  const moodTrend = analyzeMoodTrend();
-
-  const vitalCards = [
-    {
-      title: 'Energy',
-      value: today?.energy || '-',
-      status: energyTrend.status,
-      color: C.amber,
-      bg: C.amberBg,
-      icon: '⚡',
-      href: '/insights',
-    },
-    {
-      title: 'Sleep',
-      value: today?.sleep || '-',
-      unit: today?.sleep ? 'h' : '',
-      status: sleepTrend.status,
-      color: C.plum,
-      bg: C.plumBg,
-      icon: '🌙',
-      href: '/insights',
-    },
-    {
-      title: 'Stress',
-      value: stressTrend.average || '-',
-      status: stressTrend.status,
-      color: C.sage,
-      bg: C.sageMint,
-      icon: '🌬️',
-      href: '/insights',
-    },
-    {
-      title: 'Mood',
-      value: today?.mood || '-',
-      status: moodTrend.status,
-      color: C.terracotta,
-      bg: C.terracottaBg,
-      icon: '✨',
-      href: '/insights',
-    },
-  ];
+  // Get today's check-in
+  const today = checkIns && checkIns.length > 0 ? checkIns[0] : null;
 
   const planItems = [
     {
@@ -190,7 +135,7 @@ export default function Dashboard() {
               {profile?.name?.split(' ')[0] || 'there'}.
             </h1>
             <p style={{ ...bodyText(15), color: C.body, margin: 0 }}>
-              {glowScore ? `Your glow is at ${glowScore}. ` : ''}Check in to update your wellness picture.
+              Check in to update your wellness picture.
             </p>
           </div>
           <button
@@ -212,14 +157,6 @@ export default function Dashboard() {
               transition: 'all 0.2s',
               flexShrink: 0,
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = C.sage;
-              e.currentTarget.style.color = C.sage;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = C.lineSoft;
-              e.currentTarget.style.color = C.mute;
-            }}
           >
             <LogOut size={14} strokeWidth={2} /> Log out
           </button>
@@ -227,13 +164,11 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 40px' }}>
-          {/* Daily Focus */}
-          {dailyFocus && (
+          {/* Today's Check-in */}
+          {today && (
             <div
-              className="fade-up glow-card"
+              className="fade-up"
               style={{
-                position: 'relative',
-                overflow: 'hidden',
                 padding: '32px 36px',
                 borderRadius: 24,
                 background: `linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,244,239,0.6) 100%)`,
@@ -242,14 +177,26 @@ export default function Dashboard() {
                 boxShadow: '0 16px 48px -24px rgba(61,74,82,0.08)',
               }}
             >
-              <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
-              <h2 style={{ ...display(32), margin: '0 0 8px 0' }}>
-                {dailyFocus.title} <em style={{ fontStyle: 'italic', color: C.sage }}>{dailyFocus.subtitle}</em>
-              </h2>
-              <p style={{ ...bodyText(16), margin: '0 0 20px 0', color: C.body }}>
-                {dailyFocus.guidance}
-              </p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's check-in</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 16, marginBottom: 20 }}>
+                <div>
+                  <div style={{ ...bodyText(12), color: C.mute, marginBottom: 4 }}>Energy</div>
+                  <div style={{ ...display(24), color: C.amber }}>{today.energy}/10</div>
+                </div>
+                <div>
+                  <div style={{ ...bodyText(12), color: C.mute, marginBottom: 4 }}>Sleep</div>
+                  <div style={{ ...display(24), color: C.plum }}>{today.sleep}h</div>
+                </div>
+                <div>
+                  <div style={{ ...bodyText(12), color: C.mute, marginBottom: 4 }}>Stress</div>
+                  <div style={{ ...display(24), color: C.sage }}>{10 - today.stress}/10</div>
+                </div>
+                <div>
+                  <div style={{ ...bodyText(12), color: C.mute, marginBottom: 4 }}>Mood</div>
+                  <div style={{ ...display(24), color: C.terracotta }}>{today.mood}/10</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 12 }}>
                 <Link
                   to="/ai-coach"
                   style={{
@@ -263,12 +210,9 @@ export default function Dashboard() {
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
                   }}
                 >
-                  Open coach →
+                  Open coach
                 </Link>
                 <Link
                   to="/wellness-plan"
@@ -283,15 +227,6 @@ export default function Dashboard() {
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(107,158,127,0.10)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent';
                   }}
                 >
                   See full plan
@@ -300,59 +235,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Vital Snapshot */}
-          <div style={{ marginBottom: 40 }}>
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>This morning</div>
-              <h2 style={{ ...display(28), margin: 0 }}>Your snapshot</h2>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: 16,
-              }}
-            >
-              {vitalCards.map((card, i) => (
-                <Link key={i} to={card.href} style={{ textDecoration: 'none' }}>
-                  <div
-                    className="fade-up glow-card"
-                    style={{
-                      padding: '24px',
-                      borderRadius: 18,
-                      background: card.bg,
-                      border: `1px solid ${C.lineSoft}`,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      animationDelay: `${i * 0.08}s`,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div style={{ ...eyebrow(card.color), marginBottom: 12, fontSize: 10 }}>
-                      {card.icon} {card.title}
-                    </div>
-                    <div style={{ ...display(32), margin: '0 0 8px 0', color: card.color }}>
-                      {card.value}
-                      {card.unit && <span style={{ fontSize: 18 }}>{card.unit}</span>}
-                    </div>
-                    <div style={{ ...bodyText(13), color: C.body, fontStyle: 'italic' }}>
-                      {card.status}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Wellness Coach CTA */}
+          {/* Insights CTA */}
           <div
             className="fade-up"
             style={{
@@ -367,14 +250,11 @@ export default function Dashboard() {
             }}
           >
             <div>
-              <div style={{ ...eyebrow(C.sage), marginBottom: 6 }}>Anytime support</div>
-              <h3 style={{ ...display(18), margin: 0, fontWeight: 500 }}>Ask your wellness coach</h3>
-              <p style={{ ...bodyText(13), color: C.body, margin: '4px 0 0 0' }}>
-                Questions about patterns, habits, or how to feel better
-              </p>
+              <div style={{ ...eyebrow(C.sage), marginBottom: 6 }}>View patterns</div>
+              <h3 style={{ ...display(18), margin: 0, fontWeight: 500 }}>Your wellness insights</h3>
             </div>
             <Link
-              to="/ai-coach"
+              to="/insights"
               style={{
                 padding: '12px 24px',
                 borderRadius: 100,
@@ -422,11 +302,9 @@ export default function Dashboard() {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
                     <div style={{ ...eyebrow(p.accent), marginBottom: 12, fontSize: 10 }}>
@@ -453,48 +331,40 @@ export default function Dashboard() {
             </Link>
           </div>
 
-          {/* Glow Score */}
-          {glowScore && (
-            <div
-              className="fade-up"
+          {/* Glow Type CTA */}
+          <div
+            className="fade-up"
+            style={{
+              padding: '32px',
+              borderRadius: 22,
+              background: C.paper,
+              border: `1px solid ${C.lineSoft}`,
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Discover yourself</div>
+            <h2 style={{ ...display(28), margin: '0 0 12px 0' }}>Your glow type</h2>
+            <p style={{ ...bodyText(15), color: C.body, margin: '0 0 20px 0' }}>
+              Understand your wellness archetype and how you naturally thrive.
+            </p>
+            <Link
+              to="/glow-type"
               style={{
-                padding: '32px',
-                borderRadius: 22,
-                background: C.paper,
-                border: `1px solid ${C.lineSoft}`,
-                textAlign: 'center',
+                padding: '12px 24px',
+                borderRadius: 100,
+                background: C.sage,
+                color: C.paper,
+                border: 'none',
+                fontFamily: FF_UI,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                textDecoration: 'none',
               }}
             >
-              <div style={{ ...eyebrow(C.mute), marginBottom: 20 }}>Glow Score</div>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 24 }}>
-                <svg width="120" height="120" viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#f0f0f0" strokeWidth="8" />
-                  <circle
-                    cx="60"
-                    cy="60"
-                    r="54"
-                    fill="none"
-                    stroke={C.sage}
-                    strokeWidth="8"
-                    strokeDasharray={`${(glowScore / 100) * 339.3} 339.3`}
-                    style={{
-                      transform: 'rotate(-90deg)',
-                      transformOrigin: '60px 60px',
-                      transition: 'stroke-dasharray 0.6s ease',
-                    }}
-                  />
-                </svg>
-                <div>
-                  <div style={{ ...display(48), margin: 0, color: C.sage }}>
-                    {glowScore}
-                  </div>
-                  <div style={{ ...eyebrow(C.mute), marginTop: 8 }}>
-                    {glowScore >= 70 ? 'Thriving' : glowScore >= 50 ? 'Balanced' : 'Recovering'}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+              Learn your type
+            </Link>
+          </div>
         </div>
       </div>
     </AppLayout>
