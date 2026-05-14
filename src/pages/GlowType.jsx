@@ -4,7 +4,7 @@ import AppLayout from './AppLayout';
 import { Heart, Zap, Moon, TrendingUp, BookOpen, Lightbulb } from 'lucide-react';
 
 export default function GlowType() {
-  const { profile, analyzeEnergyTrend, analyzeSleepTrend, analyzeStressTrend, analyzeMoodTrend, loading } = useUserData();
+  const { profile, loading } = useUserData();
 
   if (loading) {
     return (
@@ -278,11 +278,6 @@ export default function GlowType() {
 
   const userGlowType = profile?.glowType || 'The Steady Bloomer';
   const glowTypeData = glowTypes[userGlowType] || glowTypes['The Steady Bloomer'];
-
-  // Get trend data
-  const sleepTrend = analyzeSleepTrend();
-  const energyTrend = analyzeEnergyTrend();
-  const stressTrend = analyzeStressTrend();
 
   return (
     <AppLayout>
