@@ -4,6 +4,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import {
   Sun, Moon, Zap, Heart, Waves, MessageCircle,
   Calendar, BarChart3, User, ChevronRight,
@@ -56,6 +58,9 @@ const responsiveCSS = `
     .gw-main { padding: 24px 18px 100px !important; }
     .gw-header { flex-direction: column !important; align-items: flex-start !important; }
     .gw-header-actions { width: 100% !important; }
+    @media (max-width: 768px) {
+  .gw-logout-btn { display: inline-flex !important; }
+}
     .gw-hero-pad { padding: 28px 22px !important; }
     .gw-hero-title { font-size: 26px !important; }
     .gw-header-h1 { font-size: 30px !important; }
@@ -228,7 +233,7 @@ const btnGhost = {
 };
 
 // ============ HEADER ============
-const Header = ({ name }) => {
+const Header = ({ name, onLogout }) => {
   const today = new Date();
   const weekday = today.toLocaleDateString('en-GB', { weekday: 'long' });
   const monthDay = today.toLocaleDateString('en-GB', { month: 'long', day: 'numeric' });
@@ -249,6 +254,25 @@ const Header = ({ name }) => {
         <button style={{ ...btnGhost, padding: '10px 12px' }} aria-label="Notifications">
           <Bell size={16} strokeWidth={1.6} />
         </button>
+        <button
+  onClick={onLogout}
+  style={{
+    display: 'none',
+    padding: '10px 12px',
+    borderRadius: 100,
+    background: 'transparent',
+    border: `1px solid ${C.lineSoft}`,
+    cursor: 'pointer',
+    fontFamily: FF_UI,
+    fontSize: 12,
+    fontWeight: 500,
+    color: C.mute,
+    transition: 'all 0.2s',
+    '@media (max-width: 768px)': { display: 'inline-flex' },
+  }}
+>
+  Log out
+</button>
         <Link to="/checkin" style={btnPrimary}>
           <Plus size={14} strokeWidth={2} /> New check-in
         </Link>
@@ -821,6 +845,18 @@ export default function Dashboard() {
     (profile?.name || profile?.firstName || profile?.first_name ||
      user?.displayName || '').split(' ')[0] || 'there';
 
+  const { logout } = useAuth();
+const navigate = useNavigate();
+
+const handleLogout = async () => {
+  try {
+    await logout();
+    navigate('/');
+  } catch (e) {
+    console.error(e);
+  }
+};
+
   const todayCheckIn = getTodayCheckIn();
   const today = todayCheckIn ? {
     energy: todayCheckIn.energy || 7,
@@ -872,7 +908,7 @@ export default function Dashboard() {
             padding: '44px 48px 80px',
             maxWidth: 1280, width: '100%', boxSizing: 'border-box',
           }}>
-            <Header name={firstName} />
+            <Header name={firstName} onLogout={handleLogout} />
             <HeroFocus score={score} />
             <Vitals today={today} />
             <div
