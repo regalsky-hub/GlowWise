@@ -253,10 +253,10 @@ const Header = ({ name, onLogout }) => {
         <button style={{ ...btnGhost, padding: '10px 12px' }} aria-label="Notifications">
           <Bell size={16} strokeWidth={1.6} />
         </button>
-        <button
+     <button
   onClick={onLogout}
   style={{
-    display: 'none',
+    display: window.innerWidth <= 768 ? 'inline-flex' : 'none',
     padding: '10px 12px',
     borderRadius: 100,
     background: 'transparent',
@@ -267,7 +267,8 @@ const Header = ({ name, onLogout }) => {
     fontWeight: 500,
     color: C.mute,
     transition: 'all 0.2s',
-    '@media (max-width: 768px)': { display: 'inline-flex' },
+    alignItems: 'center',
+    gap: 6,
   }}
 >
   Log out
