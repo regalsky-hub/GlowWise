@@ -5,7 +5,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import {
   Sun, Moon, Zap, Heart, Waves, MessageCircle,
   Calendar, BarChart3, User, ChevronRight,
