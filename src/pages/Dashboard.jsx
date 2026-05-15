@@ -320,7 +320,6 @@ const HeroFocus = ({ score = 78 }) => (
           <Link to="/ai-coach" style={btnPrimary}>
             Open coach <ChevronRight size={12} strokeWidth={2} />
           </Link>
-          <button style={btnGhost}>See full plan</button>
         </div>
       </div>
 
