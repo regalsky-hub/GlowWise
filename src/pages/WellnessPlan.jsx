@@ -559,55 +559,6 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-           {/* WHAT GLOWWISE IS NOTICING */}
-<div style={{ marginBottom: 56 }}>
-  <div style={{ marginBottom: 22 }}>
-    <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
-      What GlowWise is noticing
-    </div>
-
-    <h2 style={{ ...display(32), margin: 0 }}>
-      Your patterns & rhythms
-    </h2>
-  </div>
-
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 16,
-    }}
-  >
-    {[
-      'Your calmer days appear linked to more consistent sleep timing.',
-      'Emotional steadiness seems stronger after slower mornings.',
-      'Stress patterns rise faster on evenings with overstimulation.',
-    ].map((text, idx) => (
-      <div
-        key={idx}
-        style={{
-          padding: '22px 24px',
-          borderRadius: 18,
-          background: C.paper,
-          border: `1px solid ${C.lineSoft}`,
-          boxShadow: '0 6px 20px -16px rgba(61,74,82,0.06)',
-        }}
-      >
-        <p
-          style={{
-            ...bodyText(15),
-            lineHeight: 1.8,
-            margin: 0,
-            color: C.body,
-          }}
-        >
-          {text}
-        </p>
-      </div>
-    ))}
-  </div>
-</div>
-
            // Wellness priorities data
   const priorities = [
     {
@@ -651,7 +602,56 @@ export default function WellnessPlan() {
       progress: 68,
     },
   ];
+{/* WHAT GLOWWISE IS NOTICING */}
+<div style={{ marginBottom: 56 }}>
+  <div style={{ marginBottom: 22 }}>
+    <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
+      What GlowWise is noticing
+    </div>
 
+    <h2 style={{ ...display(32), margin: 0 }}>
+      Your patterns & rhythms
+    </h2>
+  </div>
+
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+    }}
+  >
+    {[
+      'Your calmer days appear linked to more consistent sleep timing.',
+      'Emotional steadiness seems stronger after slower mornings.',
+      'Stress patterns rise faster on evenings with overstimulation.',
+    ].map((text, idx) => {
+      return (
+        <div
+          key={idx}
+          style={{
+            padding: '22px 24px',
+            borderRadius: 18,
+            background: C.paper,
+            border: `1px solid ${C.lineSoft}`,
+            boxShadow: '0 6px 20px -16px rgba(61,74,82,0.06)',
+          }}
+        >
+          <p
+            style={{
+              ...bodyText(15),
+              lineHeight: 1.8,
+              margin: 0,
+              color: C.body,
+            }}
+          >
+            {text}
+          </p>
+        </div>
+      );
+    })}
+  </div>
+</div>
   // Gentle daily actions
   const gentleActions = [
     {
