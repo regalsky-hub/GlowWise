@@ -629,18 +629,18 @@ const GlowType = () => {
       className="gw-card-pad"
       onClick={() => navigate('/glow-type')}
       style={{
-      padding: '36px 34px 40px',
-      minHeight: 340,
-      borderRadius: 16,
-        background:
-          'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
-        border: '1px solid rgba(107,158,127,0.08)',
-        boxShadow: '0 24px 60px -36px rgba(61,74,82,0.16)',
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      }}
+  padding: '36px 34px 40px',
+  minHeight: 340,
+  borderRadius: 16,
+  background:
+    'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
+  border: '1px solid rgba(107,158,127,0.08)',
+  boxShadow: '0 24px 60px -36px rgba(61,74,82,0.16)',
+  position: 'relative',
+  overflow: 'hidden',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+}}
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = '0 12px 32px rgba(61,74,82,0.16)';
         e.currentTarget.style.transform = 'translateY(-2px)';
