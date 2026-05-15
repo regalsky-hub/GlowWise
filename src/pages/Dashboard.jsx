@@ -57,9 +57,9 @@ const responsiveCSS = `
     .gw-main { padding: 24px 18px 100px !important; }
     .gw-header { flex-direction: column !important; align-items: flex-start !important; }
     .gw-header-actions { width: 100% !important; }
-    @media (max-width: 768px) {
-  .gw-logout-btn { display: inline-flex !important; }
-}
+    
+    .gw-logout-btn { display: inline-flex !important; }
+    
     .gw-hero-pad { padding: 28px 22px !important; }
     .gw-hero-title { font-size: 26px !important; }
     .gw-header-h1 { font-size: 30px !important; }
