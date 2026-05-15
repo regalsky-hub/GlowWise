@@ -559,51 +559,7 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-           // Wellness priorities data
-  const priorities = [
-    {
-      id: 'sleep',
-      title: 'Sleep Recovery',
-      insight: 'Your nervous system is responding well to consistent bedtimes.',
-      icon: Moon,
-      color: C.plum,
-      bg: C.plumBg,
-      accent: '#7A5C77',
-      progress: 72,
-    },
-    {
-      id: 'nervous',
-      title: 'Nervous System Support',
-      insight: 'Stress levels have been gradually stabilising this week.',
-      icon: Wind,
-      color: C.sage,
-      bg: C.sageMint,
-      accent: C.sageDark,
-      progress: 65,
-    },
-    {
-      id: 'emotional',
-      title: 'Emotional Balance',
-      insight: 'Your mood appears more supported on days with morning movement.',
-      icon: Heart,
-      color: C.terracotta,
-      bg: C.terracottaBg,
-      accent: C.terracotta,
-      progress: 78,
-    },
-    {
-      id: 'energy',
-      title: 'Energy Stability',
-      insight: 'Energy steadiness correlates with your hydration patterns.',
-      icon: Sparkles,
-      color: C.amber,
-      bg: C.amberBg,
-      accent: C.amber,
-      progress: 68,
-    },
-  ];
-
-  {/* WHAT GLOWWISE IS NOTICING */}
+           {/* WHAT GLOWWISE IS NOTICING */}
 <div style={{ marginBottom: 56 }}>
   <div style={{ marginBottom: 22 }}>
     <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
@@ -651,6 +607,50 @@ export default function WellnessPlan() {
     ))}
   </div>
 </div>
+
+           // Wellness priorities data
+  const priorities = [
+    {
+      id: 'sleep',
+      title: 'Sleep Recovery',
+      insight: 'Your nervous system is responding well to consistent bedtimes.',
+      icon: Moon,
+      color: C.plum,
+      bg: C.plumBg,
+      accent: '#7A5C77',
+      progress: 72,
+    },
+    {
+      id: 'nervous',
+      title: 'Nervous System Support',
+      insight: 'Stress levels have been gradually stabilising this week.',
+      icon: Wind,
+      color: C.sage,
+      bg: C.sageMint,
+      accent: C.sageDark,
+      progress: 65,
+    },
+    {
+      id: 'emotional',
+      title: 'Emotional Balance',
+      insight: 'Your mood appears more supported on days with morning movement.',
+      icon: Heart,
+      color: C.terracotta,
+      bg: C.terracottaBg,
+      accent: C.terracotta,
+      progress: 78,
+    },
+    {
+      id: 'energy',
+      title: 'Energy Stability',
+      insight: 'Energy steadiness correlates with your hydration patterns.',
+      icon: Sparkles,
+      color: C.amber,
+      bg: C.amberBg,
+      accent: C.amber,
+      progress: 68,
+    },
+  ];
 
   // Gentle daily actions
   const gentleActions = [
