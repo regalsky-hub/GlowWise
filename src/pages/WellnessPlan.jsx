@@ -7,7 +7,7 @@ export default function WellnessPlan() {
   const { profile } = useUserData();
   const userName = profile?.name?.split(' ')[0] || 'there';
 
-  // Color palette
+  // ─── Color palette ───────────────────────────────────────────────────────────
   const C = {
     paper: '#FAF8F5',
     ink: '#3D4A52',
@@ -32,7 +32,7 @@ export default function WellnessPlan() {
   const FF_DISPLAY = "'Fraunces', Georgia, serif";
   const FF_UI = "'Manrope', system-ui, sans-serif";
 
-  // Style helpers
+  // ─── Style helpers ────────────────────────────────────────────────────────────
   const eyebrow = (color = C.mute) => ({
     fontFamily: FF_UI,
     fontSize: 11,
@@ -59,7 +59,7 @@ export default function WellnessPlan() {
     color: C.body,
   });
 
-  // Wellness priorities data
+  // ─── Data ─────────────────────────────────────────────────────────────────────
   const priorities = [
     {
       id: 'sleep',
@@ -103,7 +103,6 @@ export default function WellnessPlan() {
     },
   ];
 
-  // Gentle daily actions
   const gentleActions = [
     {
       icon: Sun,
@@ -131,7 +130,6 @@ export default function WellnessPlan() {
     },
   ];
 
-  // Pattern insights
   const insights = [
     {
       pattern: 'Stress correlation',
@@ -150,6 +148,7 @@ export default function WellnessPlan() {
     },
   ];
 
+  // ─── Render ───────────────────────────────────────────────────────────────────
   return (
     <AppLayout>
       <style>{`
@@ -158,102 +157,67 @@ export default function WellnessPlan() {
         }
         @keyframes fu {
           from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-
         .glow-effect {
           position: absolute;
           border-radius: 50%;
           filter: blur(70px);
           pointer-events: none;
         }
-
         .progress-ring {
           transform: rotate(-90deg);
           transform-origin: 50% 50%;
         }
-
         .wellness-card {
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         .wellness-card:hover {
           transform: translateY(-4px);
         }
-
         @media (max-width: 768px) {
-          .hero-grid {
-            grid-template-columns: 1fr !important;
-          }
+          .hero-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
       <div style={{ background: C.paper, minHeight: '100vh', paddingBottom: 60 }}>
-        {/* HERO REFLECTION */}
-<div
-  style={{
-    position: 'relative',
-    overflow: 'hidden',
-    padding: '72px 52px',
-    borderRadius: 36,
-    background:
-      'linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.48) 100%)',
-    border: `1px solid ${C.lineSoft}`,
-    marginBottom: 42,
-  }}
->
-  <div
-    className="glow-effect"
-    style={{
-      width: 360,
-      height: 360,
-      background: 'rgba(107,158,127,0.08)',
-      top: -140,
-      right: -80,
-    }}
-  />
 
-  <div style={{ position: 'relative', zIndex: 2 }}>
-    <div style={{ ...eyebrow(C.sageDark), marginBottom: 18 }}>
-      This week’s reflection
-    </div>
-
-    <h1
-      style={{
-        ...display(52),
-        maxWidth: 760,
-        lineHeight: 1.08,
-        marginBottom: 24,
-      }}
-    >
-      Your recovery appears{' '}
-      <em style={{ color: C.sage, fontStyle: 'italic' }}>
-        steadier
-      </em>{' '}
-      this week.
-    </h1>
-
-    <p
-      style={{
-        ...bodyText(17),
-        maxWidth: 620,
-        lineHeight: 1.8,
-      }}
-    >
-      Your recent check-ins suggest calmer stress patterns,
-      more stable emotional recovery, and improved sleep consistency.
-    </p>
-  </div>
-</div>
-        {/* Main Content */}
+        {/* ── 1. HERO REFLECTION ──────────────────────────────────────────────── */}
         <div
           style={{
-            maxWidth: 1100,
-            margin: '0 auto',
-            padding: '48px 40px',
+            position: 'relative',
+            overflow: 'hidden',
+            padding: '72px 52px',
+            borderRadius: 36,
+            background: 'linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.48) 100%)',
+            border: `1px solid ${C.lineSoft}`,
+            marginBottom: 42,
           }}
         >
-          {/* AI Wellness Summary */}
+          <div
+            className="glow-effect"
+            style={{ width: 360, height: 360, background: 'rgba(107,158,127,0.08)', top: -140, right: -80 }}
+          />
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <div style={{ ...eyebrow(C.sageDark), marginBottom: 18 }}>
+              This week's reflection
+            </div>
+            <h1 style={{ ...display(52), maxWidth: 760, lineHeight: 1.08, marginBottom: 24 }}>
+              Your recovery appears{' '}
+              <em style={{ color: C.sage, fontStyle: 'italic' }}>steadier</em>{' '}
+              this week.
+            </h1>
+            <p style={{ ...bodyText(17), maxWidth: 620, lineHeight: 1.8 }}>
+              Your recent check-ins suggest calmer stress patterns, more stable emotional recovery,
+              and improved sleep consistency.
+            </p>
+          </div>
+        </div>
+
+        {/* ── MAIN CONTENT CONTAINER ──────────────────────────────────────────── */}
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 40px' }}>
+
+          {/* ── AI Wellness Summary ─────────────────────────────────────────────── */}
           <div
             className="fade-up"
             style={{
@@ -261,7 +225,7 @@ export default function WellnessPlan() {
               overflow: 'hidden',
               padding: '48px 40px',
               borderRadius: 32,
-              background: `linear-gradient(135deg, rgba(237,244,239,0.8) 0%, rgba(250,248,245,0.95) 100%)`,
+              background: 'linear-gradient(135deg, rgba(237,244,239,0.8) 0%, rgba(250,248,245,0.95) 100%)',
               border: `1px solid ${C.lineSoft}`,
               marginBottom: 48,
               boxShadow: '0 24px 60px -30px rgba(61,74,82,0.12)',
@@ -269,158 +233,78 @@ export default function WellnessPlan() {
           >
             <div
               className="glow-effect"
-              style={{
-                width: 280,
-                height: 280,
-                background: 'rgba(107,158,127,0.08)',
-                top: -80,
-                right: -40,
-              }}
+              style={{ width: 280, height: 280, background: 'rgba(107,158,127,0.08)', top: -80, right: -40 }}
             />
-
             <div style={{ position: 'relative', zIndex: 2 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  marginBottom: 20,
-                }}
-              >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <div
                   style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: '50%',
+                    width: 44, height: 44, borderRadius: '50%',
                     background: `linear-gradient(135deg, ${C.sage} 0%, ${C.sageDark} 100%)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: C.paper,
-                    fontFamily: FF_DISPLAY,
-                    fontSize: 20,
-                    fontWeight: 500,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: C.paper, fontFamily: FF_DISPLAY, fontSize: 20, fontWeight: 500,
                   }}
                 >
                   g
                 </div>
                 <div style={{ ...eyebrow(C.sageDark) }}>AI Wellness Reflection</div>
               </div>
-
-              <h2
-                style={{
-                  ...display(32),
-                  maxWidth: 720,
-                  marginBottom: 18,
-                  lineHeight: 1.2,
-                }}
-              >
+              <h2 style={{ ...display(32), maxWidth: 720, marginBottom: 18, lineHeight: 1.2 }}>
                 Your recent patterns suggest steadier recovery, especially in sleep and emotional balance.
               </h2>
-
-              <p
-                style={{
-                  ...bodyText(16),
-                  maxWidth: 700,
-                  lineHeight: 1.8,
-                  color: C.body,
-                }}
-              >
-                Over the past week, your nervous system appears to be responding well to your consistent routines. Sleep quality has stabilised, and your mood patterns suggest better emotional support. However, your body still seems to benefit from deeper recovery windows — particularly in the evenings and on days when stress rises.
+              <p style={{ ...bodyText(16), maxWidth: 700, lineHeight: 1.8, color: C.body }}>
+                Over the past week, your nervous system appears to be responding well to your consistent routines.
+                Sleep quality has stabilised, and your mood patterns suggest better emotional support. However,
+                your body still seems to benefit from deeper recovery windows — particularly in the evenings and
+                on days when stress rises.
               </p>
             </div>
           </div>
 
-          {/* CURRENT STATE SNAPSHOT */}
-<div style={{ marginBottom: 48 }}>
-  <div style={{ marginBottom: 22 }}>
-    <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>
-      Current state
-    </div>
+          {/* ── 2. CURRENT STATE SNAPSHOT ──────────────────────────────────────── */}
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: 22 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>Current state</div>
+              <h2 style={{ ...display(30), margin: 0 }}>Your wellness snapshot</h2>
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: 16,
+              }}
+            >
+              {[
+                { label: 'Sleep',  value: 'Improving',   note: 'More consistent this week' },
+                { label: 'Stress', value: 'Stabilising', note: 'Calmer evenings detected' },
+                { label: 'Mood',   value: 'Supported',   note: 'Emotional recovery stronger' },
+                { label: 'Energy', value: 'Steady',      note: 'Hydration patterns helping' },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    padding: 22,
+                    borderRadius: 18,
+                    background: C.paper,
+                    border: `1px solid ${C.lineSoft}`,
+                  }}
+                >
+                  <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>{item.label}</div>
+                  <div style={{ fontFamily: FF_DISPLAY, fontSize: 24, color: C.ink, marginBottom: 8 }}>
+                    {item.value}
+                  </div>
+                  <div style={{ ...bodyText(13) }}>{item.note}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-    <h2 style={{ ...display(30), margin: 0 }}>
-      Your wellness snapshot
-    </h2>
-  </div>
-
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-      gap: 16,
-    }}
-  >
-    {[
-      {
-        label: 'Sleep',
-        value: 'Improving',
-        note: 'More consistent this week',
-      },
-      {
-        label: 'Stress',
-        value: 'Stabilising',
-        note: 'Calmer evenings detected',
-      },
-      {
-        label: 'Mood',
-        value: 'Supported',
-        note: 'Emotional recovery stronger',
-      },
-      {
-        label: 'Energy',
-        value: 'Steady',
-        note: 'Hydration patterns helping',
-      },
-    ].map((item) => (
-      <div
-        key={item.label}
-        style={{
-          padding: 22,
-          borderRadius: 18,
-          background: C.paper,
-          border: `1px solid ${C.lineSoft}`,
-        }}
-      >
-        <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>
-          {item.label}
-        </div>
-
-        <div
-          style={{
-            fontFamily: FF_DISPLAY,
-            fontSize: 24,
-            color: C.ink,
-            marginBottom: 8,
-          }}
-        >
-          {item.value}
-        </div>
-
-        <div style={{ ...bodyText(13) }}>
-          {item.note}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-```jsx
-          {/* Wellness Priorities */}
+          {/* ── Wellness Priorities ─────────────────────────────────────────────── */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 28 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>
-                Your wellness focus
-              </div>
-
-              <h2
-                style={{
-                  ...display(32),
-                  margin: 0,
-                }}
-              >
-                Adaptive wellness priorities
-              </h2>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Your wellness focus</div>
+              <h2 style={{ ...display(32), margin: 0 }}>Adaptive wellness priorities</h2>
             </div>
-
             <div
               style={{
                 display: 'grid',
@@ -430,16 +314,18 @@ export default function WellnessPlan() {
             >
               {priorities.map((priority, idx) => {
                 const Icon = priority.icon;
-
+                const rgba =
+                  priority.color === C.plum        ? '122,92,119' :
+                  priority.color === C.sage        ? '107,158,127' :
+                  priority.color === C.terracotta  ? '168,90,61' :
+                                                     '160,126,61';
                 return (
                   <div
                     key={priority.id}
                     className="wellness-card fade-up"
                     style={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      padding: 28,
-                      borderRadius: 24,
+                      position: 'relative', overflow: 'hidden',
+                      padding: 28, borderRadius: 24,
                       background: priority.bg,
                       border: `1px solid ${C.lineSoft}`,
                       boxShadow: '0 12px 32px -20px rgba(61,74,82,0.10)',
@@ -448,110 +334,37 @@ export default function WellnessPlan() {
                   >
                     <div
                       className="glow-effect"
-                      style={{
-                        width: 160,
-                        height: 160,
-                        background: `rgba(107,158,127,0.08)`,
-                        top: -60,
-                        right: -40,
-                      }}
+                      style={{ width: 160, height: 160, background: 'rgba(107,158,127,0.08)', top: -60, right: -40 }}
                     />
-
                     <div style={{ position: 'relative', zIndex: 2 }}>
                       <div
                         style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: '50%',
-                          background: `rgba(${
-                            priority.color === C.plum
-                              ? '122, 92, 119'
-                              : priority.color === C.sage
-                              ? '107, 158, 127'
-                              : priority.color === C.terracotta
-                              ? '168, 90, 61'
-                              : '160, 126, 61'
-                          }, 0.15)`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          width: 44, height: 44, borderRadius: '50%',
+                          background: `rgba(${rgba}, 0.15)`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
                           marginBottom: 16,
                         }}
                       >
-                        <Icon
-                          size={20}
-                          strokeWidth={1.8}
-                          style={{ color: priority.accent }}
-                        />
+                        <Icon size={20} strokeWidth={1.8} style={{ color: priority.accent }} />
                       </div>
-
-                      <h3
-                        style={{
-                          ...display(18),
-                          marginBottom: 12,
-                          fontWeight: 500,
-                        }}
-                      >
+                      <h3 style={{ ...display(18), marginBottom: 12, fontWeight: 500 }}>
                         {priority.title}
                       </h3>
-
-                      <p
-                        style={{
-                          ...bodyText(13.5),
-                          marginBottom: 18,
-                          lineHeight: 1.6,
-                          color: C.body,
-                          fontStyle: 'italic',
-                        }}
-                      >
+                      <p style={{ ...bodyText(13.5), marginBottom: 18, lineHeight: 1.6, color: C.body, fontStyle: 'italic' }}>
                         {priority.insight}
                       </p>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 10,
-                        }}
-                      >
-                        <svg
-                          width="40"
-                          height="40"
-                          viewBox="0 0 40 40"
-                          style={{ overflow: 'visible' }}
-                        >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <svg width="40" height="40" viewBox="0 0 40 40" style={{ overflow: 'visible' }}>
+                          <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(168,153,104,0.15)" strokeWidth="2" />
                           <circle
-                            cx="20"
-                            cy="20"
-                            r="16"
-                            fill="none"
-                            stroke={`rgba(168, 153, 104, 0.15)`}
-                            strokeWidth="2"
-                          />
-
-                          <circle
-                            cx="20"
-                            cy="20"
-                            r="16"
-                            fill="none"
-                            stroke={priority.accent}
-                            strokeWidth="2"
+                            cx="20" cy="20" r="16" fill="none"
+                            stroke={priority.accent} strokeWidth="2"
                             strokeDasharray={`${(priority.progress / 100) * 100.5} 100.5`}
                             className="progress-ring"
-                            style={{
-                              transition: 'stroke-dasharray 0.6s ease',
-                            }}
+                            style={{ transition: 'stroke-dasharray 0.6s ease' }}
                           />
                         </svg>
-
-                        <div
-                          style={{
-                            fontFamily: FF_UI,
-                            fontSize: 12,
-                            fontWeight: 600,
-                            color: priority.accent,
-                          }}
-                        >
+                        <div style={{ fontFamily: FF_UI, fontSize: 12, fontWeight: 600, color: priority.accent }}>
                           {priority.progress}%
                         </div>
                       </div>
@@ -562,25 +375,13 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-          {/* WHAT GLOWWISE IS NOTICING */}
+          {/* ── 3. WHAT GLOWWISE IS NOTICING ───────────────────────────────────── */}
           <div style={{ marginBottom: 56 }}>
             <div style={{ marginBottom: 22 }}>
-              <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
-                What GlowWise is noticing
-              </div>
-
-              <h2 style={{ ...display(32), margin: 0 }}>
-                Your patterns & rhythms
-              </h2>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>What GlowWise is noticing</div>
+              <h2 style={{ ...display(32), margin: 0 }}>Your patterns & rhythms</h2>
             </div>
-
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-              }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {[
                 'Your calmer days appear linked to more consistent sleep timing.',
                 'Emotional steadiness seems stronger after slower mornings.',
@@ -596,14 +397,7 @@ export default function WellnessPlan() {
                     boxShadow: '0 6px 20px -16px rgba(61,74,82,0.06)',
                   }}
                 >
-                  <p
-                    style={{
-                      ...bodyText(15),
-                      lineHeight: 1.8,
-                      margin: 0,
-                      color: C.body,
-                    }}
-                  >
+                  <p style={{ ...bodyText(15), lineHeight: 1.8, margin: 0, color: C.body }}>
                     {text}
                   </p>
                 </div>
@@ -611,31 +405,48 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-  // Gentle daily actions
-  const gentleActions = [
-    {
-      icon: Sun,
-      action: 'Morning sunlight',
-      description: 'A few minutes of natural light before 10am helps regulate your nervous system.',
-      insight: '↑ Energy steadiness',
-    },
+          {/* ── 4. GENTLE GUIDANCE ─────────────────────────────────────────────── */}
+          <div style={{ marginBottom: 56 }}>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>Gentle guidance</div>
+              <h2 style={{ ...display(32), margin: 0 }}>What may support you today</h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                'Protect evening recovery tonight.',
+                'Hydrate earlier in the day for steadier energy.',
+                'Reduce overstimulation after 8pm.',
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '18px 22px', borderRadius: 18,
+                    background: C.paper, border: `1px solid ${C.lineSoft}`,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div
+                      style={{ width: 14, height: 14, borderRadius: '50%', background: C.sage }}
+                    />
+                    <div style={{ ...bodyText(15), fontWeight: 500, color: C.ink }}>
+                      {item}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: C.sageDark, fontWeight: 600, fontFamily: FF_UI }}>
+                    Suggested
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Gentle Daily Actions */}
+          {/* ── Gentle Daily Actions ────────────────────────────────────────────── */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 28 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>
-                Daily gentle guidance
-              </div>
-              <h2
-                style={{
-                  ...display(32),
-                  margin: 0,
-                }}
-              >
-                Soft actions to support yourself
-              </h2>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Daily gentle guidance</div>
+              <h2 style={{ ...display(32), margin: 0 }}>Soft actions to support yourself</h2>
             </div>
-
             <div
               style={{
                 display: 'grid',
@@ -650,87 +461,41 @@ export default function WellnessPlan() {
                     key={idx}
                     className="fade-up"
                     style={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      padding: 28,
-                      borderRadius: 20,
-                      background: C.paper,
-                      border: `1px solid ${C.lineSoft}`,
+                      position: 'relative', overflow: 'hidden',
+                      padding: 28, borderRadius: 20,
+                      background: C.paper, border: `1px solid ${C.lineSoft}`,
                       boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
                       animationDelay: `${idx * 0.12}s`,
                     }}
                   >
                     <div
                       className="glow-effect"
-                      style={{
-                        width: 140,
-                        height: 140,
-                        background: 'rgba(107,158,127,0.06)',
-                        top: -50,
-                        right: -30,
-                      }}
+                      style={{ width: 140, height: 140, background: 'rgba(107,158,127,0.06)', top: -50, right: -30 }}
                     />
-
                     <div style={{ position: 'relative', zIndex: 2 }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 10,
-                          marginBottom: 14,
-                        }}
-                      >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                         <div
                           style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: '50%',
+                            width: 36, height: 36, borderRadius: '50%',
                             background: 'rgba(107,158,127,0.12)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}
                         >
-                          <Icon
-                            size={18}
-                            strokeWidth={1.8}
-                            style={{ color: C.sage }}
-                          />
+                          <Icon size={18} strokeWidth={1.8} style={{ color: C.sage }} />
                         </div>
-                        <h3
-                          style={{
-                            ...bodyText(14),
-                            fontWeight: 600,
-                            margin: 0,
-                          }}
-                        >
+                        <h3 style={{ ...bodyText(14), fontWeight: 600, margin: 0 }}>
                           {action.action}
                         </h3>
                       </div>
-
-                      <p
-                        style={{
-                          ...bodyText(13.5),
-                          marginBottom: 14,
-                          lineHeight: 1.7,
-                          color: C.body,
-                        }}
-                      >
+                      <p style={{ ...bodyText(13.5), marginBottom: 14, lineHeight: 1.7, color: C.body }}>
                         {action.description}
                       </p>
-
                       <div
                         style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 6,
-                          padding: '6px 12px',
-                          borderRadius: 100,
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                          padding: '6px 12px', borderRadius: 100,
                           background: 'rgba(107,158,127,0.10)',
-                          fontFamily: FF_UI,
-                          fontSize: 11.5,
-                          fontWeight: 600,
-                          color: C.sageDark,
+                          fontFamily: FF_UI, fontSize: 11.5, fontWeight: 600, color: C.sageDark,
                         }}
                       >
                         {action.insight}
@@ -742,29 +507,13 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-          {/* Pattern Insights */}
+          {/* ── Pattern Insights ────────────────────────────────────────────────── */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 28 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>
-                Wellness observations
-              </div>
-              <h2
-                style={{
-                  ...display(32),
-                  margin: 0,
-                }}
-              >
-                What your patterns reveal
-              </h2>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Wellness observations</div>
+              <h2 style={{ ...display(32), margin: 0 }}>What your patterns reveal</h2>
             </div>
-
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-              }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {insights.map((item, idx) => {
                 const Icon = item.icon;
                 return (
@@ -772,55 +521,27 @@ export default function WellnessPlan() {
                     key={idx}
                     className="fade-up"
                     style={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      padding: 28,
-                      borderRadius: 22,
-                      background: C.paper,
-                      border: `1px solid ${C.lineSoft}`,
+                      position: 'relative', overflow: 'hidden',
+                      padding: 28, borderRadius: 22,
+                      background: C.paper, border: `1px solid ${C.lineSoft}`,
                       boxShadow: '0 8px 20px -16px rgba(61,74,82,0.06)',
-                      display: 'flex',
-                      gap: 20,
-                      alignItems: 'flex-start',
+                      display: 'flex', gap: 20, alignItems: 'flex-start',
                       animationDelay: `${idx * 0.12}s`,
                     }}
                   >
                     <div
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '50%',
+                        width: 44, height: 44, borderRadius: '50%',
                         background: 'rgba(107,158,127,0.12)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0,
                       }}
                     >
-                      <Icon
-                        size={20}
-                        strokeWidth={1.8}
-                        style={{ color: C.sage }}
-                      />
+                      <Icon size={20} strokeWidth={1.8} style={{ color: C.sage }} />
                     </div>
-
                     <div style={{ flex: 1 }}>
-                      <div
-                        style={{
-                          ...eyebrow(C.sage),
-                          marginBottom: 8,
-                        }}
-                      >
-                        {item.pattern}
-                      </div>
-                      <p
-                        style={{
-                          ...bodyText(15),
-                          lineHeight: 1.7,
-                          margin: 0,
-                          color: C.body,
-                        }}
-                      >
+                      <div style={{ ...eyebrow(C.sage), marginBottom: 8 }}>{item.pattern}</div>
+                      <p style={{ ...bodyText(15), lineHeight: 1.7, margin: 0, color: C.body }}>
                         {item.observation}
                       </p>
                     </div>
@@ -830,69 +551,70 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-          {/* Weekly Reflection */}
+          {/* ── 5. WELLNESS RHYTHM VISUAL ───────────────────────────────────────── */}
+          <div
+            style={{
+              marginBottom: 56,
+              padding: '42px 36px',
+              borderRadius: 28,
+              background: 'linear-gradient(135deg, rgba(107,158,127,0.06) 0%, rgba(237,226,236,0.30) 100%)',
+              border: `1px solid ${C.lineSoft}`,
+            }}
+          >
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>Wellness rhythm</div>
+              <h2 style={{ ...display(30), margin: 0 }}>Your recovery trend</h2>
+            </div>
+            <svg width="100%" height="140" viewBox="0 0 600 140">
+              <path
+                d="M20 90 C100 40, 180 120, 260 70 S420 20, 580 60"
+                fill="none"
+                stroke={C.sageDark}
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+              {[20, 140, 260, 380, 500, 580].map((x, i) => (
+                <circle
+                  key={i}
+                  cx={x}
+                  cy={[90, 70, 72, 48, 52, 60][i]}
+                  r="5"
+                  fill={i === 5 ? C.terracotta : C.sageDark}
+                />
+              ))}
+            </svg>
+          </div>
+
+          {/* ── 6. WEEKLY REFLECTION ────────────────────────────────────────────── */}
           <div
             className="fade-up"
             style={{
-              position: 'relative',
-              overflow: 'hidden',
-              padding: 48,
+              padding: '52px 40px',
               borderRadius: 32,
-              background: `linear-gradient(135deg, rgba(107,158,127,0.08) 0%, rgba(237,226,236,0.38) 100%)`,
-              border: `1px solid ${C.lineSoft}`,
               textAlign: 'center',
+              background: 'linear-gradient(135deg, rgba(107,158,127,0.08) 0%, rgba(237,226,236,0.34) 100%)',
+              border: `1px solid ${C.lineSoft}`,
             }}
           >
-            <div
-              className="glow-effect"
+            <div style={{ ...eyebrow(C.sageDark), marginBottom: 18 }}>Weekly reflection</div>
+            <h2
               style={{
-                width: 320,
-                height: 320,
-                background: 'rgba(107,158,127,0.08)',
-                top: -100,
-                right: -60,
+                ...display(38),
+                maxWidth: 760,
+                margin: '0 auto 20px',
+                lineHeight: 1.15,
               }}
-            />
-
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              <div
-                style={{
-                  ...eyebrow(C.sageDark),
-                  marginBottom: 18,
-                  letterSpacing: '0.12em',
-                }}
-              >
-                Weekly reflection
-              </div>
-
-              <h2
-                style={{
-                  ...display(36),
-                  maxWidth: 800,
-                  margin: '0 auto 20px',
-                  lineHeight: 1.2,
-                }}
-              >
-                This week, your body seemed more{' '}
-                <em style={{ fontStyle: 'italic', color: C.sage }}>
-                  emotionally supported.
-                </em>
-              </h2>
-
-              <p
-                style={{
-                  ...bodyText(16),
-                  maxWidth: 680,
-                  margin: '0 auto',
-                  lineHeight: 1.8,
-                  color: C.body,
-                }}
-              >
-                Your check-ins show steadier emotional patterns and improved sleep consistency. This suggests your current routines are supporting your nervous system well. As you continue these gentle practices, notice how your energy and mood respond — your body's feedback is the most honest measure of what helps.
-              </p>
-            </div>
+            >
+              Your body appears more{' '}
+              <em style={{ color: C.sage, fontStyle: 'italic' }}>emotionally supported</em>{' '}
+              when your routines stay gentle and predictable.
+            </h2>
+            <p style={{ ...bodyText(16), maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>
+              Continue protecting slower recovery moments, especially in the evenings.
+            </p>
           </div>
-        </div>
+
+        </div>{/* end main content container */}
       </div>
     </AppLayout>
   );
