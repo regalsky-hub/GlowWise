@@ -390,9 +390,6 @@ const Vitals = ({ today }) => (
         <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>This morning</div>
         <h3 style={{ ...display(26), margin: 0 }}>Your snapshot</h3>
       </div>
-      <Link to="/checkin" style={{ ...btnGhost, padding: '8px 14px', fontSize: 12 }}>
-        Update <ChevronRight size={11} strokeWidth={2} />
-      </Link>
     </div>
     <div className="gw-vitals" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
       <Vital Icon={Zap}   label="Energy" value={today.energy} suffix="/10" mood="Steady"  bg={C.amberBg}      accent={C.amber}      text="#8B6A30" />
