@@ -189,55 +189,62 @@ export default function WellnessPlan() {
       `}</style>
 
       <div style={{ background: C.paper, minHeight: '100vh', paddingBottom: 60 }}>
-        {/* Hero Section */}
-        <div
-          className="fade-up"
-          style={{
-            position: 'relative',
-            overflow: 'hidden',
-            padding: '64px 48px',
-            background: `linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.50) 100%)`,
-            border: `1px solid ${C.lineSoft}`,
-            borderTop: 'none',
-          }}
-        >
-          <div
-            className="glow-effect"
-            style={{
-              width: 360,
-              height: 360,
-              background: 'rgba(107,158,127,0.10)',
-              top: -120,
-              right: -60,
-            }}
-          />
+        {/* HERO REFLECTION */}
+<div
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    padding: '72px 52px',
+    borderRadius: 36,
+    background:
+      'linear-gradient(135deg, rgba(107,158,127,0.12) 0%, rgba(237,226,236,0.48) 100%)',
+    border: `1px solid ${C.lineSoft}`,
+    marginBottom: 42,
+  }}
+>
+  <div
+    className="glow-effect"
+    style={{
+      width: 360,
+      height: 360,
+      background: 'rgba(107,158,127,0.08)',
+      top: -140,
+      right: -80,
+    }}
+  />
 
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>
-              Your wellness plan
-            </div>
-            <h1
-              style={{
-                ...display(52),
-                maxWidth: 700,
-                marginBottom: 24,
-              }}
-            >
-              Adapting to your{' '}
-              <em style={{ fontStyle: 'italic', color: C.sage }}>patterns.</em>
-            </h1>
-            <p
-              style={{
-                ...bodyText(16),
-                maxWidth: 620,
-                color: C.body,
-              }}
-            >
-              Based on your recent check-ins, your wellness plan is evolving. Here's what your body appears to be telling you, and how to support yourself gently.
-            </p>
-          </div>
-        </div>
+  <div style={{ position: 'relative', zIndex: 2 }}>
+    <div style={{ ...eyebrow(C.sageDark), marginBottom: 18 }}>
+      This week’s reflection
+    </div>
 
+    <h1
+      style={{
+        ...display(52),
+        maxWidth: 760,
+        lineHeight: 1.08,
+        marginBottom: 24,
+      }}
+    >
+      Your recovery appears{' '}
+      <em style={{ color: C.sage, fontStyle: 'italic' }}>
+        steadier
+      </em>{' '}
+      this week.
+    </h1>
+
+    <p
+      style={{
+        ...bodyText(17),
+        maxWidth: 620,
+        lineHeight: 1.8,
+      }}
+    >
+      Your recent check-ins suggest calmer stress patterns,
+      more stable emotional recovery, and improved sleep consistency.
+    </p>
+  </div>
+</div>
         {/* Main Content */}
         <div
           style={{
