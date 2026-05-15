@@ -331,6 +331,79 @@ export default function WellnessPlan() {
             </div>
           </div>
 
+          {/* CURRENT STATE SNAPSHOT */}
+<div style={{ marginBottom: 48 }}>
+  <div style={{ marginBottom: 22 }}>
+    <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>
+      Current state
+    </div>
+
+    <h2 style={{ ...display(30), margin: 0 }}>
+      Your wellness snapshot
+    </h2>
+  </div>
+
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gap: 16,
+    }}
+  >
+    {[
+      {
+        label: 'Sleep',
+        value: 'Improving',
+        note: 'More consistent this week',
+      },
+      {
+        label: 'Stress',
+        value: 'Stabilising',
+        note: 'Calmer evenings detected',
+      },
+      {
+        label: 'Mood',
+        value: 'Supported',
+        note: 'Emotional recovery stronger',
+      },
+      {
+        label: 'Energy',
+        value: 'Steady',
+        note: 'Hydration patterns helping',
+      },
+    ].map((item) => (
+      <div
+        key={item.label}
+        style={{
+          padding: 22,
+          borderRadius: 18,
+          background: C.paper,
+          border: `1px solid ${C.lineSoft}`,
+        }}
+      >
+        <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>
+          {item.label}
+        </div>
+
+        <div
+          style={{
+            fontFamily: FF_DISPLAY,
+            fontSize: 24,
+            color: C.ink,
+            marginBottom: 8,
+          }}
+        >
+          {item.value}
+        </div>
+
+        <div style={{ ...bodyText(13) }}>
+          {item.note}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
           {/* Wellness Priorities */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 28 }}>
