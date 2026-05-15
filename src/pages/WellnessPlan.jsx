@@ -115,7 +115,7 @@ export default function WellnessPlan() {
       icon: Droplet,
       action: 'Gentle hydration',
       description: 'Slower water intake throughout the day supports steadier energy.',
-      insight: '↑ Mood stability',
+      insight: '↑ Often linked to calmer evenings',
     },
     {
       icon: Wind,
@@ -356,7 +356,7 @@ export default function WellnessPlan() {
                     style={{
                       position: 'relative',
                       overflow: 'hidden',
-                      padding: 28,
+                      padding: 22,
                       borderRadius: 24,
                       background: priority.bg,
                       border: `1px solid ${C.lineSoft}`,
@@ -511,7 +511,7 @@ export default function WellnessPlan() {
                     style={{
                       position: 'relative',
                       overflow: 'hidden',
-                      padding: 28,
+                      padding: 22,
                       borderRadius: 20,
                       background: C.paper,
                       border: `1px solid ${C.lineSoft}`,
@@ -633,7 +633,7 @@ export default function WellnessPlan() {
                     style={{
                       position: 'relative',
                       overflow: 'hidden',
-                      padding: 28,
+                      padding: 22,
                       borderRadius: 22,
                       background: C.paper,
                       border: `1px solid ${C.lineSoft}`,
