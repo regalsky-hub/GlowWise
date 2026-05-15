@@ -629,7 +629,8 @@ const GlowType = () => {
       className="gw-card-pad"
       onClick={() => navigate('/glow-type')}
       style={{
-        padding: '28px 32px',
+        padding: '36px 34px 40px'
+minHeight: 340
         borderRadius: 16,
         background:
           'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
