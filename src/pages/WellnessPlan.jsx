@@ -403,13 +403,14 @@ export default function WellnessPlan() {
     ))}
   </div>
 </div>
-
+```jsx
           {/* Wellness Priorities */}
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 28 }}>
               <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>
                 Your wellness focus
               </div>
+
               <h2
                 style={{
                   ...display(32),
@@ -429,6 +430,7 @@ export default function WellnessPlan() {
             >
               {priorities.map((priority, idx) => {
                 const Icon = priority.icon;
+
                 return (
                   <div
                     key={priority.id}
@@ -505,7 +507,6 @@ export default function WellnessPlan() {
                         {priority.insight}
                       </p>
 
-                      {/* Mini progress ring */}
                       <div
                         style={{
                           display: 'flex',
@@ -527,6 +528,7 @@ export default function WellnessPlan() {
                             stroke={`rgba(168, 153, 104, 0.15)`}
                             strokeWidth="2"
                           />
+
                           <circle
                             cx="20"
                             cy="20"
@@ -541,6 +543,7 @@ export default function WellnessPlan() {
                             }}
                           />
                         </svg>
+
                         <div
                           style={{
                             fontFamily: FF_UI,
@@ -559,99 +562,55 @@ export default function WellnessPlan() {
             </div>
           </div>
 
-           // Wellness priorities data
-  const priorities = [
-    {
-      id: 'sleep',
-      title: 'Sleep Recovery',
-      insight: 'Your nervous system is responding well to consistent bedtimes.',
-      icon: Moon,
-      color: C.plum,
-      bg: C.plumBg,
-      accent: '#7A5C77',
-      progress: 72,
-    },
-    {
-      id: 'nervous',
-      title: 'Nervous System Support',
-      insight: 'Stress levels have been gradually stabilising this week.',
-      icon: Wind,
-      color: C.sage,
-      bg: C.sageMint,
-      accent: C.sageDark,
-      progress: 65,
-    },
-    {
-      id: 'emotional',
-      title: 'Emotional Balance',
-      insight: 'Your mood appears more supported on days with morning movement.',
-      icon: Heart,
-      color: C.terracotta,
-      bg: C.terracottaBg,
-      accent: C.terracotta,
-      progress: 78,
-    },
-    {
-      id: 'energy',
-      title: 'Energy Stability',
-      insight: 'Energy steadiness correlates with your hydration patterns.',
-      icon: Sparkles,
-      color: C.amber,
-      bg: C.amberBg,
-      accent: C.amber,
-      progress: 68,
-    },
-  ];
-{/* WHAT GLOWWISE IS NOTICING */}
-<div style={{ marginBottom: 56 }}>
-  <div style={{ marginBottom: 22 }}>
-    <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
-      What GlowWise is noticing
-    </div>
+          {/* WHAT GLOWWISE IS NOTICING */}
+          <div style={{ marginBottom: 56 }}>
+            <div style={{ marginBottom: 22 }}>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 10 }}>
+                What GlowWise is noticing
+              </div>
 
-    <h2 style={{ ...display(32), margin: 0 }}>
-      Your patterns & rhythms
-    </h2>
-  </div>
+              <h2 style={{ ...display(32), margin: 0 }}>
+                Your patterns & rhythms
+              </h2>
+            </div>
 
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 16,
-    }}
-  >
-    {[
-      'Your calmer days appear linked to more consistent sleep timing.',
-      'Emotional steadiness seems stronger after slower mornings.',
-      'Stress patterns rise faster on evenings with overstimulation.',
-    ].map((text, idx) => {
-      return (
-        <div
-          key={idx}
-          style={{
-            padding: '22px 24px',
-            borderRadius: 18,
-            background: C.paper,
-            border: `1px solid ${C.lineSoft}`,
-            boxShadow: '0 6px 20px -16px rgba(61,74,82,0.06)',
-          }}
-        >
-          <p
-            style={{
-              ...bodyText(15),
-              lineHeight: 1.8,
-              margin: 0,
-              color: C.body,
-            }}
-          >
-            {text}
-          </p>
-        </div>
-      );
-    })}
-  </div>
-</div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+              }}
+            >
+              {[
+                'Your calmer days appear linked to more consistent sleep timing.',
+                'Emotional steadiness seems stronger after slower mornings.',
+                'Stress patterns rise faster on evenings with overstimulation.',
+              ].map((text, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: '22px 24px',
+                    borderRadius: 18,
+                    background: C.paper,
+                    border: `1px solid ${C.lineSoft}`,
+                    boxShadow: '0 6px 20px -16px rgba(61,74,82,0.06)',
+                  }}
+                >
+                  <p
+                    style={{
+                      ...bodyText(15),
+                      lineHeight: 1.8,
+                      margin: 0,
+                      color: C.body,
+                    }}
+                  >
+                    {text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
   // Gentle daily actions
   const gentleActions = [
     {
