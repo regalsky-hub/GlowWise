@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Sun, Moon, Zap, Heart, Waves, MessageCircle,
   Calendar, BarChart3, User, ChevronRight,
-  Plus, Bell,
+  Plus, Bell, LogOut,
 } from 'lucide-react';
 
 // ============ PALETTE ============
@@ -260,22 +260,18 @@ const Header = ({ name, onLogout }) => {
      <button
   onClick={onLogout}
   style={{
-    display: window.innerWidth <= 768 ? 'inline-flex' : 'none',
     padding: '10px 12px',
     borderRadius: 100,
     background: 'transparent',
     border: `1px solid ${C.lineSoft}`,
     cursor: 'pointer',
-    fontFamily: FF_UI,
-    fontSize: 12,
-    fontWeight: 500,
-    color: C.mute,
-    transition: 'all 0.2s',
+    display: 'inline-flex',
     alignItems: 'center',
-    gap: 6,
+    justifyContent: 'center',
   }}
+  aria-label="Log out"
 >
-  Log out
+  <LogOut size={16} strokeWidth={1.6} color={C.mute} />
 </button>
         <Link to="/checkin" style={btnPrimary}>
           <Plus size={14} strokeWidth={2} /> New check-in
