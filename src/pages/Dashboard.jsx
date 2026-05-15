@@ -234,9 +234,13 @@ const btnGhost = {
 // ============ HEADER ============
 const Header = ({ name, onLogout }) => {
   const today = new Date();
+  const hour = today.getHours();
+  let greeting = 'Good morning';
+  if (hour >= 12 && hour < 18) greeting = 'Good afternoon';
+  else if (hour >= 18) greeting = 'Good evening';
+
   const weekday = today.toLocaleDateString('en-GB', { weekday: 'long' });
   const monthDay = today.toLocaleDateString('en-GB', { month: 'long', day: 'numeric' });
-
   return (
     <div className="gw-header" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -245,7 +249,7 @@ const Header = ({ name, onLogout }) => {
       <div>
         <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>{weekday} · {monthDay}</div>
         <h1 className="gw-header-h1" style={{ ...display(48), margin: 0 }}>
-          Good morning,{' '}
+          {greeting},{' '}
           <em style={{ fontStyle: 'italic', color: C.sage }}>{name}.</em>
         </h1>
       </div>
