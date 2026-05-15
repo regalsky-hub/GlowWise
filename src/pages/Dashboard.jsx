@@ -699,7 +699,6 @@ const Plan = () => (
         <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Your plan</div>
         <h3 style={{ ...display(24), margin: 0 }}>Your wellness plan</h3>
       </div>
-      <button style={{ ...btnGhost, padding: '8px 14px', fontSize: 12 }}>Edit</button>
     </div>
     <Link to="/wellness-plan" style={{ textDecoration: 'none' }}>
       <div className="gw-plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, cursor: 'pointer' }}>
