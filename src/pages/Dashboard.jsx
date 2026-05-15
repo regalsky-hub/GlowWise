@@ -663,7 +663,16 @@ const GlowType = () => {
       <div style={{ ...eyebrow(C.sageDark), marginBottom: 12, position: 'relative', zIndex: 2 }}>
         Your glow type
       </div>
-      <h3 style={{ ...display(26), margin: 0, marginBottom: 14, fontStyle: 'italic', fontWeight: 500, position: 'relative', zIndex: 2 }}>
+      <h3 style={{
+  ...display(34),
+  margin: 0,
+  marginBottom: 14,
+  lineHeight: 1.05,
+  fontStyle: 'italic',
+  fontWeight: 500,
+  position: 'relative',
+  zIndex: 2
+}}>
         The Steady Bloomer
       </h3>
       <p style={{ ...bodyText(14), color: C.body, marginBottom: 22, position: 'relative', zIndex: 2 }}>
