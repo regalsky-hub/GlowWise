@@ -15,7 +15,7 @@ import {
 const C = {
   paper: '#FAF8F5',
   paperWarm: '#F3EFE8',
-  ink: '#28343A',
+  ink: '#3D4A52',
   body: '#5A6770',
   mute: '#A89968',
   sage: '#6B9E7F',
