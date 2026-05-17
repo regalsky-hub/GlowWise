@@ -97,13 +97,11 @@ function AnimatedCoachDemo() {
       }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '18px', borderBottom: '1px solid rgba(168, 153, 104, 0.18)' }}>
-          <div style={{
-            width: '48px', height: '48px', borderRadius: '50%',
-            background: '#EDF4EF',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: 'inset 0 -2px 4px rgba(44, 62, 80, 0.08)',
-          }}>
-            <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+         <div style={{
+  width: '48px', height: '48px',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+}}>
+  <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
               <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
               <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
               <circle cx="78" cy="46" r="6" fill="#C97B5C" />
