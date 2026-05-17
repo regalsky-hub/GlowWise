@@ -651,16 +651,81 @@ const GlowType = () => {
         e.currentTarget.style.transform = 'translateY(0)';
       }}
     >
-      <div style={{
-        position: 'absolute',
-        width: '220px',
-        height: '220px',
-        borderRadius: '50%',
-        background: 'rgba(107,158,127,0.10)',
-        filter: 'blur(60px)',
-        top: '-80px',
-        right: '-40px',
-      }} />
+      <>
+  <div style={{
+    position: 'absolute',
+    width: '220px',
+    height: '220px',
+    borderRadius: '50%',
+    background: 'rgba(107,158,127,0.10)',
+    filter: 'blur(60px)',
+    top: '-80px',
+    right: '-40px',
+  }} />
+
+  {/* Editorial watermark */}
+  <div style={{
+    position: 'absolute',
+    top: '-20px',
+    right: '10px',
+    fontFamily: FF_DISPLAY,
+    fontStyle: 'italic',
+    fontSize: 180,
+    color: 'rgba(85,126,100,0.05)',
+    lineHeight: 1,
+    pointerEvents: 'none',
+    userSelect: 'none',
+  }}>
+    g
+  </div>
+
+  {/* Orbital motif */}
+  <svg
+    width="120"
+    height="120"
+    viewBox="0 0 120 120"
+    style={{
+      position: 'absolute',
+      top: '16px',
+      right: '18px',
+      opacity: 0.18,
+      pointerEvents: 'none',
+    }}
+  >
+    <circle
+      cx="60"
+      cy="60"
+      r="34"
+      stroke={C.sageDark}
+      strokeWidth="1.5"
+      fill="none"
+      strokeDasharray="3 6"
+    />
+
+    <circle
+      cx="60"
+      cy="60"
+      r="20"
+      stroke={C.sage}
+      strokeWidth="1.2"
+      fill="none"
+    />
+
+    <circle
+      cx="94"
+      cy="60"
+      r="4"
+      fill={C.terracottaMid}
+    />
+
+    <circle
+      cx="60"
+      cy="60"
+      r="5"
+      fill={C.sageDark}
+    />
+  </svg>
+</>
       <div style={{ ...eyebrow(C.sageDark), marginBottom: 12, position: 'relative', zIndex: 2 }}>
         Your glow type
       </div>
