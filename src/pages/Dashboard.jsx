@@ -75,22 +75,22 @@ const responsiveCSS = `
 `;
 
 // ============ BRAND ============
-const Orbit = ({ size = 32, color = C.sageDark, tail = C.sage, accent = C.terracottaMid }) => (
+const Orbit = ({ size = 32, color = '#557E64', tail = '#6B9E7F', accent = '#C97B5C' }) => (
   <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
-    <circle cx="50" cy="46" r="28" stroke={color} strokeWidth="5" fill="none" />
+    <circle cx="50" cy="46" r="28" stroke={color} strokeWidth="6" fill="none" />
     <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72"
-      stroke={tail} strokeWidth="5" strokeLinecap="round" fill="none" />
+      stroke={tail} strokeWidth="6" strokeLinecap="round" fill="none" />
     <circle cx="78" cy="46" r="6" fill={accent} />
   </svg>
 );
 
-const Wordmark = ({ size = 22, color = C.sageDark }) => (
+const Wordmark = ({ size = 22, color = C.ink }) => (
   <span style={{
-    fontFamily: FF_DISPLAY,
-    fontWeight: 500, fontSize: size, color,
-    letterSpacing: '-0.01em', lineHeight: 1, whiteSpace: 'nowrap',
+    fontFamily: FF_LOGO,
+    fontWeight: 400, fontSize: size, color,
+    letterSpacing: '0.005em', lineHeight: 1, whiteSpace: 'nowrap',
   }}>
-    Glow<span style={{ fontStyle: 'italic' }}>Wise</span>
+    GlowWise
   </span>
 );
 
