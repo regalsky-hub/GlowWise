@@ -982,7 +982,6 @@ export default function GlowTypes() {
 
       <main style={{ flex: 1, minWidth: 0 }}>
         <style>{`
-          <style>{`
   .fade-up { animation: fu 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
   .fade-up.d1 { animation-delay: 0.06s; }
   .fade-up.d2 { animation-delay: 0.12s; }
