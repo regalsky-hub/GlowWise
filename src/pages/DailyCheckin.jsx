@@ -1,439 +1,176 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
-import { Heart, Zap, Moon, TrendingUp, BookOpen, Lightbulb } from 'lucide-react';
+import { Check, Zap, Moon, Activity, Heart, Sparkles } from 'lucide-react';
 
-export default function GlowTypesOverview() {
-  // Color palette
-  const C = {
-    paper: '#FAF8F5',
-    ink: '#3D4A52',
-    body: '#5A6770',
-    mute: '#A89968',
-    sage: '#6B9E7F',
-    sageMint: '#EDF4EF',
-    plum: '#7A5C77',
-    plumBg: '#EDE2EC',
-    terracotta: '#A85A3D',
-    terracottaBg: '#F5DDD0',
-    amber: '#A07E3D',
-    amberBg: '#FAF3DC',
-    lineSoft: 'rgba(168, 153, 104, 0.10)',
+export default function DailyCheckin() {
+  const [energy, setEnergy] = useState(7);
+  const [sleepHours, setSleepHours] = useState(7);
+  const [stressLevel, setStressLevel] = useState(5);
+  const [mood, setMood] = useState(7);
+  const [symptoms, setSymptoms] = useState('');
+  const [supplementTaken, setSupplementTaken] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const { addCheckIn, getTodayCheckIn } = useUserData();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const today = getTodayCheckIn();
+    if (today) {
+      setEnergy(today.energy || 7);
+      setSleepHours(today.sleep_hours || 7);
+      setStressLevel(today.stress_level || 5);
+      setMood(today.mood || 7);
+      setSymptoms(today.symptoms?.join(', ') || '');
+      setSupplementTaken(today.supplement_taken || false);
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      await addCheckIn({
+        energy, sleep_hours: sleepHours, stress_level: stressLevel, mood,
+        symptoms: symptoms ? symptoms.split(',').map(s => s.trim()) : [],
+        supplement_taken: supplementTaken,
+      });
+      setSuccess(true);
+      setTimeout(() => navigate('/dashboard'), 1500);
+    } catch (err) {
+      setError('Could not save: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const FF_DISPLAY = "'Fraunces', Georgia, serif";
-  const FF_UI = "'Manrope', system-ui, sans-serif";
-
-  const eyebrow = (color = C.mute) => ({
-    fontFamily: FF_UI,
-    fontSize: 11,
-    fontWeight: 600,
-    letterSpacing: '0.18em',
-    textTransform: 'uppercase',
-    color,
-  });
-
-  const display = (size = 28) => ({
-    fontFamily: FF_DISPLAY,
-    fontWeight: 400,
-    fontSize: size,
-    lineHeight: 1.1,
-    letterSpacing: '-0.02em',
-    color: C.ink,
-  });
-
-  const bodyText = (size = 14) => ({
-    fontFamily: FF_UI,
-    fontSize: size,
-    lineHeight: 1.6,
-    color: C.body,
-  });
-
-  // All Glow Types with unique colors
-  const glowTypes = [
-    {
-      name: 'The Steady Bloomer',
-      icon: Moon,
-      color: '#6B9E7F',
-      bg: '#EDF4EF',
-      shortDescription: 'Thrives on routine and consistency. Small daily rituals compound beautifully.',
-      fullDescription: 'People with this pattern thrive on routine and small, consistent rituals. Big swings typically drain them — gentle daily care compounds beautifully. Sleep-led, predictable, and stabilised by consistency.',
-    },
-    {
-      name: 'The Energy Optimizer',
-      icon: Zap,
-      color: '#A07E3D',
-      bg: '#FAF3DC',
-      shortDescription: 'Needs variety and stimulation to thrive. Monotony drains energy quickly.',
-      fullDescription: 'People with this pattern need variety and stimulation to thrive. Monotony typically drains them — diverse movement, novelty, and change energise deeply. Dynamic, exploratory, and driven by new input.',
-    },
-    {
-      name: 'The Sensitive Nurturer',
-      icon: Heart,
-      color: '#7A5C77',
-      bg: '#EDE2EC',
-      shortDescription: 'Needs deep calm and protection. Feels acutely — sensitivity is an asset.',
-      fullDescription: 'People with this pattern need deep calm and gentle transitions. They feel acutely — the skill is learning to protect that sensitivity as an asset. Intuitive, environment-aware, and grounded in quality over quantity.',
-    },
-    {
-      name: 'The Resilient Achiever',
-      icon: TrendingUp,
-      color: '#A85A3D',
-      bg: '#F5DDD0',
-      shortDescription: 'Driven and goal-oriented with deep reserves. Recovery is fuel, not laziness.',
-      fullDescription: 'People with this pattern are driven and goal-oriented with deep reserves of energy. The key insight: recovery is fuel, not laziness. Ambitious, capable, and prone to override rest signals.',
-    },
-    {
-      name: 'The Intuitive Explorer',
-      icon: Lightbulb,
-      color: '#5B8FA3',
-      bg: '#E8EFF5',
-      shortDescription: 'Deeply body-aware and trusting of inner knowing. Acts without overthinking.',
-      fullDescription: 'People with this pattern are deeply body-aware and trust their inner knowing. The skill: tuning into subtle signals and acting without overthinking. Flexible, intuitive, and naturally aligned with their needs.',
-    },
-    {
-      name: 'The Community Connector',
-      icon: BookOpen,
-      color: '#A77090',
-      bg: '#F5E5ED',
-      shortDescription: 'Energised by connection and community. Movement with others is natural medicine.',
-      fullDescription: 'People with this pattern are energised by connection and community. Isolation typically depletes them — movement and interaction with others is their natural medicine. Social, accountable, and thriving in groups.',
-    },
-  ];
+  const Scale = ({ value, onChange, leftLabel, rightLabel }) => (
+    <div>
+      <div style={{ display: 'flex', gap: '6px', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap' }}>
+        {[1,2,3,4,5,6,7,8,9,10].map(i => (
+          <button key={i} type="button" onClick={() => onChange(i)} style={{
+            width: '38px', height: '38px', borderRadius: '50%',
+            border: 'none', cursor: 'pointer', fontFamily: "'Manrope', sans-serif",
+            fontSize: '14px', fontWeight: 600, transition: 'all 0.2s',
+            background: value === i ? '#6B9E7F' : '#EDF4EF',
+            color: value === i ? '#FAF8F5' : '#557E64',
+            boxShadow: value === i ? '0 4px 12px rgba(107, 158, 127, 0.3)' : 'none',
+          }}>{i}</button>
+        ))}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#A89968', letterSpacing: '0.05em' }}>
+        <span>{leftLabel}</span><span>{rightLabel}</span>
+      </div>
+    </div>
+  );
 
   return (
     <AppLayout>
       <style>{`
+        .display { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
+        .eyebrow { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #A89968; }
         .fade-up { animation: fu 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
         @keyframes fu { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .glow-effect {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(70px);
-          pointer-events: none;
-        }
+        .checkin-input { width: 100%; background: #FAF8F5; border: 1px solid rgba(168, 153, 104, 0.25); border-radius: 8px; padding: 14px 16px; font-family: 'Manrope', sans-serif; font-size: 15px; color: #3D4A52; outline: none; resize: vertical; min-height: 90px; }
+        .checkin-input:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
+        .slider { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(168, 153, 104, 0.2); border-radius: 100px; outline: none; cursor: pointer; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: #6B9E7F; border-radius: 50%; cursor: pointer; border: 4px solid #FAF8F5; box-shadow: 0 2px 8px rgba(107, 158, 127, 0.3); }
+        .btn-primary { width: 100%; background: #6B9E7F; color: #FAF8F5; padding: 16px; border: none; border-radius: 100px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary:hover:not(:disabled) { background: #557E64; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(107, 158, 127, 0.25); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .field-icon { color: #6B9E7F; flex-shrink: 0; }
       `}</style>
 
-      <div style={{ background: C.paper, minHeight: '100vh', paddingBottom: 80 }}>
-        {/* Hero Section */}
-        <div
-          className="fade-up"
-          style={{
-            position: 'relative',
-            overflow: 'hidden',
-            padding: '64px 48px',
-            background: `linear-gradient(135deg, ${C.sageMint} 0%, rgba(250,248,245,0.95) 100%)`,
-            border: `1px solid ${C.lineSoft}`,
-            borderTop: 'none',
-          }}
-        >
-          <div
-            className="glow-effect"
-            style={{
-              width: 360,
-              height: 360,
-              background: `rgba(107,158,127,0.08)`,
-              top: -120,
-              right: -60,
-            }}
-          />
-
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ ...eyebrow(C.sage), marginBottom: 16 }}>
-              Understanding your wellness
-            </div>
-            <h1
-              style={{
-                ...display(56),
-                margin: '0 0 16px 0',
-                maxWidth: 700,
-              }}
-            >
-              What are Glow Types?
-            </h1>
-            <p
-              style={{
-                ...bodyText(16),
-                maxWidth: 700,
-                color: C.body,
-                lineHeight: 1.8,
-              }}
-            >
-              Everyone has a natural rhythm and pattern for thriving. Glow Types map how you naturally function — your energy needs, your pace, what depletes you, and what compounds beautifully. There's no "best" type. There's only what works for your unique body and life.
-            </p>
-          </div>
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '40px 24px' }}>
+        <div className="fade-up" style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div className="eyebrow" style={{ marginBottom: '12px' }}>Daily check-in</div>
+          <h1 className="display" style={{ fontSize: 'clamp(32px, 5vw, 44px)', lineHeight: 1.1, color: '#3D4A52', marginBottom: '12px' }}>
+            How are you <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>feeling today?</em>
+          </h1>
+          <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#5A6770' }}>
+            60 seconds. Honest answers build the most accurate insights.
+          </p>
         </div>
 
-        {/* Main Content */}
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 40px' }}>
-          {/* Framework Explanation */}
-          <div style={{ marginBottom: 64 }}>
-            <div style={{ marginBottom: 32 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>How it works</div>
-              <h2 style={{ ...display(36), margin: 0 }}>Six patterns of thriving</h2>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: 24,
-                marginBottom: 48,
-              }}
-            >
-              <div
-                className="fade-up"
-                style={{
-                  padding: '32px',
-                  borderRadius: 20,
-                  background: C.paper,
-                  border: `1px solid ${C.lineSoft}`,
-                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    background: '#EDF4EF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 16,
-                  }}
-                >
-                  <Moon size={24} color="#6B9E7F" strokeWidth={1.5} />
-                </div>
-                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
-                  Personalised to you
-                </h3>
-                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
-                  Your type emerges from your check-in patterns — sleep, energy, mood, movement. Real data about how you actually function, not guesses.
-                </p>
+        {success && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(61, 74, 82, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+            <div className="fade-up" style={{ background: '#FAF8F5', borderRadius: '16px', padding: '40px', textAlign: 'center', maxWidth: '360px' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#6B9E7F', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                <Check size={32} strokeWidth={2.5} style={{ color: '#FAF8F5' }} />
               </div>
-
-              <div
-                className="fade-up"
-                style={{
-                  padding: '32px',
-                  borderRadius: 20,
-                  background: C.paper,
-                  border: `1px solid ${C.lineSoft}`,
-                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
-                  animationDelay: '0.08s',
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    background: '#FAF3DC',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 16,
-                  }}
-                >
-                  <Zap size={24} color="#A07E3D" strokeWidth={1.5} />
-                </div>
-                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
-                  Actionable insights
-                </h3>
-                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
-                  Once you have your type, you get specific practices tailored to how you naturally thrive — not generic wellness advice.
-                </p>
-              </div>
-
-              <div
-                className="fade-up"
-                style={{
-                  padding: '32px',
-                  borderRadius: 20,
-                  background: C.paper,
-                  border: `1px solid ${C.lineSoft}`,
-                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
-                  animationDelay: '0.16s',
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    background: '#EDE2EC',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 16,
-                  }}
-                >
-                  <Heart size={24} color="#7A5C77" strokeWidth={1.5} />
-                </div>
-                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
-                  Honest framing
-                </h3>
-                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
-                  No mystical language. No hierarchies. Just patterns about how people with your profile typically experience wellness.
-                </p>
-              </div>
+              <h2 className="display" style={{ fontSize: '24px', color: '#3D4A52', marginBottom: '8px' }}>Logged.</h2>
+              <p style={{ fontSize: '14px', color: '#5A6770' }}>You're building real awareness. See you tomorrow.</p>
             </div>
           </div>
+        )}
 
-          {/* All Types Grid */}
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ marginBottom: 32 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>The six types</div>
-              <h2 style={{ ...display(36), margin: 0 }}>Find yourself in these patterns</h2>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
+          {error && (
+            <div style={{ background: 'rgba(204, 68, 68, 0.08)', borderLeft: '3px solid #CC4444', borderRadius: '4px', padding: '12px 16px', fontSize: '13px', color: '#CC4444' }}>{error}</div>
+          )}
+
+          {/* Energy */}
+          <div className="fade-up">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <Zap size={18} strokeWidth={1.6} className="field-icon" />
+              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>How's your energy?</label>
             </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                gap: 24,
-              }}
-            >
-              {glowTypes.map((type, i) => {
-                const Icon = type.icon;
-                return (
-                  <div
-                    key={i}
-                    className="fade-up"
-                    style={{
-                      position: 'relative',
-                      overflow: 'hidden',
-                      padding: '32px',
-                      borderRadius: 24,
-                      background: type.bg,
-                      border: `1px solid ${C.lineSoft}`,
-                      transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                      cursor: 'pointer',
-                      animationDelay: `${i * 0.06}s`,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-8px)';
-                      e.currentTarget.style.boxShadow = '0 16px 32px rgba(61,74,82,0.12)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: '50%',
-                        background: C.paper,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: 16,
-                      }}
-                    >
-                      <Icon size={28} color={type.color} strokeWidth={1.5} />
-                    </div>
-
-                    {/* Type Name */}
-                    <h3
-                      style={{
-                        ...display(20),
-                        margin: '0 0 12px 0',
-                        color: type.color,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {type.name}
-                    </h3>
-
-                    {/* Short Description */}
-                    <p
-                      style={{
-                        ...bodyText(14),
-                        margin: '0 0 16px 0',
-                        lineHeight: 1.7,
-                        color: C.body,
-                        fontWeight: 500,
-                      }}
-                    >
-                      {type.shortDescription}
-                    </p>
-
-                    {/* Full Description */}
-                    <p
-                      style={{
-                        ...bodyText(13),
-                        margin: 0,
-                        lineHeight: 1.7,
-                        color: C.body,
-                      }}
-                    >
-                      {type.fullDescription}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+            <Scale value={energy} onChange={setEnergy} leftLabel="Drained" rightLabel="Energised" />
           </div>
 
-          {/* CTA Section */}
-          <div
-            className="fade-up"
-            style={{
-              marginTop: 64,
-              padding: '64px 56px',
-              borderRadius: 28,
-              background: `linear-gradient(135deg, ${C.sageMint} 0%, rgba(250,248,245,0.95) 100%)`,
-              border: `1px solid ${C.lineSoft}`,
-              textAlign: 'center',
-            }}
-          >
-            <h2
-              style={{
-                ...display(36),
-                margin: '0 0 20px 0',
-              }}
-            >
-              Which one feels like home?
-            </h2>
-            <p
-              style={{
-                ...bodyText(16),
-                margin: '0 0 40px 0',
-                color: C.body,
-                maxWidth: 700,
-              }}
-            >
-              Answer a few check-in questions, and we'll identify your type. The more data you share, the more accurate and useful your insights become.
-            </p>
-            <button
-              style={{
-                padding: '16px 40px',
-                borderRadius: 12,
-                background: C.sage,
-                color: C.paper,
-                border: 'none',
-                fontFamily: FF_UI,
-                fontSize: 15,
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = C.sageDark;
-                e.currentTarget.style.transform = 'scale(1.02)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = C.sage;
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              Start your first check-in
-            </button>
+          {/* Sleep */}
+          <div className="fade-up">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <Moon size={18} strokeWidth={1.6} className="field-icon" />
+              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Hours of sleep last night</label>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <input type="range" min="3" max="12" value={sleepHours} onChange={(e) => setSleepHours(Number(e.target.value))} className="slider" />
+              <span className="display" style={{ fontSize: '28px', color: '#6B9E7F', minWidth: '60px', textAlign: 'right' }}>{sleepHours}h</span>
+            </div>
+            <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>Most adults feel best with 7–9 hours.</p>
           </div>
-        </div>
+
+          {/* Stress */}
+          <div className="fade-up">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <Activity size={18} strokeWidth={1.6} className="field-icon" />
+              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Stress level</label>
+            </div>
+            <Scale value={stressLevel} onChange={setStressLevel} leftLabel="Calm" rightLabel="Overwhelmed" />
+          </div>
+
+          {/* Mood */}
+          <div className="fade-up">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <Heart size={18} strokeWidth={1.6} className="field-icon" />
+              <label className="display" style={{ fontSize: '20px', color: '#3D4A52', fontWeight: 500 }}>Overall mood</label>
+            </div>
+            <Scale value={mood} onChange={setMood} leftLabel="Low" rightLabel="Great" />
+          </div>
+
+          {/* Symptoms */}
+          <div className="fade-up">
+            <label className="eyebrow" style={{ display: 'block', marginBottom: '10px' }}>Anything you're noticing? (optional)</label>
+            <textarea value={symptoms} onChange={(e) => setSymptoms(e.target.value)} placeholder="e.g. headache, bloating, fatigue, breakouts..." className="checkin-input" />
+          </div>
+
+          {/* Supplements */}
+          <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '16px 18px', background: '#FAF8F5', border: '1px solid rgba(168, 153, 104, 0.25)', borderRadius: '8px' }}>
+            <input type="checkbox" checked={supplementTaken} onChange={(e) => setSupplementTaken(e.target.checked)} style={{ width: '18px', height: '18px', accentColor: '#6B9E7F', cursor: 'pointer' }} />
+            <span style={{ fontSize: '15px', color: '#3D4A52', fontWeight: 500 }}>Took supplements today</span>
+          </label>
+
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? 'Saving...' : (<>Save check-in <Check size={16} strokeWidth={2} /></>)}
+          </button>
+
+          <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968' }}>Takes about 60 seconds · Your data is private and encrypted</p>
+        </form>
       </div>
     </AppLayout>
   );
