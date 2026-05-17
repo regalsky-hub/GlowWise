@@ -767,33 +767,52 @@ const GlowType = () => {
     Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.
   </p>
 </>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 22, position: 'relative', zIndex: 2 }}>
-        {['Gentle rhythm', 'Calm energy', 'Ritual-led'].map((t) => (
-          <span key={t} style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(107,158,127,0.12)', color: C.sageDark, fontSize: 11.5, fontWeight: 600, fontFamily: FF_UI }}>
+            <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginBottom: 22,
+        position: 'relative',
+        zIndex: 2,
+      }}>
+        {['Gentle rhythm', 'Calm energy', 'Soft structure'].map((t) => (
+          <span
+            key={t}
+            style={{
+              padding: '5px 12px',
+              borderRadius: 999,
+              background: 'rgba(107,158,127,0.12)',
+              color: C.sageDark,
+              fontSize: 11.5,
+              fontWeight: 600,
+              fontFamily: FF_UI,
+            }}
+          >
             {t}
           </span>
         ))}
       </div>
-      <div style={{
-  color: C.sageDark,
-  fontFamily: FF_UI,
-  fontSize: 13,
-  fontWeight: 700,
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '10px 16px',
-  borderRadius: 999,
-  background: 'rgba(107,158,127,0.10)',
-  border: '1px solid rgba(107,158,127,0.12)',
-  position: 'relative',
-  zIndex: 2,
-  transition: 'all 0.2s ease',
-}}>
-  Explore your rhythm <ChevronRight size={12} strokeWidth={2.2} />
-</div>
+
+      <div
+        style={{
+          color: C.sageDark,
+          fontFamily: FF_UI,
+          fontSize: 13,
+          fontWeight: 700,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '10px 16px',
+          borderRadius: 999,
+          background: 'rgba(107,158,127,0.10)',
+          border: '1px solid rgba(107,158,127,0.12)',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
+        Explore your rhythm
+        <ChevronRight size={12} strokeWidth={2.2} />
       </div>
-    </div>
   );
 };
 
