@@ -369,13 +369,7 @@ export default function AICoach() {
           display: flex; align-items: center; gap: 10px; min-width: 0;
           font-family: 'Manrope', sans-serif; font-size: 14px; color: #5A6770;
         }
-        .g-mark {
-          width: 28px; height: 28px; border-radius: 50%;
-          background: linear-gradient(135deg, #6B9E7F, #A89968);
-          display: flex; align-items: center; justify-content: center;
-          color: #FAF8F5; font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
-          flex-shrink: 0;
-        }
+       
         .new-chat-btn {
           display: flex; align-items: center; gap: 6px;
           background: transparent;
@@ -573,13 +567,6 @@ export default function AICoach() {
           align-items: center; justify-content: center;
           text-align: center; padding: 32px 0 24px; min-height: 100%;
         }
-        .welcome-mark {
-          width: 64px; height: 64px; border-radius: 50%;
-          background: linear-gradient(135deg, #6B9E7F 0%, #557E64 100%);
-          display: flex; align-items: center; justify-content: center;
-          color: #FAF8F5; font-family: 'Fraunces', serif;
-          font-size: 28px; font-weight: 500; margin-bottom: 22px;
-        }
         .welcome-title {
           font-family: 'Fraunces', serif; font-weight: 400;
           font-size: clamp(26px, 4vw, 34px);
@@ -660,7 +647,11 @@ export default function AICoach() {
               <Menu size={20} />
             </button>
             <div className="topbar-label">
-              <div className="g-mark">g</div>
+              <svg width="28" height="28" viewBox="0 0 100 100" fill="none" style={{ flexShrink: 0 }}>
+  <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+  <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+  <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+</svg>
               <span>Wellness coach</span>
             </div>
           </div>
@@ -673,7 +664,11 @@ export default function AICoach() {
         <div className="messages-scroll">
           {messages.length === 0 && !loading ? (
             <div className="welcome fade-up">
-              <div className="welcome-mark">g</div>
+              <svg width="64" height="64" viewBox="0 0 100 100" fill="none" style={{ marginBottom: 22 }}>
+  <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+  <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+  <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+</svg>
               <div className="eyebrow" style={{ marginBottom: 14 }}>Your wellness coach</div>
               <h1 className="welcome-title">
                 Hello, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>{userName}.</em>
