@@ -768,7 +768,7 @@ const GlowType = () => {
   </p>
 </>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 22, position: 'relative', zIndex: 2 }}>
-        {['Sleep-led', 'Consistency', 'Soft mornings'].map((t) => (
+        {['Gentle rhythm', 'Calm energy', 'Ritual-led'].map((t) => (
           <span key={t} style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(107,158,127,0.12)', color: C.sageDark, fontSize: 11.5, fontWeight: 600, fontFamily: FF_UI }}>
             {t}
           </span>
