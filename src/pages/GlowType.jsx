@@ -1,21 +1,8 @@
 import React from 'react';
-import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
 import { Heart, Zap, Moon, TrendingUp, BookOpen, Lightbulb } from 'lucide-react';
 
-export default function GlowType() {
-  const { profile, loading } = useUserData();
-
-  if (loading) {
-    return (
-      <AppLayout>
-        <div style={{ padding: '40px', textAlign: 'center', color: '#A89968' }}>
-          Loading your glow type...
-        </div>
-      </AppLayout>
-    );
-  }
-
+export default function GlowTypesOverview() {
   // Color palette
   const C = {
     paper: '#FAF8F5',
@@ -23,7 +10,6 @@ export default function GlowType() {
     body: '#5A6770',
     mute: '#A89968',
     sage: '#6B9E7F',
-    sageDark: '#557E64',
     sageMint: '#EDF4EF',
     plum: '#7A5C77',
     plumBg: '#EDE2EC',
@@ -62,272 +48,57 @@ export default function GlowType() {
     color: C.body,
   });
 
-  // Glow Type Data
-  const glowTypes = {
-    'The Steady Bloomer': {
-      description: 'People with this pattern thrive on routine and small, consistent rituals. Big swings typically drain them — gentle daily care compounds beautifully.',
+  // All Glow Types
+  const glowTypes = [
+    {
+      name: 'The Steady Bloomer',
       icon: Moon,
       color: C.sage,
       bg: C.sageMint,
-      characteristics: ['Sleep-led', 'Consistency', 'Soft mornings', 'Predictable rhythms'],
-      support: [
-        {
-          title: 'Create non-negotiable routines',
-          description: 'A stable nervous system thrives on predictability. Consistent bed/wake times, meals, and movement windows reduce decision fatigue.',
-        },
-        {
-          title: 'Gentle layering over intensity',
-          description: 'Small daily practices (5 min breathing, 10 min walks) compound more than occasional intense efforts. Consistency beats occasional extremes.',
-        },
-        {
-          title: 'Sleep is your anchor',
-          description: 'Quality sleep stabilises everything else. Protect sleep above flashy wellness trends — it\'s your foundation.',
-        },
-        {
-          title: 'Soft transitions matter',
-          description: 'Abrupt changes create stress. Build buffer time between activities and ease into your day rather than jolting awake.',
-        },
-      ],
-      insights: [
-        'Energy stabilises most when sleep is consistent',
-        'Steady mood improvement emerges with predictable routines over weeks, not days',
-        'Stress peaks noticeably during unpredictable or high-change periods',
-      ],
-      resources: [
-        { title: 'Sleep consistency guide', icon: Moon },
-        { title: 'Building sustainable morning rituals', icon: Lightbulb },
-        { title: 'Nervous system stability through routine', icon: TrendingUp },
-      ],
+      shortDescription: 'Thrives on routine and consistency. Small daily rituals compound beautifully.',
+      fullDescription: 'People with this pattern thrive on routine and small, consistent rituals. Big swings typically drain them — gentle daily care compounds beautifully. Sleep-led, predictable, and stabilised by consistency.',
     },
-    'The Energy Optimizer': {
-      description: 'People with this pattern need variety and stimulation to thrive. Monotony typically drains them — diverse movement, novelty, and change energise deeply.',
+    {
+      name: 'The Energy Optimizer',
       icon: Zap,
       color: C.amber,
       bg: C.amberBg,
-      characteristics: ['Movement-varied', 'Novel stimulation', 'Dynamic energy', 'Exploration-driven'],
-      support: [
-        {
-          title: 'Mix movement modalities',
-          description: 'Rotate between strength, cardio, flexibility, and dance. Monotonous routines deplete energy quickly for this pattern.',
-        },
-        {
-          title: 'Embrace novelty',
-          description: 'Try new activities, change routes, vary environments. A nervous system that craves input needs consistent new stimulus.',
-        },
-        {
-          title: 'Schedule recovery strategically',
-          description: 'High energy output requires intentional rest. Build restorative days between intense periods to prevent depletion.',
-        },
-        {
-          title: 'Social movement amplifies',
-          description: 'Group activities, classes, and outdoor movement with others create multiplicative energy gains.',
-        },
-      ],
-      insights: [
-        'Energy peaks noticeably when activities are varied and novel',
-        'Stress levels decrease with higher movement frequency and diversity',
-        'Mood is brightest on days featuring both novelty and exploration',
-      ],
-      resources: [
-        { title: 'Movement variety guide', icon: Zap },
-        { title: 'Building stimulation into routines', icon: Lightbulb },
-        { title: 'Recovery for high-energy types', icon: Heart },
-      ],
+      shortDescription: 'Needs variety and stimulation to thrive. Monotony drains energy quickly.',
+      fullDescription: 'People with this pattern need variety and stimulation to thrive. Monotony typically drains them — diverse movement, novelty, and change energise deeply. Dynamic, exploratory, and driven by new input.',
     },
-    'The Sensitive Nurturer': {
-      description: 'People with this pattern need deep calm and gentle transitions. They feel acutely — the skill is learning to protect that sensitivity as an asset.',
+    {
+      name: 'The Sensitive Nurturer',
       icon: Heart,
       color: C.plum,
       bg: C.plumBg,
-      characteristics: ['Deeply intuitive', 'Needs calm', 'Sensitive to environment', 'Gentle pace'],
-      support: [
-        {
-          title: 'Protect your nervous system',
-          description: 'Manage overstimulation strategically: limit screen time, seek quiet spaces, curate your social circle with intention.',
-        },
-        {
-          title: 'Honour your processing time',
-          description: 'Processing emotions and experiences takes longer for this pattern. Build in solitude and reflection time without guilt.',
-        },
-        {
-          title: 'Environmental design matters deeply',
-          description: 'Soft lighting, natural textures, minimal clutter, and calming scents directly affect wellbeing. Environment is medicine.',
-        },
-        {
-          title: 'Quality over quantity always',
-          description: 'Fewer, more meaningful activities sustain you. Deep friendships matter more than broad networks.',
-        },
-      ],
-      insights: [
-        'Stress is triggered by overstimulation and harsh environmental inputs',
-        'Sleep quality improves dramatically with calm, intentional evening routines',
-        'Emotional balance emerges from adequate alone time, not social pushes',
-      ],
-      resources: [
-        { title: 'Creating a calm nervous system', icon: Moon },
-        { title: 'Boundary-setting for sensitive types', icon: Lightbulb },
-        { title: 'Intuition as a wellness tool', icon: Heart },
-      ],
+      shortDescription: 'Needs deep calm and protection. Feels acutely — sensitivity is an asset.',
+      fullDescription: 'People with this pattern need deep calm and gentle transitions. They feel acutely — the skill is learning to protect that sensitivity as an asset. Intuitive, environment-aware, and grounded in quality over quantity.',
     },
-    'The Resilient Achiever': {
-      description: "People with this pattern are driven and goal-oriented with deep reserves of energy. The key insight: recovery is fuel, not laziness.",
+    {
+      name: 'The Resilient Achiever',
       icon: TrendingUp,
       color: C.terracotta,
       bg: C.terracottaBg,
-      characteristics: ['Goal-driven', 'High capacity', 'Recovery-blind', 'Ambitious'],
-      support: [
-        {
-          title: 'Schedule recovery like meetings',
-          description: 'Drive often overrides rest signals. Block recovery time as non-negotiable calendar commitments to protect it.',
-        },
-        {
-          title: 'Track recovery metrics',
-          description: 'Monitor sleep, mood, and stress data. Performance often drops before this pattern consciously feels tired.',
-        },
-        {
-          title: 'Build in deload weeks',
-          description: 'Every 4–6 weeks, intentionally reduce intensity. Bodies need periodic deep recovery to maintain long-term capacity.',
-        },
-        {
-          title: 'Reframe rest as performance',
-          description: 'Recovery amplifies next-cycle output. Rest is productive, not indulgent — it compounds your long-term results.',
-        },
-      ],
-      insights: [
-        'Stress accumulates gradually — often undetectable until a threshold is crossed',
-        'Sleep quality directly predicts next-cycle performance and decision-making',
-        'Recovery weeks prevent burnout and maintain capacity over years, not just weeks',
-      ],
-      resources: [
-        { title: 'Strategic recovery for achievers', icon: TrendingUp },
-        { title: 'Recognising burnout signals early', icon: Lightbulb },
-        { title: 'Building sustainable ambition', icon: Heart },
-      ],
+      shortDescription: 'Driven and goal-oriented with deep reserves. Recovery is fuel, not laziness.',
+      fullDescription: 'People with this pattern are driven and goal-oriented with deep reserves of energy. The key insight: recovery is fuel, not laziness. Ambitious, capable, and prone to override rest signals.',
     },
-    'The Intuitive Explorer': {
-      description: "People with this pattern are deeply body-aware and trust their inner knowing. The skill: tuning into subtle signals and acting without overthinking.",
+    {
+      name: 'The Intuitive Explorer',
       icon: Lightbulb,
       color: C.sage,
       bg: C.sageMint,
-      characteristics: ['Body-aware', 'Intuitive', 'Flexible approach', 'Inner-directed'],
-      support: [
-        {
-          title: 'Trust your body signals',
-          description: 'This pattern senses what\'s needed before data confirms it. Following intuition typically leads to better choices.',
-        },
-        {
-          title: 'Embrace flexibility',
-          description: 'Rigid plans restrict this pattern. Build frameworks, not rules. Let wellness adapt daily based on what\'s genuinely needed.',
-        },
-        {
-          title: 'Movement as conversation',
-          description: 'Move what needs moving. Sometimes intense, sometimes gentle — honour what your body actually requests each day.',
-        },
-        {
-          title: 'Integrate mind-body practices',
-          description: 'Yoga, tai chi, somatic work, and breathwork naturally amplify the intuitive abilities this pattern possesses.',
-        },
-      ],
-      insights: [
-        'Wellness thrives with intuitive, flexible approaches rather than rigid protocols',
-        'This pattern often senses patterns before they become measurable in data',
-        'Body-aware practices deepen existing natural intuitive abilities',
-      ],
-      resources: [
-        { title: 'Somatic awareness practices', icon: Heart },
-        { title: 'Flexible wellness frameworks', icon: Lightbulb },
-        { title: 'Trusting your body intelligence', icon: Moon },
-      ],
+      shortDescription: 'Deeply body-aware and trusting of inner knowing. Acts without overthinking.',
+      fullDescription: 'People with this pattern are deeply body-aware and trust their inner knowing. The skill: tuning into subtle signals and acting without overthinking. Flexible, intuitive, and naturally aligned with their needs.',
     },
-    'The Community Connector': {
-      description: "People with this pattern are energised by connection and community. Isolation typically depletes them — movement and interaction with others is their natural medicine.",
+    {
+      name: 'The Community Connector',
       icon: BookOpen,
       color: C.amber,
       bg: C.amberBg,
-      characteristics: ['Community-driven', 'Socially energised', 'Movement-based', 'Connection-seeking'],
-      support: [
-        {
-          title: 'Prioritise group movement',
-          description: 'Classes, group hikes, sports, partner yoga — this pattern thrives when movement combines with community.',
-        },
-        {
-          title: 'Build accountability circles',
-          description: 'Commitment with friends boosts motivation exponentially. Social accountability creates consistency for this pattern.',
-        },
-        {
-          title: 'Make rest restorative and social',
-          description: 'Solo rest can feel depleting. Create restorative social time: gentle group yoga, friend coffee, community events.',
-        },
-        {
-          title: 'Cultivate meaningful connection',
-          description: 'Not all social time is equal. Deep friendships and quality community impact wellbeing far more than casual connection.',
-        },
-      ],
-      insights: [
-        'Energy peaks noticeably on days with social movement or meaningful connection',
-        'Isolation triggers rapid mood decline and low energy for this pattern',
-        'Community accountability dramatically boosts consistency and follow-through',
-      ],
-      resources: [
-        { title: 'Finding your wellness community', icon: Heart },
-        { title: 'Group-based wellness practices', icon: Zap },
-        { title: 'Social accountability for consistency', icon: TrendingUp },
-      ],
+      shortDescription: 'Energised by connection and community. Movement with others is natural medicine.',
+      fullDescription: 'People with this pattern are energised by connection and community. Isolation typically depletes them — movement and interaction with others is their natural medicine. Social, accountable, and thriving in groups.',
     },
-  };
-
-  // Check if type is forming (< 5 check-ins)
-  const checkInCount = profile?.checkIns?.length || 0;
-  const isTypeForming = checkInCount < 5;
-
-  const userGlowType = profile?.glowType || 'The Steady Bloomer';
-  const glowTypeData = glowTypes[userGlowType] || glowTypes['The Steady Bloomer'];
-  const TypeIcon = glowTypeData.icon;
-
-  if (isTypeForming) {
-    return (
-      <AppLayout>
-        <div style={{ background: C.paper, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
-          <style>{`
-            .fade-up { animation: fu 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-            @keyframes fu { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-          `}</style>
-          <div
-            className="fade-up"
-            style={{
-              maxWidth: 500,
-              textAlign: 'center',
-              padding: '60px 40px',
-            }}
-          >
-            <div
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                background: C.sageMint,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 32px',
-              }}
-            >
-              <Moon size={40} color={C.sage} strokeWidth={1.5} />
-            </div>
-            <h1 style={{ ...display(32), margin: '0 0 16px 0' }}>
-              Your type is forming
-            </h1>
-            <p style={{ ...bodyText(16), color: C.body, margin: '0 0 24px 0' }}>
-              We're learning how you naturally thrive. After a few more check-ins, we'll understand your patterns and show you a type tailored to how your body actually works.
-            </p>
-            <p style={{ ...bodyText(14), color: C.mute, margin: 0 }}>
-              You've completed {checkInCount} check-in{checkInCount !== 1 ? 's' : ''}. A few more will give us a clear picture.
-            </p>
-          </div>
-        </div>
-      </AppLayout>
-    );
-  }
+  ];
 
   return (
     <AppLayout>
@@ -350,7 +121,7 @@ export default function GlowType() {
             position: 'relative',
             overflow: 'hidden',
             padding: '64px 48px',
-            background: `linear-gradient(135deg, ${glowTypeData.bg} 0%, rgba(250,248,245,0.95) 100%)`,
+            background: `linear-gradient(135deg, ${C.sageMint} 0%, rgba(250,248,245,0.95) 100%)`,
             border: `1px solid ${C.lineSoft}`,
             borderTop: 'none',
           }}
@@ -367,264 +138,239 @@ export default function GlowType() {
           />
 
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ ...eyebrow(glowTypeData.color), marginBottom: 16 }}>
-              Your wellness archetype
+            <div style={{ ...eyebrow(C.sage), marginBottom: 16 }}>
+              Understanding your wellness
             </div>
-            <div
+            <h1
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                marginBottom: 12,
+                ...display(56),
+                margin: '0 0 16px 0',
+                maxWidth: 700,
               }}
             >
-              <TypeIcon size={48} color={glowTypeData.color} strokeWidth={1.5} />
-              <h1
-                style={{
-                  ...display(56),
-                  margin: 0,
-                  maxWidth: 700,
-                }}
-              >
-                You are{' '}
-                <em style={{ fontStyle: 'italic', color: glowTypeData.color }}>
-                  {userGlowType}
-                </em>
-              </h1>
-            </div>
+              What are Glow Types?
+            </h1>
             <p
               style={{
                 ...bodyText(16),
                 maxWidth: 700,
                 color: C.body,
+                lineHeight: 1.8,
               }}
             >
-              {glowTypeData.description}
+              Everyone has a natural rhythm and pattern for thriving. Glow Types map how you naturally function — your energy needs, your pace, what depletes you, and what compounds beautifully. There's no "best" type. There's only what works for your unique body and life.
             </p>
           </div>
         </div>
 
         {/* Main Content */}
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 40px' }}>
-          {/* Key Characteristics */}
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>What defines you</div>
-              <h2 style={{ ...display(32), margin: 0 }}>Key characteristics</h2>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 40px' }}>
+          {/* Framework Explanation */}
+          <div style={{ marginBottom: 64 }}>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>How it works</div>
+              <h2 style={{ ...display(36), margin: 0 }}>Six patterns of thriving</h2>
             </div>
 
             <div
               style={{
-                display: 'flex',
-                gap: 12,
-                flexWrap: 'wrap',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: 24,
+                marginBottom: 48,
               }}
             >
-              {glowTypeData.characteristics.map((char, i) => (
+              <div
+                className="fade-up"
+                style={{
+                  padding: '32px',
+                  borderRadius: 20,
+                  background: C.paper,
+                  border: `1px solid ${C.lineSoft}`,
+                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
+                }}
+              >
                 <div
-                  key={i}
-                  className="fade-up"
                   style={{
-                    display: 'inline-flex',
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: C.sageMint,
+                    display: 'flex',
                     alignItems: 'center',
-                    padding: '10px 16px',
-                    borderRadius: 100,
-                    background: glowTypeData.bg,
-                    border: `1px solid ${C.lineSoft}`,
-                    fontFamily: FF_UI,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: glowTypeData.color,
-                    animationDelay: `${i * 0.08}s`,
+                    justifyContent: 'center',
+                    marginBottom: 16,
                   }}
                 >
-                  {char}
+                  <Moon size={24} color={C.sage} strokeWidth={1.5} />
                 </div>
-              ))}
-            </div>
-          </div>
+                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
+                  Personalised to you
+                </h3>
+                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
+                  Your type emerges from your check-in patterns — sleep, energy, mood, movement. Real data about how you actually function, not guesses.
+                </p>
+              </div>
 
-          {/* How to Support This Type */}
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>Your practice</div>
-              <h2 style={{ ...display(32), margin: 0 }}>How to support your type</h2>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: 20,
-              }}
-            >
-              {glowTypeData.support.map((item, i) => (
+              <div
+                className="fade-up"
+                style={{
+                  padding: '32px',
+                  borderRadius: 20,
+                  background: C.paper,
+                  border: `1px solid ${C.lineSoft}`,
+                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
+                  animationDelay: '0.08s',
+                }}
+              >
                 <div
-                  key={i}
-                  className="fade-up"
                   style={{
-                    position: 'relative',
-                    overflow: 'hidden',
-                    padding: '28px',
-                    borderRadius: 20,
-                    background: C.paper,
-                    border: `1px solid ${C.lineSoft}`,
-                    boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
-                    animationDelay: `${i * 0.1}s`,
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: C.amberBg,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 16,
                   }}
                 >
-                  <h3
-                    style={{
-                      ...display(18),
-                      marginBottom: 12,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{
-                      ...bodyText(14),
-                      margin: 0,
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    {item.description}
-                  </p>
+                  <Zap size={24} color={C.amber} strokeWidth={1.5} />
                 </div>
-              ))}
-            </div>
-          </div>
+                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
+                  Actionable insights
+                </h3>
+                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
+                  Once you have your type, you get specific practices tailored to how you naturally thrive — not generic wellness advice.
+                </p>
+              </div>
 
-          {/* Pattern Insights */}
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>Your data</div>
-              <h2 style={{ ...display(32), margin: 0 }}>What this type typically experiences</h2>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                gap: 16,
-              }}
-            >
-              {glowTypeData.insights.map((insight, i) => (
+              <div
+                className="fade-up"
+                style={{
+                  padding: '32px',
+                  borderRadius: 20,
+                  background: C.paper,
+                  border: `1px solid ${C.lineSoft}`,
+                  boxShadow: '0 8px 24px -16px rgba(61,74,82,0.08)',
+                  animationDelay: '0.16s',
+                }}
+              >
                 <div
-                  key={i}
-                  className="fade-up"
                   style={{
-                    padding: '24px',
-                    borderRadius: 18,
-                    background: glowTypeData.bg,
-                    border: `1px solid ${C.lineSoft}`,
-                    animationDelay: `${i * 0.08}s`,
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    background: C.plumBg,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 16,
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      marginBottom: 12,
-                    }}
-                  >
-                    <TrendingUp size={16} style={{ color: glowTypeData.color }} strokeWidth={2} />
-                    <div style={{ ...eyebrow(glowTypeData.color) }}>Pattern</div>
-                  </div>
-                  <p
-                    style={{
-                      ...bodyText(14),
-                      margin: 0,
-                      lineHeight: 1.6,
-                      color: C.body,
-                    }}
-                  >
-                    {insight}
-                  </p>
+                  <Heart size={24} color={C.plum} strokeWidth={1.5} />
                 </div>
-              ))}
+                <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
+                  Honest framing
+                </h3>
+                <p style={{ ...bodyText(14), margin: 0, lineHeight: 1.7 }}>
+                  No mystical language. No hierarchies. Just patterns about how people with your profile typically experience wellness.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Resources */}
-          <div className="fade-up">
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>Learn more</div>
-              <h2 style={{ ...display(32), margin: 0 }}>Resources for your type</h2>
+          {/* All Types Grid */}
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>The six types</div>
+              <h2 style={{ ...display(36), margin: 0 }}>Find yourself in these patterns</h2>
             </div>
 
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                gap: 16,
+                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+                gap: 24,
               }}
             >
-              {glowTypeData.resources.map((resource, i) => {
-                const Icon = resource.icon;
+              {glowTypes.map((type, i) => {
+                const Icon = type.icon;
                 return (
                   <div
                     key={i}
+                    className="fade-up"
                     style={{
                       position: 'relative',
                       overflow: 'hidden',
-                      padding: '24px',
-                      borderRadius: 18,
-                      background: C.paper,
+                      padding: '32px',
+                      borderRadius: 24,
+                      background: type.bg,
                       border: `1px solid ${C.lineSoft}`,
+                      transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                       cursor: 'pointer',
-                      transition: 'all 0.2s',
+                      animationDelay: `${i * 0.06}s`,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = '0 16px 32px rgba(61,74,82,0.12)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
+                    {/* Icon */}
                     <div
                       style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: '50%',
+                        background: C.paper,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 10,
-                        marginBottom: 12,
+                        justifyContent: 'center',
+                        marginBottom: 16,
                       }}
                     >
-                      <div
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: '50%',
-                          background: glowTypeData.bg,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Icon size={18} strokeWidth={1.8} style={{ color: glowTypeData.color }} />
-                      </div>
-                      <div
-                        style={{
-                          ...bodyText(13),
-                          fontWeight: 600,
-                          color: C.ink,
-                        }}
-                      >
-                        {resource.title}
-                      </div>
+                      <Icon size={28} color={type.color} strokeWidth={1.5} />
                     </div>
+
+                    {/* Type Name */}
+                    <h3
+                      style={{
+                        ...display(20),
+                        margin: '0 0 12px 0',
+                        color: type.color,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {type.name}
+                    </h3>
+
+                    {/* Short Description */}
                     <p
                       style={{
-                        ...bodyText(12),
+                        ...bodyText(14),
+                        margin: '0 0 16px 0',
+                        lineHeight: 1.7,
                         color: C.body,
-                        margin: 0,
+                        fontWeight: 500,
                       }}
                     >
-                      Personalised guidance for your type
+                      {type.shortDescription}
+                    </p>
+
+                    {/* Full Description */}
+                    <p
+                      style={{
+                        ...bodyText(13),
+                        margin: 0,
+                        lineHeight: 1.7,
+                        color: C.body,
+                      }}
+                    >
+                      {type.fullDescription}
                     </p>
                   </div>
                 );
@@ -632,34 +378,73 @@ export default function GlowType() {
             </div>
           </div>
 
-          {/* Footer CTA */}
+          {/* CTA Section */}
           <div
             className="fade-up"
             style={{
-              marginTop: 48,
-              padding: '36px',
-              borderRadius: 24,
-              background: `linear-gradient(135deg, ${glowTypeData.bg} 0%, rgba(250,248,245,0.95) 100%)`,
+              marginTop: 64,
+              padding: '48px',
+              borderRadius: 28,
+              background: `linear-gradient(135deg, ${C.sageMint} 0%, rgba(250,248,245,0.95) 100%)`,
               border: `1px solid ${C.lineSoft}`,
               textAlign: 'center',
             }}
           >
             <h2
               style={{
-                ...display(28),
-                margin: '0 0 12px 0',
+                ...display(32),
+                margin: '0 0 16px 0',
               }}
             >
-              Live into your type.
+              Which one feels like home?
             </h2>
             <p
               style={{
                 ...bodyText(15),
-                margin: 0,
+                margin: '0 0 32px 0',
                 color: C.body,
+                maxWidth: 600,
               }}
             >
-              The more you understand how you naturally thrive, the easier wellness becomes. Use these insights to build practices that feel like home, not homework.
+              Answer a few check-in questions, and we'll identify your type. The more data you share, the more accurate and useful your insights become.
+            </p>
+            <button
+              style={{
+                padding: '14px 32px',
+                borderRadius: 12,
+                background: C.sage,
+                color: C.paper,
+                border: 'none',
+                fontFamily: FF_UI,
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = C.sageDark;
+                e.currentTarget.style.transform = 'scale(1.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = C.sage;
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              Start your first check-in
+            </button>
+          </div>
+
+          {/* Footer Info */}
+          <div
+            style={{
+              marginTop: 48,
+              padding: '24px',
+              textAlign: 'center',
+              borderTop: `1px solid ${C.lineSoft}`,
+            }}
+          >
+            <p style={{ ...bodyText(12), color: C.mute, margin: 0 }}>
+              You'll need about 5 check-ins before your type is clear. After that, your type may shift slightly as you provide more data — that's normal and helpful.
             </p>
           </div>
         </div>
