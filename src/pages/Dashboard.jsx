@@ -85,11 +85,11 @@ const Orbit = ({ size = 32, color = '#557E64', tail = '#6B9E7F', accent = '#C97B
   </svg>
 );
 
-const Wordmark = ({ size = 22, color = C.ink }) => (
+const Wordmark = ({ size = 26, color = '#3D4A52' }) => (
   <span style={{
-    fontFamily: FF_LOGO,
-    fontWeight: 400, fontSize: size, color,
-    letterSpacing: '0.005em', lineHeight: 1, whiteSpace: 'nowrap',
+    fontFamily: FF_DISPLAY,
+    fontWeight: 500, fontSize: size, color,
+    letterSpacing: '-0.01em', lineHeight: 1, whiteSpace: 'nowrap',
   }}>
     GlowWise
   </span>
@@ -163,12 +163,12 @@ const Sidebar = () => (
     boxSizing: 'border-box', flexShrink: 0,
   }}>
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 10,
-      padding: '0 8px 28px',
-    }}>
-      <Orbit size={32} />
-      <Wordmark size={22} />
-    </div>
+  display: 'flex', alignItems: 'center', gap: 12,
+  padding: '0 8px 28px',
+}}>
+  <Orbit size={38} />
+  <Wordmark size={26} />
+</div>
     {navItems.map((item) => (
       <NavItem key={item.to} {...item} />
     ))}
