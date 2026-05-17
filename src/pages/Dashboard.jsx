@@ -774,8 +774,24 @@ const GlowType = () => {
           </span>
         ))}
       </div>
-      <div style={{ color: C.sageDark, fontFamily: FF_UI, fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4, borderBottom: `1px solid ${C.sageDark}`, paddingBottom: 2, position: 'relative', zIndex: 2 }}>
-        Learn about your type <ChevronRight size={11} strokeWidth={2} />
+      <div style={{
+  color: C.sageDark,
+  fontFamily: FF_UI,
+  fontSize: 13,
+  fontWeight: 700,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  padding: '10px 16px',
+  borderRadius: 999,
+  background: 'rgba(107,158,127,0.10)',
+  border: '1px solid rgba(107,158,127,0.12)',
+  position: 'relative',
+  zIndex: 2,
+  transition: 'all 0.2s ease',
+}}>
+  Explore your rhythm <ChevronRight size={12} strokeWidth={2.2} />
+</div>
       </div>
     </div>
   );
