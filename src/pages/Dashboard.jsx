@@ -679,8 +679,6 @@ const GlowType = () => {
   }}>
     g
   </div>
-  : '-20px',
-    rig
 
   {/* Orbital motif */}
   <svg
