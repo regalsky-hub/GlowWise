@@ -413,7 +413,9 @@ const Compass = ({ onSelect }) => {
               const cx = px(t.x), cy = py(t.y);
               const isHover = hover === t.id;
               return (
-                <g key={t.id}
+                <g
+  key={t.id}
+  className="orbit-float"
                   style={{ cursor: "pointer", transition: "transform 0.3s ease" }}
                   onMouseEnter={() => setHover(t.id)}
                   onMouseLeave={() => setHover(null)}
@@ -980,17 +982,61 @@ export default function GlowTypes() {
 
       <main style={{ flex: 1, minWidth: 0 }}>
         <style>{`
-          .fade-up { animation: fu 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-          .fade-up.d1 { animation-delay: 0.06s; }
-          .fade-up.d2 { animation-delay: 0.12s; }
-          .fade-up.d3 { animation-delay: 0.18s; }
-          .fade-up.d4 { animation-delay: 0.24s; }
-          .fade-up.d5 { animation-delay: 0.30s; }
-          @keyframes fu { from { opacity: 0; transform: translateY(14px); }
-                            to { opacity: 1; transform: translateY(0); } }
-          .hover-lift { transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease; }
-          .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 22px 50px -28px rgba(61,74,82,0.28); }
-        `}</style>
+          <style>{`
+  .fade-up { animation: fu 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .fade-up.d1 { animation-delay: 0.06s; }
+  .fade-up.d2 { animation-delay: 0.12s; }
+  .fade-up.d3 { animation-delay: 0.18s; }
+  .fade-up.d4 { animation-delay: 0.24s; }
+  .fade-up.d5 { animation-delay: 0.30s; }
+
+  @keyframes fu {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes floatOrbit {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  .hover-lift {
+    transition:
+      transform 0.4s cubic-bezier(0.16,1,0.3,1),
+      box-shadow 0.4s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px -28px rgba(61,74,82,0.28);
+  }
+
+  .orbit-float {
+    animation: floatOrbit 5s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  .orbit-float:nth-child(2n) {
+    animation-duration: 6s;
+  }
+
+  .orbit-float:nth-child(3n) {
+    animation-duration: 7s;
+  }
+`}</style>
 
         <div style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
