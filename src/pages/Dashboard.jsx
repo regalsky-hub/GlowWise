@@ -742,38 +742,6 @@ const Plan = () => (
   </Card>
 );
 
-// ============ SMALL STEPS ============
-const actions = [
-  'Drink a glass of water in the next 30 min',
-  'Step outside for 5 minutes of morning light',
-  'Reply to coach about last night\'s sleep',
-];
-
-const Actions = () => (
-  <Card>
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Today</div>
-      <h3 style={{ ...display(22), margin: 0 }}>Small steps</h3>
-    </div>
-    {actions.map((a, i) => (
-      <div key={i} style={{
-        display: 'flex', alignItems: 'center', gap: 14,
-        padding: '14px 0',
-        borderBottom: i < actions.length - 1 ? `1px solid ${C.line}` : 'none',
-      }}>
-        <div style={{
-          width: 22, height: 22, borderRadius: '50%',
-          border: '1.5px solid rgba(107,158,127,0.4)', flexShrink: 0,
-        }} />
-        <div style={{ flex: 1, fontFamily: FF_UI, fontSize: 14, color: C.ink, fontWeight: 500 }}>
-          {a}
-        </div>
-        <ChevronRight size={16} strokeWidth={1.6} style={{ color: C.mute }} />
-      </div>
-    ))}
-  </Card>
-);
-
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
   <div className="gw-bottomnav" style={{
