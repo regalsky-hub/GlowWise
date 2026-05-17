@@ -1025,20 +1025,16 @@ export default function Landing() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '48px', marginBottom: '60px' }}>
 
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <div style={{
-                  width: '28px', height: '28px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#FAF8F5',
-                  fontFamily: "'Fraunces', serif",
-                  fontSize: '14px',
-                }}>g</div>
-                <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: '#FAF8F5' }}>
-                  GlowWise
-                </span>
-              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+  <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="46" r="28" stroke="#FAF8F5" strokeWidth="6" fill="none" />
+    <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#C0DAC8" strokeWidth="6" strokeLinecap="round" fill="none" />
+    <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+  </svg>
+  <span style={{ fontFamily: "'Fraunces', serif", fontSize: '24px', fontWeight: 500, color: '#FAF8F5', letterSpacing: '-0.018em', lineHeight: 1 }}>
+    GlowWise
+  </span>
+</div>
               <p style={{ fontSize: '14px', lineHeight: 1.6, color: '#A89968', marginBottom: '16px' }}>
                 Your AI wellness coach.
               </p>
