@@ -359,7 +359,7 @@ const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
       borderRadius: 14,
       padding: '20px 20px 22px',
       cursor: 'pointer',
-      transition: 'all 0.2s ease',
+      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
     }}
     onMouseEnter={(e) => {
       e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
