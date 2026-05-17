@@ -1019,7 +1019,7 @@ export default function GlowTypes() {
 
         <div style={{ maxWidth: 1180, margin: "0 auto", padding: "40px 48px 96px" }}>
           <Hero />
-          <Principles />
+          
           <Compass onSelect={handleCompassSelect} />
           <TypesGrid openId={openId} setOpenId={setOpenId} focusedId={focusedId} />
           <Journey />
