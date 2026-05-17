@@ -65,33 +65,33 @@ export default function GlowType() {
   // Glow Type Data
   const glowTypes = {
     'The Steady Bloomer': {
-      description: 'You thrive on routine and small, consistent rituals. Big swings drain you — gentle daily care compounds beautifully.',
-      icon: '🌱',
+      description: 'People with this pattern thrive on routine and small, consistent rituals. Big swings typically drain them — gentle daily care compounds beautifully.',
+      icon: Moon,
       color: C.sage,
       bg: C.sageMint,
       characteristics: ['Sleep-led', 'Consistency', 'Soft mornings', 'Predictable rhythms'],
       support: [
         {
           title: 'Create non-negotiable routines',
-          description: 'Your nervous system loves predictability. Set consistent bed/wake times, meal times, and movement windows.',
+          description: 'A stable nervous system thrives on predictability. Consistent bed/wake times, meals, and movement windows reduce decision fatigue.',
         },
         {
           title: 'Gentle layering over intensity',
-          description: 'Small daily practices (5 min breathing, 10 min walks) compound more than occasional intense efforts.',
+          description: 'Small daily practices (5 min breathing, 10 min walks) compound more than occasional intense efforts. Consistency beats occasional extremes.',
         },
         {
           title: 'Sleep is your anchor',
-          description: 'Prioritize sleep quality above all — it stabilises everything else for your type.',
+          description: 'Quality sleep stabilises everything else. Protect sleep above flashy wellness trends — it\'s your foundation.',
         },
         {
           title: 'Soft transitions matter',
-          description: 'Abrupt changes stress you. Build in buffer time between activities and ease into your day.',
+          description: 'Abrupt changes create stress. Build buffer time between activities and ease into your day rather than jolting awake.',
         },
       ],
       insights: [
-        'Your energy is most stable when sleep is consistent',
-        'You show steady mood improvement with predictable routines',
-        'Stress peaks during unpredictable or high-change periods',
+        'Energy stabilises most when sleep is consistent',
+        'Steady mood improvement emerges with predictable routines over weeks, not days',
+        'Stress peaks noticeably during unpredictable or high-change periods',
       ],
       resources: [
         { title: 'Sleep consistency guide', icon: Moon },
@@ -100,33 +100,33 @@ export default function GlowType() {
       ],
     },
     'The Energy Optimizer': {
-      description: 'You need variety and stimulation to thrive. Monotony drains you — diverse movement, novelty, and change energise deeply.',
-      icon: '⚡',
+      description: 'People with this pattern need variety and stimulation to thrive. Monotony typically drains them — diverse movement, novelty, and change energise deeply.',
+      icon: Zap,
       color: C.amber,
       bg: C.amberBg,
       characteristics: ['Movement-varied', 'Novel stimulation', 'Dynamic energy', 'Exploration-driven'],
       support: [
         {
           title: 'Mix movement modalities',
-          description: 'Rotate between strength, cardio, flexibility, and dance. Monotonous routines drain your energy.',
+          description: 'Rotate between strength, cardio, flexibility, and dance. Monotonous routines deplete energy quickly for this pattern.',
         },
         {
           title: 'Embrace novelty',
-          description: 'Try new activities, change your routes, vary your environment. Your nervous system craves new input.',
+          description: 'Try new activities, change routes, vary environments. A nervous system that craves input needs consistent new stimulus.',
         },
         {
           title: 'Schedule recovery strategically',
-          description: 'High energy needs intentional rest. Build in restorative days between intense periods.',
+          description: 'High energy output requires intentional rest. Build restorative days between intense periods to prevent depletion.',
         },
         {
           title: 'Social movement amplifies',
-          description: 'Group activities, classes, or outdoor movement with others boost your energy exponentially.',
+          description: 'Group activities, classes, and outdoor movement with others create multiplicative energy gains.',
         },
       ],
       insights: [
-        'Your energy peaks when activities are varied and new',
-        'Stress decreases with higher movement frequency and diversity',
-        'Mood is brightest on days with novelty and exploration',
+        'Energy peaks noticeably when activities are varied and novel',
+        'Stress levels decrease with higher movement frequency and diversity',
+        'Mood is brightest on days featuring both novelty and exploration',
       ],
       resources: [
         { title: 'Movement variety guide', icon: Zap },
@@ -135,33 +135,33 @@ export default function GlowType() {
       ],
     },
     'The Sensitive Nurturer': {
-      description: 'You need deep calm and gentle transitions. You feel everything acutely — your superpower is intuition, your need is protection.',
-      icon: '🌿',
+      description: 'People with this pattern need deep calm and gentle transitions. They feel acutely — the skill is learning to protect that sensitivity as an asset.',
+      icon: Heart,
       color: C.plum,
       bg: C.plumBg,
       characteristics: ['Deeply intuitive', 'Needs calm', 'Sensitive to environment', 'Gentle pace'],
       support: [
         {
           title: 'Protect your nervous system',
-          description: 'Limit overstimulation: manage screen time, choose quiet spaces, curate your social circle.',
+          description: 'Manage overstimulation strategically: limit screen time, seek quiet spaces, curate your social circle with intention.',
         },
         {
           title: 'Honour your processing time',
-          description: 'You need longer to process emotions and experiences. Build in solitude and reflection time.',
+          description: 'Processing emotions and experiences takes longer for this pattern. Build in solitude and reflection time without guilt.',
         },
         {
-          title: 'Environmental design matters',
-          description: 'Soft lighting, natural textures, minimal clutter, calming scents — your space affects your wellbeing deeply.',
+          title: 'Environmental design matters deeply',
+          description: 'Soft lighting, natural textures, minimal clutter, and calming scents directly affect wellbeing. Environment is medicine.',
         },
         {
-          title: 'Nourish with intention',
-          description: 'Quality over quantity. Fewer, more meaningful activities. Deep friendships over broad networks.',
+          title: 'Quality over quantity always',
+          description: 'Fewer, more meaningful activities sustain you. Deep friendships matter more than broad networks.',
         },
       ],
       insights: [
-        'Your stress is triggered by overstimulation and harsh environments',
-        'Sleep quality improves dramatically with calm evening routines',
-        'Emotional balance comes from adequate alone time',
+        'Stress is triggered by overstimulation and harsh environmental inputs',
+        'Sleep quality improves dramatically with calm, intentional evening routines',
+        'Emotional balance emerges from adequate alone time, not social pushes',
       ],
       resources: [
         { title: 'Creating a calm nervous system', icon: Moon },
@@ -170,68 +170,68 @@ export default function GlowType() {
       ],
     },
     'The Resilient Achiever': {
-      description: "You are driven and goal-oriented, with deep reserves of energy. Your challenge: remembering recovery is not laziness, it is fuel.",
-      icon: '🔥',
+      description: "People with this pattern are driven and goal-oriented with deep reserves of energy. The key insight: recovery is fuel, not laziness.",
+      icon: TrendingUp,
       color: C.terracotta,
       bg: C.terracottaBg,
       characteristics: ['Goal-driven', 'High capacity', 'Recovery-blind', 'Ambitious'],
       support: [
         {
           title: 'Schedule recovery like meetings',
-          description: 'Your drive can override rest signals. Block recovery time as non-negotiable appointments.',
+          description: 'Drive often overrides rest signals. Block recovery time as non-negotiable calendar commitments to protect it.',
         },
         {
           title: 'Track recovery metrics',
-          description: 'Monitor sleep, mood, and stress. Often you will notice performance drops before you feel tired.',
+          description: 'Monitor sleep, mood, and stress data. Performance often drops before this pattern consciously feels tired.',
         },
         {
           title: 'Build in deload weeks',
-          description: 'Every 4-6 weeks, intentionally reduce intensity. Your body needs periodic deep recovery.',
+          description: 'Every 4–6 weeks, intentionally reduce intensity. Bodies need periodic deep recovery to maintain long-term capacity.',
         },
         {
           title: 'Reframe rest as performance',
-          description: 'Recovery amplifies next-cycle performance. Rest is productive, not indulgent.',
+          description: 'Recovery amplifies next-cycle output. Rest is productive, not indulgent — it compounds your long-term results.',
         },
       ],
       insights: [
-        'Your stress builds gradually — you\'re often unaware until collapse',
-        'Sleep quality directly impacts your next-cycle performance',
-        'Recovery weeks prevent burnout and maintain long-term capacity',
+        'Stress accumulates gradually — often undetectable until a threshold is crossed',
+        'Sleep quality directly predicts next-cycle performance and decision-making',
+        'Recovery weeks prevent burnout and maintain capacity over years, not just weeks',
       ],
       resources: [
         { title: 'Strategic recovery for achievers', icon: TrendingUp },
-        { title: 'Recognising burnout signals', icon: Lightbulb },
+        { title: 'Recognising burnout signals early', icon: Lightbulb },
         { title: 'Building sustainable ambition', icon: Heart },
       ],
     },
-    'The Intuitive Healer': {
-      description: "You are deeply body-aware and trust your inner knowing. Your gift: tuning into subtle signals. Your practice: trusting without overthinking.",
-      icon: '💫',
+    'The Intuitive Explorer': {
+      description: "People with this pattern are deeply body-aware and trust their inner knowing. The skill: tuning into subtle signals and acting without overthinking.",
+      icon: Lightbulb,
       color: C.sage,
       bg: C.sageMint,
       characteristics: ['Body-aware', 'Intuitive', 'Flexible approach', 'Inner-directed'],
       support: [
         {
           title: 'Trust your body signals',
-          description: 'You sense what you need before data confirms it. Follow your intuition — it\'s usually right.',
+          description: 'This pattern senses what\'s needed before data confirms it. Following intuition typically leads to better choices.',
         },
         {
           title: 'Embrace flexibility',
-          description: 'Rigid plans don\'t suit you. Build frameworks, not rules. Let your wellness adapt daily.',
+          description: 'Rigid plans restrict this pattern. Build frameworks, not rules. Let wellness adapt daily based on what\'s genuinely needed.',
         },
         {
           title: 'Movement as conversation',
-          description: 'Move what needs moving. Sometimes intense, sometimes gentle — listen to what your body requests.',
+          description: 'Move what needs moving. Sometimes intense, sometimes gentle — honour what your body actually requests each day.',
         },
         {
           title: 'Integrate mind-body practices',
-          description: 'Yoga, tai chi, somatic work, breathwork — these amplify your natural intuitive abilities.',
+          description: 'Yoga, tai chi, somatic work, and breathwork naturally amplify the intuitive abilities this pattern possesses.',
         },
       ],
       insights: [
-        'Your wellness thrives with intuitive, flexible approaches',
-        'You often sense patterns before they\'re measurable',
-        'Body-aware practices deepen your natural gifts',
+        'Wellness thrives with intuitive, flexible approaches rather than rigid protocols',
+        'This pattern often senses patterns before they become measurable in data',
+        'Body-aware practices deepen existing natural intuitive abilities',
       ],
       resources: [
         { title: 'Somatic awareness practices', icon: Heart },
@@ -239,34 +239,34 @@ export default function GlowType() {
         { title: 'Trusting your body intelligence', icon: Moon },
       ],
     },
-    'The Social Butterfly': {
-      description: "You are energised by connection and community. Isolation depletes you — movement with others is your natural medicine.",
-      icon: '🦋',
+    'The Community Connector': {
+      description: "People with this pattern are energised by connection and community. Isolation typically depletes them — movement and interaction with others is their natural medicine.",
+      icon: BookOpen,
       color: C.amber,
       bg: C.amberBg,
       characteristics: ['Community-driven', 'Socially energised', 'Movement-based', 'Connection-seeking'],
       support: [
         {
           title: 'Prioritise group movement',
-          description: 'Classes, group hikes, sports, partner yoga — you thrive with movement + community.',
+          description: 'Classes, group hikes, sports, partner yoga — this pattern thrives when movement combines with community.',
         },
         {
           title: 'Build accountability circles',
-          description: 'Commit with friends. Your motivation soars with social accountability and shared goals.',
+          description: 'Commitment with friends boosts motivation exponentially. Social accountability creates consistency for this pattern.',
         },
         {
-          title: 'Solo rest is harder for you',
-          description: 'Create restorative social time: gentle group yoga, friend coffee, community wellness events.',
+          title: 'Make rest restorative and social',
+          description: 'Solo rest can feel depleting. Create restorative social time: gentle group yoga, friend coffee, community events.',
         },
         {
           title: 'Cultivate meaningful connection',
-          description: 'Not all social time is equal. Deep friendships and quality community matter most.',
+          description: 'Not all social time is equal. Deep friendships and quality community impact wellbeing far more than casual connection.',
         },
       ],
       insights: [
-        'Your energy is highest on days with social movement or connection',
-        'Isolation triggers mood decline and low energy',
-        'Community accountability boosts consistency dramatically',
+        'Energy peaks noticeably on days with social movement or meaningful connection',
+        'Isolation triggers rapid mood decline and low energy for this pattern',
+        'Community accountability dramatically boosts consistency and follow-through',
       ],
       resources: [
         { title: 'Finding your wellness community', icon: Heart },
@@ -276,8 +276,58 @@ export default function GlowType() {
     },
   };
 
+  // Check if type is forming (< 5 check-ins)
+  const checkInCount = profile?.checkIns?.length || 0;
+  const isTypeForming = checkInCount < 5;
+
   const userGlowType = profile?.glowType || 'The Steady Bloomer';
   const glowTypeData = glowTypes[userGlowType] || glowTypes['The Steady Bloomer'];
+  const TypeIcon = glowTypeData.icon;
+
+  if (isTypeForming) {
+    return (
+      <AppLayout>
+        <div style={{ background: C.paper, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+          <style>{`
+            .fade-up { animation: fu 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+            @keyframes fu { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+          `}</style>
+          <div
+            className="fade-up"
+            style={{
+              maxWidth: 500,
+              textAlign: 'center',
+              padding: '60px 40px',
+            }}
+          >
+            <div
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                background: C.sageMint,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 32px',
+              }}
+            >
+              <Moon size={40} color={C.sage} strokeWidth={1.5} />
+            </div>
+            <h1 style={{ ...display(32), margin: '0 0 16px 0' }}>
+              Your type is forming
+            </h1>
+            <p style={{ ...bodyText(16), color: C.body, margin: '0 0 24px 0' }}>
+              We're learning how you naturally thrive. After a few more check-ins, we'll understand your patterns and show you a type tailored to how your body actually works.
+            </p>
+            <p style={{ ...bodyText(14), color: C.mute, margin: 0 }}>
+              You've completed {checkInCount} check-in{checkInCount !== 1 ? 's' : ''}. A few more will give us a clear picture.
+            </p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -320,18 +370,28 @@ export default function GlowType() {
             <div style={{ ...eyebrow(glowTypeData.color), marginBottom: 16 }}>
               Your wellness archetype
             </div>
-            <h1
+            <div
               style={{
-                ...display(56),
-                margin: '0 0 12px 0',
-                maxWidth: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
+                marginBottom: 12,
               }}
             >
-              {glowTypeData.icon} You are{' '}
-              <em style={{ fontStyle: 'italic', color: glowTypeData.color }}>
-                {userGlowType}
-              </em>
-            </h1>
+              <TypeIcon size={48} color={glowTypeData.color} strokeWidth={1.5} />
+              <h1
+                style={{
+                  ...display(56),
+                  margin: 0,
+                  maxWidth: 700,
+                }}
+              >
+                You are{' '}
+                <em style={{ fontStyle: 'italic', color: glowTypeData.color }}>
+                  {userGlowType}
+                </em>
+              </h1>
+            </div>
             <p
               style={{
                 ...bodyText(16),
@@ -440,7 +500,7 @@ export default function GlowType() {
           <div style={{ marginBottom: 48 }}>
             <div style={{ marginBottom: 24 }}>
               <div style={{ ...eyebrow(C.mute), marginBottom: 8 }}>Your data</div>
-              <h2 style={{ ...display(32), margin: 0 }}>How we detected your type</h2>
+              <h2 style={{ ...display(32), margin: 0 }}>What this type typically experiences</h2>
             </div>
 
             <div
