@@ -759,24 +759,34 @@ const MobileLogo = () => (
 
 // ============ DASHBOARD ============
 export default function Dashboard() {
-  const { user } = useAuth();
-  const { profile, checkIns, glowScore, loading, getTodayCheckIn } = useUserData();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    profile,
+    checkIns,
+    glowScore,
+    loading,
+    getTodayCheckIn,
+  } = useUserData();
 
   const firstName =
-    (profile?.name || profile?.firstName || profile?.first_name ||
-     user?.displayName || '').split(' ')[0] || 'there';
+    (
+      profile?.name ||
+      profile?.firstName ||
+      profile?.first_name ||
+      user?.displayName ||
+      ''
+    ).split(' ')[0] || 'there';
 
-  const { logout } = useAuth();
-const navigate = useNavigate();
-
-const handleLogout = async () => {
-  try {
-    await logout();
-    navigate('/');
-  } catch (e) {
-    console.error(e);
-  }
-};
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const todayCheckIn = getTodayCheckIn();
   const today = todayCheckIn ? {
