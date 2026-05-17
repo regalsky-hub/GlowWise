@@ -48,53 +48,53 @@ export default function GlowTypesOverview() {
     color: C.body,
   });
 
-  // All Glow Types
+  // All Glow Types with unique colors
   const glowTypes = [
     {
       name: 'The Steady Bloomer',
       icon: Moon,
-      color: C.sage,
-      bg: C.sageMint,
+      color: '#6B9E7F',
+      bg: '#EDF4EF',
       shortDescription: 'Thrives on routine and consistency. Small daily rituals compound beautifully.',
       fullDescription: 'People with this pattern thrive on routine and small, consistent rituals. Big swings typically drain them — gentle daily care compounds beautifully. Sleep-led, predictable, and stabilised by consistency.',
     },
     {
       name: 'The Energy Optimizer',
       icon: Zap,
-      color: C.amber,
-      bg: C.amberBg,
+      color: '#A07E3D',
+      bg: '#FAF3DC',
       shortDescription: 'Needs variety and stimulation to thrive. Monotony drains energy quickly.',
       fullDescription: 'People with this pattern need variety and stimulation to thrive. Monotony typically drains them — diverse movement, novelty, and change energise deeply. Dynamic, exploratory, and driven by new input.',
     },
     {
       name: 'The Sensitive Nurturer',
       icon: Heart,
-      color: C.plum,
-      bg: C.plumBg,
+      color: '#7A5C77',
+      bg: '#EDE2EC',
       shortDescription: 'Needs deep calm and protection. Feels acutely — sensitivity is an asset.',
       fullDescription: 'People with this pattern need deep calm and gentle transitions. They feel acutely — the skill is learning to protect that sensitivity as an asset. Intuitive, environment-aware, and grounded in quality over quantity.',
     },
     {
       name: 'The Resilient Achiever',
       icon: TrendingUp,
-      color: C.terracotta,
-      bg: C.terracottaBg,
+      color: '#A85A3D',
+      bg: '#F5DDD0',
       shortDescription: 'Driven and goal-oriented with deep reserves. Recovery is fuel, not laziness.',
       fullDescription: 'People with this pattern are driven and goal-oriented with deep reserves of energy. The key insight: recovery is fuel, not laziness. Ambitious, capable, and prone to override rest signals.',
     },
     {
       name: 'The Intuitive Explorer',
       icon: Lightbulb,
-      color: C.sage,
-      bg: C.sageMint,
+      color: '#5B8FA3',
+      bg: '#E8EFF5',
       shortDescription: 'Deeply body-aware and trusting of inner knowing. Acts without overthinking.',
       fullDescription: 'People with this pattern are deeply body-aware and trust their inner knowing. The skill: tuning into subtle signals and acting without overthinking. Flexible, intuitive, and naturally aligned with their needs.',
     },
     {
       name: 'The Community Connector',
       icon: BookOpen,
-      color: C.amber,
-      bg: C.amberBg,
+      color: '#A77090',
+      bg: '#F5E5ED',
       shortDescription: 'Energised by connection and community. Movement with others is natural medicine.',
       fullDescription: 'People with this pattern are energised by connection and community. Isolation typically depletes them — movement and interaction with others is their natural medicine. Social, accountable, and thriving in groups.',
     },
@@ -195,14 +195,14 @@ export default function GlowTypesOverview() {
                     width: 48,
                     height: 48,
                     borderRadius: '50%',
-                    background: C.sageMint,
+                    background: '#EDF4EF',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: 16,
                   }}
                 >
-                  <Moon size={24} color={C.sage} strokeWidth={1.5} />
+                  <Moon size={24} color="#6B9E7F" strokeWidth={1.5} />
                 </div>
                 <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
                   Personalised to you
@@ -228,14 +228,14 @@ export default function GlowTypesOverview() {
                     width: 48,
                     height: 48,
                     borderRadius: '50%',
-                    background: C.amberBg,
+                    background: '#FAF3DC',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: 16,
                   }}
                 >
-                  <Zap size={24} color={C.amber} strokeWidth={1.5} />
+                  <Zap size={24} color="#A07E3D" strokeWidth={1.5} />
                 </div>
                 <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
                   Actionable insights
@@ -261,14 +261,14 @@ export default function GlowTypesOverview() {
                     width: 48,
                     height: 48,
                     borderRadius: '50%',
-                    background: C.plumBg,
+                    background: '#EDE2EC',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: 16,
                   }}
                 >
-                  <Heart size={24} color={C.plum} strokeWidth={1.5} />
+                  <Heart size={24} color="#7A5C77" strokeWidth={1.5} />
                 </div>
                 <h3 style={{ ...display(18), margin: '0 0 12px 0', fontWeight: 500 }}>
                   Honest framing
@@ -378,72 +378,16 @@ export default function GlowTypesOverview() {
             </div>
           </div>
 
-          {/* CTA Section */}
-          <div
-            className="fade-up"
-            style={{
-              marginTop: 64,
-              padding: '48px',
-              borderRadius: 28,
-              background: `linear-gradient(135deg, ${C.sageMint} 0%, rgba(250,248,245,0.95) 100%)`,
-              border: `1px solid ${C.lineSoft}`,
-              textAlign: 'center',
-            }}
-          >
-            <h2
-              style={{
-                ...display(32),
-                margin: '0 0 16px 0',
-              }}
-            >
-              Which one feels like home?
-            </h2>
-            <p
-              style={{
-                ...bodyText(15),
-                margin: '0 0 32px 0',
-                color: C.body,
-                maxWidth: 600,
-              }}
-            >
-              Answer a few check-in questions, and we'll identify your type. The more data you share, the more accurate and useful your insights become.
-            </p>
-            <button
-              style={{
-                padding: '14px 32px',
-                borderRadius: 12,
-                background: C.sage,
-                color: C.paper,
-                border: 'none',
-                fontFamily: FF_UI,
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = C.sageDark;
-                e.currentTarget.style.transform = 'scale(1.02)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = C.sage;
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              Start your first check-in
-            </button>
-          </div>
-
           {/* Footer Info */}
           <div
             style={{
-              marginTop: 48,
-              padding: '24px',
+              marginTop: 64,
+              padding: '32px',
               textAlign: 'center',
               borderTop: `1px solid ${C.lineSoft}`,
             }}
           >
-            <p style={{ ...bodyText(12), color: C.mute, margin: 0 }}>
+            <p style={{ ...bodyText(14), color: C.mute, margin: 0 }}>
               You'll need about 5 check-ins before your type is clear. After that, your type may shift slightly as you provide more data — that's normal and helpful.
             </p>
           </div>
