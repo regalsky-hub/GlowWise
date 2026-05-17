@@ -731,15 +731,16 @@ backdropFilter: 'blur(2px)',
       <div style={{ ...eyebrow(C.sageDark), marginBottom: 12, position: 'relative', zIndex: 2 }}>
         Your glow type
       </div>
-      <h3 style={{
-  ...display(34),
+     <h3 style={{
+  ...display(36),
   margin: 0,
-  marginBottom: 14,
-  lineHeight: 1.05,
+  marginBottom: 18,
+  lineHeight: 1,
   fontStyle: 'italic',
   fontWeight: 500,
+  letterSpacing: '-0.03em',
   position: 'relative',
-  zIndex: 2
+  zIndex: 2,
 }}>
         The Steady Bloomer
       </h3>
@@ -747,10 +748,10 @@ backdropFilter: 'blur(2px)',
   <p style={{
     fontFamily: FF_DISPLAY,
     fontStyle: 'italic',
-    fontSize: 20,
-    lineHeight: 1.45,
-    color: C.sageDark,
-    margin: '0 0 14px',
+    fontSize: 22,
+lineHeight: 1.5,
+color: C.sageDark,
+margin: '0 0 18px',
     letterSpacing: '-0.01em',
     position: 'relative',
     zIndex: 2,
@@ -761,8 +762,8 @@ backdropFilter: 'blur(2px)',
   <p style={{
     ...bodyText(14),
     color: C.body,
-    marginBottom: 22,
-    lineHeight: 1.75,
+    marginBottom: 26,
+    lineHeight: 1.8,
     position: 'relative',
     zIndex: 2,
   }}>
