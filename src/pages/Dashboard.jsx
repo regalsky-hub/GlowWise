@@ -767,30 +767,34 @@ const GlowType = () => {
     Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.
   </p>
 </>
-            <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 22,
-        position: 'relative',
-        zIndex: 2,
-      }}>
-        {['Gentle rhythm', 'Calm energy', 'Soft structure'].map((t) => (
-          <span
-            key={t}
-            style={{
-              padding: '5px 12px',
-              borderRadius: 999,
-              background: 'rgba(107,158,127,0.12)',
-              color: C.sageDark,
-              fontSize: 11.5,
-              fontWeight: 600,
-              fontFamily: FF_UI,
-            }}
-          >
-            {t}
-          </span>
-        ))}
+                  <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 22,
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
+        {['Gentle rhythm', 'Calm energy', 'Soft structure'].map((t) => {
+          return (
+            <span
+              key={t}
+              style={{
+                padding: '5px 12px',
+                borderRadius: 999,
+                background: 'rgba(107,158,127,0.12)',
+                color: C.sageDark,
+                fontSize: 11.5,
+                fontWeight: 600,
+                fontFamily: FF_UI,
+              }}
+            >
+              {t}
+            </span>
+          );
+        })}
       </div>
 
       <div
