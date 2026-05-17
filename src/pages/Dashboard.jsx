@@ -663,21 +663,24 @@ const GlowType = () => {
     right: '-40px',
   }} />
 
-  {/* Editorial watermark */}
+    {/* Editorial watermark */}
   <div style={{
     position: 'absolute',
-    top: '-20px',
-    right: '10px',
+    bottom: '-55px',
+    left: '-10px',
     fontFamily: FF_DISPLAY,
     fontStyle: 'italic',
-    fontSize: 180,
-    color: 'rgba(85,126,100,0.05)',
+    fontSize: 160,
+    color: 'rgba(85,126,100,0.04)',
     lineHeight: 1,
     pointerEvents: 'none',
     userSelect: 'none',
+    zIndex: 1,
   }}>
     g
   </div>
+        : '-20px',
+    rig
 
   {/* Orbital motif */}
   <svg
