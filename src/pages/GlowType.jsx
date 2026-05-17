@@ -1,5 +1,5 @@
 /* global React, ReactDOM */
-const { useState } = React;
+import React, { useState } from 'react';
 
 /* ==========================================================
    GlowWise · Glow Types overview — editorial + interactive
