@@ -676,9 +676,32 @@ const GlowType = () => {
 }}>
         The Steady Bloomer
       </h3>
-      <p style={{ ...bodyText(14), color: C.body, marginBottom: 22, position: 'relative', zIndex: 2 }}>
-        You thrive on routine and small, consistent rituals. Big swings drain you — gentle daily care compounds beautifully.
-      </p>
+      <>
+  <p style={{
+    fontFamily: FF_DISPLAY,
+    fontStyle: 'italic',
+    fontSize: 20,
+    lineHeight: 1.45,
+    color: C.sageDark,
+    margin: '0 0 14px',
+    letterSpacing: '-0.01em',
+    position: 'relative',
+    zIndex: 2,
+  }}>
+    “You bloom through steadiness, not intensity.”
+  </p>
+
+  <p style={{
+    ...bodyText(14),
+    color: C.body,
+    marginBottom: 22,
+    lineHeight: 1.75,
+    position: 'relative',
+    zIndex: 2,
+  }}>
+    Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.
+  </p>
+</>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 22, position: 'relative', zIndex: 2 }}>
         {['Sleep-led', 'Consistency', 'Soft mornings'].map((t) => (
           <span key={t} style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(107,158,127,0.12)', color: C.sageDark, fontSize: 11.5, fontWeight: 600, fontFamily: FF_UI }}>
