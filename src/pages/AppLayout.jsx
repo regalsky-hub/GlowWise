@@ -74,29 +74,6 @@ export default function AppLayout({ children }) {
           cursor: pointer;
         }
         
-        .sidebar-logo-mark {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #6B9E7F 0%, #A89968 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #FAF8F5;
-          font-family: 'Fraunces', serif;
-          font-size: 15px;
-          font-weight: 500;
-        }
-        
-        .sidebar-logo-text {
-          font-family: 'Fraunces', serif;
-          font-size: 22px;
-          font-weight: 500;
-          color: ${C.sageDark};
-          letter-spacing: '-0.02em';
-          white-space: nowrap;
-        }
-        
         .nav-item {
           display: flex;
           align-items: center;
@@ -266,8 +243,12 @@ export default function AppLayout({ children }) {
       {/* Desktop Sidebar - only shows on desktop */}
       <aside className="sidebar">
         <div className="sidebar-logo" onClick={() => navigate('/dashboard')}>
-          <div className="sidebar-logo-mark">g</div>
-          <div className="sidebar-logo-text">GlowWise</div>
+          <svg width="38" height="38" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+  <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+  <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+</svg>
+<span style={{ fontFamily: "'Fraunces', serif", fontSize: '26px', fontWeight: 500, color: C.ink, letterSpacing: '-0.018em', lineHeight: 1 }}>GlowWise</span>
         </div>
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -290,8 +271,12 @@ export default function AppLayout({ children }) {
         <header className="header">
           <div className="header-content">
             <button onClick={() => navigate('/dashboard')} className="header-logo-btn">
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '15px', fontWeight: 500 }}>g</div>
-              <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: C.ink, letterSpacing: '-0.02em' }}>GlowWise</span>
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+  <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+  <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+</svg>
+<span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: C.ink, letterSpacing: '-0.018em', lineHeight: 1 }}>GlowWise</span>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <button className="nav-icon-btn" aria-label="Notifications"><Bell size={18} strokeWidth={1.6} /></button>
