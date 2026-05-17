@@ -634,9 +634,10 @@ const GlowType = () => {
   minHeight: 340,
   borderRadius: 16,
   background:
-    'linear-gradient(135deg, rgba(107,158,127,0.10) 0%, rgba(237,226,236,0.48) 100%)',
-  border: '1px solid rgba(107,158,127,0.08)',
-  boxShadow: '0 24px 60px -36px rgba(61,74,82,0.16)',
+  'linear-gradient(145deg, rgba(107,158,127,0.14) 0%, rgba(237,226,236,0.62) 52%, rgba(245,221,208,0.30) 100%)',
+border: '1px solid rgba(107,158,127,0.10)',
+boxShadow: '0 30px 80px -42px rgba(61,74,82,0.22)',
+backdropFilter: 'blur(2px)',
   position: 'relative',
   overflow: 'hidden',
   cursor: 'pointer',
