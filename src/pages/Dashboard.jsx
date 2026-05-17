@@ -797,7 +797,7 @@ const GlowType = () => {
         })}
       </div>
 
-      <div
+            <div
         style={{
           color: C.sageDark,
           fontFamily: FF_UI,
@@ -817,6 +817,7 @@ const GlowType = () => {
         Explore your rhythm
         <ChevronRight size={12} strokeWidth={2.2} />
       </div>
+    </div>
   );
 };
 
