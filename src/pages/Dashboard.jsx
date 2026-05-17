@@ -35,6 +35,7 @@ const C = {
 };
 
 const FF_DISPLAY = "'Fraunces', Georgia, serif";
+const FF_LOGO = "'Marcellus', Georgia, serif";
 const FF_UI = "'Manrope', system-ui, sans-serif";
 
 // ============ RESPONSIVE STYLES ============
