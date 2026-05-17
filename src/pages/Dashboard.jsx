@@ -862,7 +862,6 @@ export default function Dashboard() {
               <GlowType />
               <Plan />
             </div>
-            <Actions />
           </main>
         </div>
         <BottomNav />
