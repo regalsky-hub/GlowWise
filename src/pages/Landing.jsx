@@ -96,14 +96,18 @@ function AnimatedCoachDemo() {
         boxShadow: '0 30px 60px -20px rgba(61, 74, 82, 0.15)',
       }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingBottom: '18px', borderBottom: '1px solid rgba(168, 153, 104, 0.18)' }}>
-          <div style={{
-            width: '48px', height: '48px', borderRadius: '50%',
-            background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#FAF8F5', fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500,
-            boxShadow: 'inset 0 -2px 4px rgba(44, 62, 80, 0.08)',
-          }}>g</div>
+        <div style={{
+  width: '48px', height: '48px', borderRadius: '50%',
+  background: '#EDF4EF',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  boxShadow: 'inset 0 -2px 4px rgba(44, 62, 80, 0.08)',
+}}>
+  <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+    <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+    <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+  </svg>
+</div>
           <div>
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: '18px', fontWeight: 500, color: '#3D4A52', letterSpacing: '-0.01em' }}>Your wellness coach</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#6B9E7F', marginTop: '2px' }}>
@@ -534,21 +538,16 @@ export default function Landing() {
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
           {/* Logo */}
-          <button onClick={() => scrollTo('top')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '28px', height: '28px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#FAF8F5',
-              fontFamily: "'Fraunces', serif",
-              fontSize: '14px',
-              fontWeight: 500,
-            }}>g</div>
-            <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: '#3D4A52', letterSpacing: '-0.02em' }}>
-              GlowWise
-            </span>
-          </button>
+          <button onClick={() => scrollTo('top')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+  <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+    <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+    <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+  </svg>
+  <span style={{ fontFamily: "'Fraunces', serif", fontSize: '24px', fontWeight: 500, color: '#3D4A52', letterSpacing: '-0.018em', lineHeight: 1 }}>
+    GlowWise
+  </span>
+</button>
 
           {/* Desktop nav */}
           <div className="hide-mobile" style={{ display: 'flex', gap: '36px', alignItems: 'center' }}>
