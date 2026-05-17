@@ -955,7 +955,7 @@ const Closing = () => (
 );
 
 // ─────────── PAGE ───────────
-function GlowTypes() {
+export default function GlowTypes() {
   const [openId, setOpenId] = useState(null);
   const [focusedId, setFocusedId] = useState(null);
 
