@@ -529,10 +529,10 @@ const TypeCard = ({ type, isOpen, onToggle, index, isFocused }) => {
       style={{
         position: "relative", overflow: "hidden",
         borderRadius: 24, background: type.bg,
-        border: `1px solid ${isFocused ? type.color : C.lineSoft}`,
-        boxShadow: isFocused
-          ? `0 0 0 3px ${type.color}22, 0 20px 40px -28px rgba(61,74,82,0.28)`
-          : "0 10px 30px -24px rgba(61,74,82,0.18)",
+        border: `1px solid ${isFocused ? `${type.color}55` : "rgba(255,255,255,0.34)"}`,
+boxShadow: isFocused
+  ? `0 0 0 3px ${type.color}18, 0 28px 54px -34px rgba(61,74,82,0.26)`
+  : "0 18px 40px -32px rgba(61,74,82,0.16)",
         animationDelay: `${index * 0.06}s`,
         transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
