@@ -599,7 +599,7 @@ boxShadow: isFocused
           fontFamily: FF_UI, fontSize: 11.5, fontWeight: 700,
           letterSpacing: "0.16em", textTransform: "uppercase",
         }}>
-          <span>{isOpen ? "Show less" : "Read full type"}</span>
+          <span>{isOpen ? "Close reflection" : "Explore this rhythm"}</span>
           <span style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             width: 22, height: 22, borderRadius: "50%",
