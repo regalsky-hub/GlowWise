@@ -569,9 +569,13 @@ boxShadow: isFocused
         </div>
 
         <h3 style={{
-          ...display(26), margin: "0 0 12px", color: type.accent,
-          fontWeight: 500, lineHeight: 1.15,
-        }}>
+  ...display(28),
+  margin: "0 0 16px",
+  color: type.accent,
+  fontWeight: 500,
+  lineHeight: 1.12,
+  letterSpacing: "-0.02em",
+}}>
           {type.name}
         </h3>
 
@@ -589,7 +593,12 @@ boxShadow: isFocused
           "{type.tagline}"
         </p>
 
-        <p style={{ ...bodyText(13.5), margin: 0, lineHeight: 1.7, maxWidth: 380 }}>
+        <p style={{
+  ...bodyText(13.5),
+  margin: "0 0 4px",
+  lineHeight: 1.8,
+  maxWidth: 390,
+}}>
           {type.essence}
         </p>
 
