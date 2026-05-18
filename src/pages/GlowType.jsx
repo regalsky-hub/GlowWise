@@ -325,32 +325,6 @@ export default function GlowTypes() {
         }
       `}</style>
 
-      {/* ── Top bar ─────────────────────────────────────── */}
-      <div className="gt-topbar-pad" style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "20px 48px", borderBottom: `1px solid ${C.lineSoft}`,
-        background: C.paper,
-      }}>
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}
-        >
-          <Orbit size={32} />
-          <Wordmark size={22} />
-        </button>
-        <button
-          onClick={() => navigate('/checkin')}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "11px 18px", borderRadius: 999,
-            background: C.sage, color: C.paper, border: "none", cursor: "pointer",
-            fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
-          }}
-        >
-          <Icon.plus width={14} height={14}/> New check-in
-        </button>
-      </div>
-
       {/* ── Main content ────────────────────────────────── */}
       <div className="gt-main-pad" style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 48px 96px" }}>
 
@@ -455,49 +429,6 @@ export default function GlowTypes() {
               />
             ))}
           </div>
-        </section>
-
-        {/* ── Journey ───────────────────────────────────── */}
-        <section className="fade-up d3" style={{ marginBottom: 80 }}>
-          <div style={{ marginBottom: 28, maxWidth: 720 }}>
-            <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>How you discover yours</div>
-            <h2 style={{ ...display(36), margin: "0 0 14px" }}>
-              A type that's{" "}
-              <em style={{ fontStyle: "italic", color: C.sage }}>earned</em>,
-              not assigned.
-            </h2>
-            <p style={{ ...bodyText(15), margin: 0 }}>
-              You won't take a quiz. Your type appears gently, the way a print develops — from honest data over a few days.
-            </p>
-          </div>
-          <div className="gt-journey-grid" style={{ display: "grid", gap: 18, gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
-            {[
-              { n: "01", color: C.sage, bg: C.sageMint, title: "Check in daily", body: "Sleep, energy, mood, movement. 60 seconds. The more honestly you log, the clearer your pattern becomes." },
-              { n: "02", color: C.plum, bg: C.plumBg, title: "After 5 check-ins", body: "GlowWise has enough data to suggest your most likely Glow Type — with a confidence score, not a verdict." },
-              { n: "03", color: C.terracotta, bg: C.terracottaBg, title: "Refine over time", body: "Your type may shift slightly as you log more — that's not a glitch, it's calibration. Real bodies don't fit one box." },
-            ].map((s, i) => (
-              <div key={i} className="hover-lift" style={{ position: "relative", overflow: "hidden", padding: "30px 26px 28px", borderRadius: 22, background: s.bg, border: `1px solid ${C.lineSoft}` }}>
-                <div style={{ position: "absolute", width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.30)", filter: "blur(40px)", top: -40, right: -30 }}/>
-                <div style={{ position: "relative", zIndex: 2 }}>
-                  <div style={{ fontFamily: FF_DISPLAY, fontStyle: "italic", fontSize: 44, color: s.color, lineHeight: 1, marginBottom: 18, opacity: 0.85 }}>{s.n}</div>
-                  <h3 style={{ ...display(20), margin: "0 0 10px", fontWeight: 500 }}>{s.title}</h3>
-                  <p style={{ ...bodyText(13.5), margin: 0, lineHeight: 1.7 }}>{s.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── FAQ ───────────────────────────────────────── */}
-        <section className="fade-up d4" style={{ marginBottom: 80 }}>
-          <div style={{ marginBottom: 28, maxWidth: 720 }}>
-            <div style={{ ...eyebrow(C.mute), marginBottom: 10 }}>Common questions</div>
-            <h2 style={{ ...display(36), margin: 0 }}>
-              Honest answers to{" "}
-              <em style={{ fontStyle: "italic", color: C.sage }}>fair questions</em>.
-            </h2>
-          </div>
-          <FaqBlock />
         </section>
 
         {/* ── Closing CTA ───────────────────────────────── */}
