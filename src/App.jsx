@@ -19,7 +19,6 @@ import Terms from './pages/Terms';
 import Cookies from './pages/Cookies';
 import Disclaimer from './pages/Disclaimer';
 import WellnessPlan from './pages/WellnessPlan';
-import GlowType from './pages/GlowType';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -140,7 +139,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/glow-type" element={<ProtectedRoute><GlowType /></ProtectedRoute>} />
+  
       {/* Catch all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
