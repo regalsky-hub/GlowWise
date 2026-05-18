@@ -928,38 +928,46 @@ export default function Landing() {
               </div>
 
               <button onClick={async () => {
-  const res = await fetch('/api/create-checkout-session', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const data = await res.json();
-  if (data.url) window.location.href = data.url;
+  try {
+    const res = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+    console.log('Stripe response:', data);
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      console.error('No URL returned:', data);
+    }
+  } catch (err) {
+    console.error('Checkout error:', err);
+  }
 }} style={{
-                background: '#FAF8F5',
-                color: '#557E64',
-                padding: '14px 24px',
-                border: 'none',
-                borderRadius: '100px',
-                fontFamily: "'Manrope', sans-serif",
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                width: '100%',
-                transition: 'all 0.3s',
-              }}
-              onMouseEnter={(e) => { e.target.style.background = '#FFFFFF'; e.target.style.transform = 'translateY(-1px)'; }}
-              onMouseLeave={(e) => { e.target.style.background = '#FAF8F5'; e.target.style.transform = 'translateY(0)'; }}
-              >
-                Start Wellness Coach
-              </button>
-            </div>
-          </div>
-
-          <p style={{ textAlign: 'center', marginTop: '28px', fontSize: '13px', color: '#A89968', fontStyle: 'italic' }}>
-            Cancel anytime. Fair-use policy applies to unlimited access.
-          </p>
-        </div>
-      </section>
+  background: '#FAF8F5',
+  color: '#557E64',
+  padding: '14px 24px',
+  border: 'none',
+  borderRadius: '100px',
+  fontFamily: "'Manrope', sans-serif",
+  fontSize: '15px',
+  fontWeight: 600,
+  cursor: 'pointer',
+  width: '100%',
+  transition: 'all 0.3s',
+}}
+onMouseEnter={(e) => { e.target.style.background = '#FFFFFF'; e.target.style.transform = 'translateY(-1px)'; }}
+onMouseLeave={(e) => { e.target.style.background = '#FAF8F5'; e.target.style.transform = 'translateY(0)'; }}
+>
+  Start Wellness Coach
+</button>
+</div>
+</div>
+<p style={{ textAlign: 'center', marginTop: '28px', fontSize: '13px', color: '#A89968', fontStyle: 'italic' }}>
+  Cancel anytime. Fair-use policy applies to unlimited access.
+</p>
+</div>
+</section>
 
       {/* FAQ */}
       <section id="faq" style={{ padding: '120px 0' }}>
