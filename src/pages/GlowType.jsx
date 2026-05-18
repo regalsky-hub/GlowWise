@@ -215,7 +215,7 @@ const Compass = ({ onSelect }) => {
             <line x1={PAD} y1={H/2} x2={W-PAD} y2={H/2} stroke={C.line} strokeWidth="1" strokeDasharray="2 6" />
             <line x1={W/2} y1={PAD} x2={W/2} y2={H-PAD} stroke={C.line} strokeWidth="1" strokeDasharray="2 6" />
             <text x={PAD-8} y={H/2+4} fontSize="10" fontWeight="700" letterSpacing="2" fill={C.mute} fontFamily="Manrope" textAnchor="end">INWARD</text>
-            <text x={W-PAD+8} y={H/2+4} fontSize="10" fontWeight="700" letterSpacing="2" fill={C.mute} fontFamily="Manrope">OUTWARD</text>
+            <text x={W-PAD-8} y={H/2+4} fontSize="10" fontWeight="700" letterSpacing="2" fill={C.mute} fontFamily="Manrope">OUTWARD</text>
             <text x={W/2} y={PAD-14} fontSize="10" fontWeight="700" letterSpacing="2" fill={C.mute} fontFamily="Manrope" textAnchor="middle">DYNAMIC</text>
             <text x={W/2} y={H-PAD+22} fontSize="10" fontWeight="700" letterSpacing="2" fill={C.mute} fontFamily="Manrope" textAnchor="middle">STEADY</text>
             {GLOW_TYPES.map((t) => {
