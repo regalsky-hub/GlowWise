@@ -927,7 +927,14 @@ export default function Landing() {
                 ))}
               </div>
 
-              <button onClick={() => navigate('/signup')} style={{
+              <button onClick={async () => {
+  const res = await fetch('/api/create-checkout-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
+}} style={{
                 background: '#FAF8F5',
                 color: '#557E64',
                 padding: '14px 24px',
