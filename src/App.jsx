@@ -20,6 +20,7 @@ import Cookies from './pages/Cookies';
 import Disclaimer from './pages/Disclaimer';
 import WellnessPlan from './pages/WellnessPlan';
 import GlowType from './pages/GlowType';
+import ChoosePlan from './pages/ChoosePlan';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -41,7 +42,6 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/" replace />;
   }
 
-  // Redirect to onboarding if not completed
   if (!profile?.onboarding_completed) {
     return <Navigate to="/onboarding" replace />;
   }
@@ -68,12 +68,14 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/contact" element={<Contact />} />
-<Route path="/privacy" element={<Privacy />} />
-<Route path="/terms" element={<Terms />} />
-<Route path="/cookies" element={<Cookies />} />
-<Route path="/disclaimer" element={<Disclaimer />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/cookies" element={<Cookies />} />
+      <Route path="/disclaimer" element={<Disclaimer />} />
+
       {/* Public Routes */}
       <Route path="/" element={<Landing />} />
+      <Route path="/choose-plan" element={<ChoosePlan />} />
       <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
 
@@ -92,63 +94,20 @@ function AppRoutes() {
           )
         }
       />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/checkin"
-        element={
-          <ProtectedRoute>
-            <DailyCheckin />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/ai-coach"
-        element={
-          <ProtectedRoute>
-            <AICoach />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/insights"
-        element={
-          <ProtectedRoute>
-            <Insights />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/wellness-plan"
-        element={
-          <ProtectedRoute>
-            <WellnessPlan />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/checkin" element={<ProtectedRoute><DailyCheckin /></ProtectedRoute>} />
+      <Route path="/ai-coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
+      <Route path="/insights" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      <Route path="/wellness-plan" element={<ProtectedRoute><WellnessPlan /></ProtectedRoute>} />
       <Route path="/glow-type" element={<ProtectedRoute><GlowType /></ProtectedRoute>} />
-  
+
       {/* Catch all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
 
-// Main App Component
 export default function App() {
   return (
     <BrowserRouter>
