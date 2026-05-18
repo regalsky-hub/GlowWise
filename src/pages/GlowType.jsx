@@ -938,7 +938,7 @@ const Closing = () => (
         maxWidth: 640, margin: "0 auto",
       }}>
         <div style={{ ...eyebrow(C.sageDark), marginBottom: 20 }}>
-          Ready when you are
+         Your rhythm becomes <em style={{ color: C.sageDark, fontStyle: "italic" }}>clearer with time</em>.
         </div>
         <h2 style={{
           ...display(40), margin: "0 0 22px", lineHeight: 1.15,
@@ -950,7 +950,7 @@ const Closing = () => (
         <p style={{
           ...bodyText(15.5), maxWidth: 520, margin: "0 auto 30px", lineHeight: 1.8,
         }}>
-          Start with today. A 60-second check-in tonight gets you one step closer to a pattern you can actually use.
+          Gentle check-ins reveal the patterns behind your energy, emotions, recovery, and growth.
         </p>
         <div style={{ display: "inline-flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
           <button style={{
@@ -961,7 +961,7 @@ const Closing = () => (
             boxShadow: "0 10px 24px -12px rgba(107,158,127,0.55)",
           }}>
             <Icon.plus width={14} height={14} />
-            Start tonight's check-in
+            Begin today
           </button>
           <button style={{
             display: "inline-flex", alignItems: "center", gap: 8,
@@ -970,7 +970,7 @@ const Closing = () => (
             border: `1px solid ${C.sage}`, cursor: "pointer",
             fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
           }}>
-            See sample types
+            Explore the types
             <Icon.arrow width={12} height={12}/>
           </button>
         </div>
@@ -1048,7 +1048,7 @@ export default function GlowTypes() {
           <Compass onSelect={handleCompassSelect} />
           <TypesGrid openId={openId} setOpenId={setOpenId} focusedId={focusedId} />
    
-          <FAQ />
+          
           <Closing />
         </div>
       </main>
