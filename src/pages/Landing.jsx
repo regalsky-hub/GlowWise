@@ -654,7 +654,7 @@ export default function Landing() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px', flex: 1 }}>
                 <button onClick={() => navigate('/signup')} className="btn-primary">
-                  Start free today <ArrowRight size={16} strokeWidth={2} />
+                  Meet your wellness coach <ArrowRight size={16} strokeWidth={2} />
                 </button>
                 <button className="btn-secondary" onClick={() => scrollTo('how')}>
                   See how it works
