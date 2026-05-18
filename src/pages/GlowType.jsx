@@ -546,11 +546,13 @@ const TypeCard = ({ type, isOpen, onToggle, index, isFocused }) => {
           padding: "28px 30px 24px", cursor: "pointer", boxSizing: "border-box",
         }}>
         <div style={{
-          display: "inline-flex", alignItems: "center", justifyContent: "center",
-          width: 50, height: 50, borderRadius: "50%",
-          background: C.paper, color: type.color, marginBottom: 18,
-          boxShadow: `0 6px 18px -10px ${type.color}88`,
-        }}>
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: type.color,
+  marginBottom: 18,
+  opacity: 0.95,
+}}>
           <I width={24} height={24} />
         </div>
 
