@@ -1047,7 +1047,7 @@ export default function GlowTypes() {
           
           <Compass onSelect={handleCompassSelect} />
           <TypesGrid openId={openId} setOpenId={setOpenId} focusedId={focusedId} />
-          <Journey />
+   
           <FAQ />
           <Closing />
         </div>
