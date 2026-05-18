@@ -51,6 +51,7 @@ const responsiveCSS = `
     .gw-vitals { grid-template-columns: repeat(2, 1fr) !important; }
     .gw-plan-grid { grid-template-columns: 1fr !important; }
     .gw-main { padding: 32px 24px 100px !important; }
+    .gw-mobile-photo-banner { display: block !important; }
   }
   @media (max-width: 768px) {
     .gw-sidebar { display: none !important; }
@@ -1031,6 +1032,25 @@ export default function Dashboard() {
               <GlowType />
               <Plan />
             </div>
+            <div className="gw-mobile-photo-banner" style={{
+  display: 'none',
+  padding: '16px 14px',
+  borderRadius: 14,
+  background: C.amberBg,
+  border: `1px solid rgba(168,153,104,0.2)`,
+  marginBottom: 28,
+}}>
+  <div style={{ ...eyebrow(C.amber), marginBottom: 8 }}>Coming soon</div>
+  <div style={{ fontFamily: FF_DISPLAY, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.4, marginBottom: 8 }}>
+    Photo Analysis
+  </div>
+  <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.body, lineHeight: 1.6, marginBottom: 10 }}>
+    Track your skin, hair, and glow visually over time. AI-powered insights from your photos — coming to GlowWise soon.
+  </div>
+  <div style={{ fontFamily: FF_UI, fontSize: 11, fontWeight: 600, color: C.amber }}>
+    We'll notify you when it's ready
+  </div>
+</div>
           </main>
         </div>
         <BottomNav />
