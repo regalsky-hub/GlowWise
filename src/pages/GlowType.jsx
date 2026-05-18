@@ -570,10 +570,16 @@ const TypeCard = ({ type, isOpen, onToggle, index, isFocused }) => {
         </h3>
 
         <p style={{
-          ...bodyText(14), margin: "0 0 16px", fontFamily: FF_DISPLAY,
-          fontStyle: "italic", fontSize: 17, lineHeight: 1.5, color: type.accent,
-          maxWidth: 340,
-        }}>
+  ...bodyText(14),
+  margin: "0 0 20px",
+  fontFamily: FF_DISPLAY,
+  fontStyle: "italic",
+  fontSize: 20,
+  lineHeight: 1.55,
+  color: type.accent,
+  letterSpacing: "-0.01em",
+  maxWidth: 360,
+}}>
           "{type.tagline}"
         </p>
 
