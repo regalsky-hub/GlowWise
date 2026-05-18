@@ -537,7 +537,13 @@ const TypeCard = ({ type, isOpen, onToggle, index, isFocused }) => {
         transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
     >
-      <div style={{ position: "absolute", top: 18, right: 22, opacity: 0.7 }}>
+      <div style={{
+  position: "absolute",
+  top: 20,
+  right: 20,
+  opacity: 0.38,
+  transform: "scale(0.92)",
+}}>
         <TypeOrbit color={type.color} />
       </div>
 
