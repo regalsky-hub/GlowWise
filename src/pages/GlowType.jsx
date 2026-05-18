@@ -340,7 +340,7 @@ export default function GlowTypes() {
           <div style={{ position: "absolute", width: 260, height: 260, borderRadius: "50%", background: "rgba(168,90,61,0.08)", filter: "blur(80px)", bottom: -100, left: 200 }}/>
           <Watermark size={360} style={{ bottom: -130, left: -30 }}/>
 
-          <div className="gt-hero-pad" style={{ position: "relative", zIndex: 2, maxWidth: 760 }}>
+          <div className="gt-hero-pad" style={{ position: "relative", zIndex: 2, maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.terracottaMid, boxShadow: `0 0 0 4px rgba(201,123,92,0.18)` }}/>
               <div style={{ ...eyebrow(C.sageDark) }}>Understanding your wellness</div>
@@ -352,7 +352,7 @@ export default function GlowTypes() {
             <p style={{ ...bodyText(17), lineHeight: 1.8, maxWidth: 620, margin: "0 0 32px" }}>
               Everyone has a natural rhythm for thriving. Glow Types map how <em style={{ fontFamily: FF_DISPLAY, fontStyle: "italic", fontSize: 18 }}>you</em> function — your energy needs, your pace, what depletes you, and what compounds beautifully. Six honest patterns. No hierarchy.
             </p>
-            <div className="gt-hero-stats" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "center" }}>
+           <div className="gt-hero-stats" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
               {[
                 { n: "6",  l: "Glow Types" },
                 { n: "5",  l: "Check-ins to clarity" },
