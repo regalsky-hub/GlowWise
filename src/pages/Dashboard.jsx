@@ -461,24 +461,30 @@ const Vitals = ({ today }) => (
 
 // ============ WEEK CHART ============
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
+  // Validate scores
+  if (!scores || scores.length < 2) {
+    scores = [62, 70, 65, 74, 71, 76, 78];
+  }
+
   const max = Math.max(...scores);
   const min = Math.min(...scores);
   const range = max - min || 1;
   
-  // Increased height to accommodate labels
-  const w = 460, h = 180, pad = 28, labelPad = 20;
-  const chartHeight = h - labelPad;
+  const w = 500;
+  const h = 250;
+  const padX = 40;
+  const padY = 40;
+  const chartW = w - padX * 2;
+  const chartH = h - padY * 2 - 30; // Extra space for labels
   
+  // Calculate points
   const pts = scores.map((v, i) => {
-    const x = pad + (i / (scores.length - 1)) * (w - pad * 2);
-    const y = pad + (1 - (v - min) / range) * (chartHeight - pad * 2);
-    return [x, y];
+    const x = padX + (i / (scores.length - 1)) * chartW;
+    const y = padY + chartH - ((v - min) / range) * chartH;
+    return { x, y, v };
   });
   
-  const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'} ${x} ${y}`).join(' ');
-  const area = `${path} L ${pts[pts.length - 1][0]} ${chartHeight - 8} L ${pts[0][0]} ${chartHeight - 8} Z`;
-  
-  // Generate proper day labels
+  // Generate day labels (proper Mon-Sun)
   const today = new Date();
   const dayLabels = [];
   for (let i = 6; i >= 0; i--) {
@@ -487,7 +493,11 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
     dayLabels.push(d.toLocaleDateString('en-GB', { weekday: 'short' }));
   }
   
-  const delta = scores[scores.length - 1] - scores[0];
+  // Build SVG path
+  const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+  const areaPath = `${linePath} L ${pts[pts.length - 1].x} ${padY + chartH} L ${pts[0].x} ${padY + chartH} Z`;
+  
+  const delta = Math.round(scores[scores.length - 1] - scores[0]);
 
   return (
     <Link to="/insights" style={{ textDecoration: 'none' }}>
@@ -506,60 +516,78 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
             <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
           </div>
           <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from start of week
+            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} pts
           </div>
         </div>
-        <p style={{ ...bodyText(12.5), marginBottom: 20, marginTop: 4, maxWidth: 360 }}>
+        <p style={{ ...bodyText(12.5), marginBottom: 20, maxWidth: 360 }}>
           How your overall wellbeing is trending — so daily ups and downs don't
           cloud the bigger picture.
         </p>
-        <svg width="100%" viewBox={`0 0 ${w} ${h}`} style={{ display: 'block', minHeight: 200 }} preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="gloGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={C.sage} stopOpacity="0.22" />
-              <stop offset="100%" stopColor={C.sage} stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          
-          {/* Area under curve */}
-          <path d={area} fill="url(#gloGrad)" />
-          
-          {/* Main line */}
-          <path 
-            d={path} 
-            fill="none" 
-            stroke={C.sageDark} 
-            strokeWidth="2.5"
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-          />
-          
-          {/* Points and labels */}
-          {pts.map(([x, y], i) => (
-            <g key={i}>
-              {/* Data point circle */}
-              <circle 
-                cx={x} 
-                cy={y} 
-                r={i === pts.length - 1 ? 5 : 3}
-                fill={i === pts.length - 1 ? C.terracotta : C.sageDark} 
-              />
-              
-              {/* Day label */}
-              <text 
-                x={x} 
-                y={chartHeight + 12} 
-                textAnchor="middle" 
-                fontSize="10"
-                fontWeight="600"
-                fill={C.mute} 
-                fontFamily={FF_UI}
-              >
-                {dayLabels[i]}
-              </text>
-            </g>
-          ))}
-        </svg>
+
+        {/* Chart Container */}
+        <div style={{ width: '100%', overflow: 'visible' }}>
+          <svg 
+            width="100%" 
+            height="auto"
+            viewBox={`0 0 ${w} ${h}`}
+            style={{ 
+              display: 'block',
+              minHeight: '220px',
+              maxWidth: '100%'
+            }}
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <linearGradient id="gloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={C.sage} stopOpacity="0.28" />
+                <stop offset="100%" stopColor={C.sage} stopOpacity="0.02" />
+              </linearGradient>
+            </defs>
+
+            {/* Gradient area under line */}
+            <path 
+              d={areaPath}
+              fill="url(#gloGrad)"
+            />
+
+            {/* Main trend line */}
+            <path 
+              d={linePath}
+              fill="none"
+              stroke={C.sageDark}
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+
+            {/* Data points and labels */}
+            {pts.map((p, i) => (
+              <g key={`point-${i}`}>
+                {/* Circle marker */}
+                <circle 
+                  cx={p.x} 
+                  cy={p.y}
+                  r={i === pts.length - 1 ? 6 : 4}
+                  fill={i === pts.length - 1 ? C.terracotta : C.sageDark}
+                  opacity={i === pts.length - 1 ? 1 : 0.8}
+                />
+
+                {/* Day label below chart */}
+                <text
+                  x={p.x}
+                  y={padY + chartH + 28}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="600"
+                  fontFamily={FF_UI}
+                  fill={C.mute}
+                >
+                  {dayLabels[i]}
+                </text>
+              </g>
+            ))}
+          </svg>
+        </div>
       </Card>
     </Link>
   );
