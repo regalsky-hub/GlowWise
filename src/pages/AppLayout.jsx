@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Settings, LogOut, Bell, Home, Calendar, MessageCircle, BarChart3 } from 'lucide-react';
+import { Settings, LogOut, Home, Calendar, MessageCircle, BarChart3 } from 'lucide-react';
 
 export default function AppLayout({ children }) {
   const { logout } = useAuth();
@@ -279,7 +279,6 @@ export default function AppLayout({ children }) {
 <span style={{ fontFamily: "'Fraunces', serif", fontSize: '22px', fontWeight: 500, color: C.ink, letterSpacing: '-0.018em', lineHeight: 1 }}>GlowWise</span>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <button className="nav-icon-btn" aria-label="Notifications"><Bell size={18} strokeWidth={1.6} /></button>
               <button className="nav-icon-btn" onClick={() => navigate('/settings')} aria-label="Settings"><Settings size={18} strokeWidth={1.6} /></button>
               <button className="nav-icon-btn" onClick={handleLogout} aria-label="Logout" style={{ color: C.mute }}><LogOut size={18} strokeWidth={1.6} /></button>
             </div>
