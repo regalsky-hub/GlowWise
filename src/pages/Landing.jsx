@@ -927,23 +927,7 @@ export default function Landing() {
                 ))}
               </div>
 
-              <button onClick={async () => {
-  try {
-    const res = await fetch('/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await res.json();
-    console.log('Stripe response:', data);
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      console.error('No URL returned:', data);
-    }
-  } catch (err) {
-    console.error('Checkout error:', err);
-  }
-}} style={{
+              <button onClick={() => navigate('/signup')} style={{
   background: '#FAF8F5',
   color: '#557E64',
   padding: '14px 24px',
@@ -956,8 +940,8 @@ export default function Landing() {
   width: '100%',
   transition: 'all 0.3s',
 }}
-onMouseEnter={(e) => { e.target.style.background = '#FFFFFF'; e.target.style.transform = 'translateY(-1px)'; }}
-onMouseLeave={(e) => { e.target.style.background = '#FAF8F5'; e.target.style.transform = 'translateY(0)'; }}
+onMouseEnter={(e) => { e.currentTarget.style.background = '#FFFFFF'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+onMouseLeave={(e) => { e.currentTarget.style.background = '#FAF8F5'; e.currentTarget.style.transform = 'translateY(0)'; }}
 >
   Start Wellness Coach
 </button>
