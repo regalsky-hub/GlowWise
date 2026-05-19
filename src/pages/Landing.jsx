@@ -943,7 +943,7 @@ export default function Landing() {
 onMouseEnter={(e) => { e.currentTarget.style.background = '#FFFFFF'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
 onMouseLeave={(e) => { e.currentTarget.style.background = '#FAF8F5'; e.currentTarget.style.transform = 'translateY(0)'; }}
 >
-  Start Wellness Coach
+  Start GlowWise Plus
 </button>
 </div>
 </div>
