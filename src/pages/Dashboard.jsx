@@ -322,72 +322,91 @@ const Header = ({ name, onLogout }) => {
 };
 
 // ============ HERO FOCUS ============
-const HeroFocus = ({ score = 78 }) => (
-  <div className="gw-hero-pad" style={{
-    position: 'relative', overflow: 'hidden',
-    padding: '52px 48px',
-    borderRadius: 28,
-    background: 'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
-    border: '1px solid rgba(107,158,127,0.10)',
-    boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
-    marginBottom: 28,
-  }}>
-    <div style={{
-      position: 'absolute', width: 320, height: 320, borderRadius: '50%',
-      background: 'rgba(107,158,127,0.12)', filter: 'blur(70px)',
-      top: -120, right: -80,
-    }} />
-    <div className="gw-hero-grid" style={{
-      position: 'relative', display: 'grid',
-      gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
-    }}>
-      <div>
-        <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
-        <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
-          A balanced day.{' '}
-          <em style={{ fontStyle: 'italic', color: C.sage }}>Protect that feeling</em>
-          {' '}with gentle movement and a slow lunch.
-        </h2>
-        <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 28 }}>
-          Your stress is low and energy is steady — a good day for the harder
-          task you've been putting off. Hydrate before 11am.
-        </p>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <Link to="/ai-coach" style={btnPrimary}>
-            Open coach <ChevronRight size={12} strokeWidth={2} />
-          </Link>
-        </div>
-      </div>
+const getGlowStatus = (score) => {
+  if (score >= 91) return { label: 'Glowing', color: C.sage };
+  if (score >= 76) return { label: 'Thriving', color: C.sage };
+  if (score >= 61) return { label: 'Balancing', color: C.sageDark };
+  return { label: 'Recovering', color: C.terracotta };
+};
 
-      {/* Glow Score ring */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
-          <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
-            <circle cx="50" cy="50" r="42" fill="none"
-              stroke={C.sage} strokeWidth="6" strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
-            <circle
-              cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
-              cy={50 + 42 * Math.sin((score / 100) * 2 * Math.PI - Math.PI / 2)}
-              r="3.5" fill={C.terracottaMid}
-            />
-          </svg>
-          <div style={{
-            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-          }}>
-            <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
-            <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
-            <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-              Thriving
+const HeroFocus = ({ score = 78 }) => {
+  const { label: statusLabel, color: statusColor } = getGlowStatus(score);
+
+  return (
+    <div className="gw-hero-pad" style={{
+      position: 'relative', overflow: 'hidden',
+      padding: '52px 48px',
+      borderRadius: 28,
+      background: 'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
+      border: '1px solid rgba(107,158,127,0.10)',
+      boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
+      marginBottom: 28,
+    }}>
+      <div style={{
+        position: 'absolute', width: 320, height: 320, borderRadius: '50%',
+        background: 'rgba(107,158,127,0.12)', filter: 'blur(70px)',
+        top: -120, right: -80,
+      }} />
+      <div className="gw-hero-grid" style={{
+        position: 'relative', display: 'grid',
+        gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
+      }}>
+        <div>
+          <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
+          <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
+            A balanced day.{' '}
+            <em style={{ fontStyle: 'italic', color: C.sage }}>Protect that feeling</em>
+            {' '}with gentle movement and a slow lunch.
+          </h2>
+          <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 28 }}>
+            Your stress is low and energy is steady — a good day for the harder
+            task you've been putting off. Hydrate before 11am.
+          </p>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link to="/ai-coach" style={btnPrimary}>
+              Open coach <ChevronRight size={12} strokeWidth={2} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Glow Score ring */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
+            <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
+              <circle cx="50" cy="50" r="42" fill="none"
+                stroke={C.sage} strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
+              <circle
+                cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
+                cy={50 + 42 * Math.sin((score / 100) * 2 * Math.PI - Math.PI / 2)}
+                r="3.5" fill={C.terracottaMid}
+              />
+            </svg>
+            <div style={{
+              position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+            }}>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
+              <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
+              <div style={{ 
+                fontFamily: FF_UI, 
+                fontSize: 13, 
+                color: statusColor, 
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                transition: 'color 0.3s ease',
+              }}>
+                {statusLabel}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ============ VITALS ============
 const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
@@ -453,7 +472,16 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   });
   const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'} ${x} ${y}`).join(' ');
   const area = `${path} L ${pts[pts.length - 1][0]} ${h - pad} L ${pts[0][0]} ${h - pad} Z`;
-  const days = ['W', 'T', 'F', 'S', 'S', 'M', 'T'];
+  
+  // Generate last 7 days (Mon–Sun)
+  const today = new Date();
+  const dayNames = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    dayNames.push(d.toLocaleDateString('en-GB', { weekday: 'short' }));
+  }
+  
   const delta = scores[scores.length - 1] - scores[0];
 
   return (
@@ -473,7 +501,7 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
             <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
           </div>
           <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from last week
+            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from week start
           </div>
         </div>
         <p style={{ ...bodyText(12.5), marginBottom: 18, marginTop: 4, maxWidth: 360 }}>
@@ -496,7 +524,7 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
                 fill={i === pts.length - 1 ? C.terracotta : C.sageDark} />
               <text x={x} y={h - 6} textAnchor="middle" fontSize="10"
                 fill={C.mute} fontFamily={FF_UI} fontWeight="600">
-                {days[i]}
+                {dayNames[i]}
               </text>
             </g>
           ))}
@@ -1003,6 +1031,7 @@ export default function Dashboard() {
       <style>{responsiveCSS}</style>
       <div style={{ display: 'flex', background: C.paper, minHeight: '100vh' }}>
         <Sidebar />
+        
         <div style={{ flex: 1, minWidth: 0 }}>
           <MobileLogo />
           <main className="gw-main" style={{
