@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Sun, Moon, Zap, Heart, Waves, MessageCircle,
   Calendar, BarChart3, User, ChevronRight,
-  Plus, Bell, LogOut,
+  Plus, LogOut,
 } from 'lucide-react';
 
 // ============ PALETTE ============
@@ -294,9 +294,6 @@ const Header = ({ name, onLogout }) => {
         </h1>
       </div>
       <div className="gw-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <button style={{ ...btnGhost, padding: '10px 12px' }} aria-label="Notifications">
-          <Bell size={16} strokeWidth={1.6} />
-        </button>
      <button
   onClick={onLogout}
   style={{
