@@ -464,22 +464,27 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   const max = Math.max(...scores);
   const min = Math.min(...scores);
   const range = max - min || 1;
-  const w = 460, h = 160, pad = 24;
+  
+  // Increased height to accommodate labels
+  const w = 460, h = 180, pad = 28, labelPad = 20;
+  const chartHeight = h - labelPad;
+  
   const pts = scores.map((v, i) => {
     const x = pad + (i / (scores.length - 1)) * (w - pad * 2);
-    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    const y = pad + (1 - (v - min) / range) * (chartHeight - pad * 2);
     return [x, y];
   });
-  const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'} ${x} ${y}`).join(' ');
-  const area = `${path} L ${pts[pts.length - 1][0]} ${h - pad} L ${pts[0][0]} ${h - pad} Z`;
   
-  // Generate last 7 days (Mon–Sun)
+  const path = pts.map(([x, y], i) => `${i ? 'L' : 'M'} ${x} ${y}`).join(' ');
+  const area = `${path} L ${pts[pts.length - 1][0]} ${chartHeight - 8} L ${pts[0][0]} ${chartHeight - 8} Z`;
+  
+  // Generate proper day labels
   const today = new Date();
-  const dayNames = [];
+  const dayLabels = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    dayNames.push(d.toLocaleDateString('en-GB', { weekday: 'short' }));
+    dayLabels.push(d.toLocaleDateString('en-GB', { weekday: 'short' }));
   }
   
   const delta = scores[scores.length - 1] - scores[0];
@@ -495,36 +500,62 @@ const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
           e.currentTarget.style.boxShadow = '0 1px 0 rgba(0,0,0,0.02), 0 10px 30px -24px rgba(61,74,82,0.18)';
           e.currentTarget.style.transform = 'translateY(0)';
         }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
           <div>
             <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
             <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
           </div>
           <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from week start
+            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} from start of week
           </div>
         </div>
-        <p style={{ ...bodyText(12.5), marginBottom: 18, marginTop: 4, maxWidth: 360 }}>
+        <p style={{ ...bodyText(12.5), marginBottom: 20, marginTop: 4, maxWidth: 360 }}>
           How your overall wellbeing is trending — so daily ups and downs don't
           cloud the bigger picture.
         </p>
-        <svg width="100%" viewBox={`0 0 ${w} ${h}`} style={{ display: 'block' }}>
+        <svg width="100%" viewBox={`0 0 ${w} ${h}`} style={{ display: 'block', minHeight: 200 }} preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="gloGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={C.sage} stopOpacity="0.22" />
               <stop offset="100%" stopColor={C.sage} stopOpacity="0" />
             </linearGradient>
           </defs>
+          
+          {/* Area under curve */}
           <path d={area} fill="url(#gloGrad)" />
-          <path d={path} fill="none" stroke={C.sageDark} strokeWidth="2"
-            strokeLinecap="round" strokeLinejoin="round" />
+          
+          {/* Main line */}
+          <path 
+            d={path} 
+            fill="none" 
+            stroke={C.sageDark} 
+            strokeWidth="2.5"
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+          />
+          
+          {/* Points and labels */}
           {pts.map(([x, y], i) => (
             <g key={i}>
-              <circle cx={x} cy={y} r={i === pts.length - 1 ? 5 : 3}
-                fill={i === pts.length - 1 ? C.terracotta : C.sageDark} />
-              <text x={x} y={h - 6} textAnchor="middle" fontSize="10"
-                fill={C.mute} fontFamily={FF_UI} fontWeight="600">
-                {dayNames[i]}
+              {/* Data point circle */}
+              <circle 
+                cx={x} 
+                cy={y} 
+                r={i === pts.length - 1 ? 5 : 3}
+                fill={i === pts.length - 1 ? C.terracotta : C.sageDark} 
+              />
+              
+              {/* Day label */}
+              <text 
+                x={x} 
+                y={chartHeight + 12} 
+                textAnchor="middle" 
+                fontSize="10"
+                fontWeight="600"
+                fill={C.mute} 
+                fontFamily={FF_UI}
+              >
+                {dayLabels[i]}
               </text>
             </g>
           ))}
