@@ -10,11 +10,10 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [agreedToDisclaimer, setAgreedToDisclaimer] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [selectedPlan, setSelectedPlan] = useState('free');
+  const [selectedPlan, setSelectedPlan] = useState('paid');
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -45,7 +44,7 @@ export default function Signup() {
     return 'Strong';
   };
 
-  const canSubmit = agreedToTerms && agreedToDisclaimer && !loading;
+  const canSubmit = agreedToTerms && !loading;
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -57,7 +56,6 @@ export default function Signup() {
     if (password.length < 8) { setError('Password must be at least 8 characters'); return; }
     if (passwordStrength < 2) { setError('Password needs letters, numbers, and ideally a symbol'); return; }
     if (!agreedToTerms) { setError('Please agree to the Terms, Privacy Policy, and Medical Disclaimer'); return; }
-    if (!agreedToDisclaimer) { setError('Please confirm you understand GlowWise provides wellness guidance, not medical advice'); return; }
 
     try {
       setLoading(true);
@@ -149,7 +147,7 @@ export default function Signup() {
         <div className="info-box" style={{ marginBottom: '28px' }}>
           <Shield size={16} strokeWidth={1.8} style={{ color: '#6B9E7F', flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <strong style={{ fontWeight: 600 }}>Wellness, not medical advice.</strong> Always consult a qualified healthcare provider for medical concerns.
+            <strong style={{ fontWeight: 600 }}>Your data stays private.</strong> Encrypted, GDPR compliant, and under your control. Delete anytime.
           </div>
         </div>
 
@@ -217,6 +215,37 @@ export default function Signup() {
             <label className="eyebrow" style={{ display: 'block', marginBottom: '12px' }}>Choose your plan</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
+              {/* Paid Plan — preselected */}
+              <div
+                className={`plan-card ${selectedPlan === 'paid' ? 'selected-paid' : ''}`}
+                onClick={() => setSelectedPlan('paid')}
+                style={{ position: 'relative' }}
+              >
+                <div style={{
+                  position: 'absolute', top: '-10px', left: '16px',
+                  background: '#A89968', color: '#FAF8F5',
+                  padding: '3px 10px', borderRadius: '100px',
+                  fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600,
+                }}>Most popular</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '15px', color: selectedPlan === 'paid' ? '#FAF8F5' : '#3D4A52', marginBottom: '4px' }}>GlowWise Plus</div>
+                    <div style={{ fontSize: '13px', color: selectedPlan === 'paid' ? '#D4E8DD' : '#5A6770' }}>Unlock your complete wellness roadmap</div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontFamily: "'Fraunces', serif", fontSize: '20px', color: selectedPlan === 'paid' ? '#FAF8F5' : '#3D4A52' }}>£4.99</span>
+                    <div style={{
+                      width: '20px', height: '20px', borderRadius: '50%',
+                      border: `2px solid ${selectedPlan === 'paid' ? '#FAF8F5' : 'rgba(168,153,104,0.4)'}`,
+                      background: selectedPlan === 'paid' ? '#FAF8F5' : 'transparent',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      {selectedPlan === 'paid' && <Check size={11} strokeWidth={3} style={{ color: '#6B9E7F' }} />}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Free Plan */}
               <div
                 className={`plan-card ${selectedPlan === 'free' ? 'selected' : ''}`}
@@ -240,67 +269,26 @@ export default function Signup() {
                   </div>
                 </div>
               </div>
-
-              {/* Paid Plan */}
-              <div
-                className={`plan-card ${selectedPlan === 'paid' ? 'selected-paid' : ''}`}
-                onClick={() => setSelectedPlan('paid')}
-                style={{ position: 'relative' }}
-              >
-                <div style={{
-                  position: 'absolute', top: '-10px', left: '16px',
-                  background: '#A89968', color: '#FAF8F5',
-                  padding: '3px 10px', borderRadius: '100px',
-                  fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600,
-                }}>Most popular</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '15px', color: selectedPlan === 'paid' ? '#FAF8F5' : '#3D4A52', marginBottom: '4px' }}>AI Wellness Coach</div>
-                    <div style={{ fontSize: '13px', color: selectedPlan === 'paid' ? '#D4E8DD' : '#5A6770' }}>Unlimited access · Advanced insights · Cancel anytime</div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontFamily: "'Fraunces', serif", fontSize: '20px', color: selectedPlan === 'paid' ? '#FAF8F5' : '#3D4A52' }}>£4.99</span>
-                    <div style={{
-                      width: '20px', height: '20px', borderRadius: '50%',
-                      border: `2px solid ${selectedPlan === 'paid' ? '#FAF8F5' : 'rgba(168,153,104,0.4)'}`,
-                      background: selectedPlan === 'paid' ? '#FAF8F5' : 'transparent',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}>
-                      {selectedPlan === 'paid' && <Check size={11} strokeWidth={3} style={{ color: '#6B9E7F' }} />}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* Legal Consent */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* Single combined consent checkbox */}
+          <div style={{ marginTop: '8px' }}>
             <label className={`consent-row ${agreedToTerms ? 'checked' : ''}`}>
               <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} style={{ display: 'none' }} />
               <div className={`consent-checkbox ${agreedToTerms ? 'checked' : ''}`}>
                 {agreedToTerms && <Check size={14} strokeWidth={3} style={{ color: '#FAF8F5' }} />}
               </div>
               <span className="consent-text">
-                I have read and agree to the <Link to="/terms" target="_blank">Terms of Service</Link>, <Link to="/privacy" target="_blank">Privacy Policy</Link>, and <Link to="/disclaimer" target="_blank">Medical Disclaimer</Link>.
-              </span>
-            </label>
-
-            <label className={`consent-row ${agreedToDisclaimer ? 'checked' : ''}`}>
-              <input type="checkbox" checked={agreedToDisclaimer} onChange={(e) => setAgreedToDisclaimer(e.target.checked)} style={{ display: 'none' }} />
-              <div className={`consent-checkbox ${agreedToDisclaimer ? 'checked' : ''}`}>
-                {agreedToDisclaimer && <Check size={14} strokeWidth={3} style={{ color: '#FAF8F5' }} />}
-              </div>
-              <span className="consent-text">
-                I understand GlowWise provides wellness guidance, not medical advice, and is not a substitute for a qualified healthcare professional.
+                I have read and agree to the <Link to="/terms" target="_blank">Terms of Service</Link>, <Link to="/privacy" target="_blank">Privacy Policy</Link>, and <Link to="/disclaimer" target="_blank">Medical Disclaimer</Link>, and understand GlowWise provides wellness guidance, not medical advice or a substitute for a qualified healthcare professional.
               </span>
             </label>
           </div>
 
-          <button type="submit" disabled={!canSubmit} className="btn-primary" style={{ marginTop: '12px' }}>
+          <button type="submit" disabled={!canSubmit} className="btn-primary" style={{ marginTop: '4px' }}>
             {loading ? 'Creating your account...' : (
               <>
-                {selectedPlan === 'paid' ? 'Create account & choose payment' : 'Create free account'}
+                {selectedPlan === 'paid' ? 'Start GlowWise Plus' : 'Create free account'}
                 <ArrowRight size={16} strokeWidth={2} />
               </>
             )}
@@ -308,7 +296,7 @@ export default function Signup() {
 
           {selectedPlan === 'paid' && (
             <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968', marginTop: '-8px' }}>
-              You'll complete payment after your short onboarding.
+              Payment after your short personalisation. Cancel anytime.
             </p>
           )}
         </form>
