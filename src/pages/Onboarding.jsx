@@ -249,15 +249,31 @@ export default function Onboarding() {
       });
 
       await addCheckIn({
-        energy: data.energy_level,
-        sleep_hours: data.sleep_hours,
-        stress_level: data.stress_level,
-        mood: 7,
-        symptoms: data.body_signals ? [data.body_signals] : [],
-        supplement_taken: false,
-      });
+  energy: data.energy_level,
+  sleep_hours: data.sleep_hours,
+  stress_level: data.stress_level,
+  mood: 7,
+  symptoms: data.body_signals ? [data.body_signals] : [],
+  supplement_taken: false,
+});
 
-      navigate('/dashboard');
+const selectedPlan = localStorage.getItem('selectedPlan');
+localStorage.removeItem('selectedPlan');
+
+if (selectedPlan === 'paid') {
+  const res = await fetch('/api/create-checkout-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const checkoutData = await res.json();
+  if (checkoutData.url) {
+    window.location.href = checkoutData.url;
+  } else {
+    navigate('/dashboard');
+  }
+} else {
+  navigate('/dashboard');
+}
     } catch (err) {
       console.error('Onboarding save error:', err);
       // Still navigate so user isn't stuck — data should mostly be saved
