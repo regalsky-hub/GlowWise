@@ -139,7 +139,6 @@ const buildUserContext = (profile, checkIns, glowScore) => {
 };
 
 export default function AICoach() {
-export default function AICoach() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
