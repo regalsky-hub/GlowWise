@@ -100,6 +100,45 @@ const groupConversations = (convs) => {
   return groups;
 };
 
+const buildUserContext = (profile, checkIns, glowScore) => {
+  const recent = (checkIns || []).slice(0, 7);
+
+  const avg = (field) => {
+    const vals = recent.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
+    if (!vals.length) return null;
+    return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1);
+  };
+
+  const recentSymptoms = [...new Set(
+    recent.flatMap(c => c.symptoms || []).filter(Boolean)
+  )].slice(0, 10);
+
+  const checkInSummaries = recent.map(c => ({
+    date: c.created_at?.toDate?.().toLocaleDateString('en-GB') || 'recent',
+    energy: c.energy,
+    sleep: c.sleep_hours,
+    stress: c.stress_level,
+    mood: c.mood,
+    symptoms: c.symptoms?.join(', ') || '',
+  }));
+
+  return {
+    name: profile?.name || 'User',
+    glowType: profile?.glowType || null,
+    glowScore: glowScore || null,
+    averages: {
+      energy: avg('energy'),
+      sleep: avg('sleep_hours'),
+      stress: avg('stress_level'),
+      mood: avg('mood'),
+    },
+    recentSymptoms,
+    recentCheckIns: checkInSummaries,
+    totalCheckIns: (checkIns || []).length,
+  };
+};
+
+export default function AICoach() {
 export default function AICoach() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
