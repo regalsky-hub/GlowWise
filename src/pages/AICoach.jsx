@@ -276,7 +276,7 @@ export default function AICoach() {
     persistMessages(afterUser, convId);
 
     try {
-      const aiText = await getAIResponse(text, afterUser, profile);
+      const aiText = await getAIResponse(text, afterUser, buildUserContext(profile, checkIns, glowScore));
       const aiMsg = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
