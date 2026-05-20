@@ -10,7 +10,7 @@ import {
   Calendar, BarChart3, User, ChevronRight,
   Plus, LogOut,
 } from 'lucide-react';
-import { generateDailyGuidance } from '../utils/dailyGuidance';
+import { generateDailyGuidance } from './dailyGuidance';
 
 // ============ PALETTE ============
 const C = {
