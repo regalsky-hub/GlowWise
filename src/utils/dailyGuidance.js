@@ -137,7 +137,7 @@ const RULES = [
   () => ({
     headlineStart: 'Your patterns are steady.',
     headlineEm:    'A good day to build',
-    headlineEnd:   'on what\'s already working.',
+    headlineEnd:   "on what's already working.",
     body: 'Energy, sleep, and stress are all in a healthy range. Focus on consistency today — a regular bedtime and one nourishing meal will reinforce what\'s working.',
     actions: ['Consistent bedtime', 'Nourishing meal'],
     tag: 'general',
