@@ -10,6 +10,7 @@ import {
   Calendar, BarChart3, User, ChevronRight,
   Plus, LogOut,
 } from 'lucide-react';
+import { generateDailyGuidance } from '../utils/dailyGuidance';
 
 // ============ PALETTE ============
 const C = {
@@ -326,8 +327,16 @@ const getGlowStatus = (score) => {
   return { label: 'Recovering', color: C.terracotta };
 };
 
-const HeroFocus = ({ score = 78 }) => {
+const HeroFocus = ({ score = 78, guidance }) => {
   const { label: statusLabel, color: statusColor } = getGlowStatus(score);
+
+  // Fallback text if guidance hasn't loaded yet
+  const headline = guidance || {
+    headlineStart: 'Your patterns are steady.',
+    headlineEm:    'A good day to build',
+    headlineEnd:   'on what\'s already working.',
+    body: 'Energy, sleep, and stress are in a healthy range. Focus on consistency — a regular bedtime and one nourishing meal will reinforce what\'s working.',
+  };
 
   return (
     <div className="gw-hero-pad" style={{
@@ -350,15 +359,19 @@ const HeroFocus = ({ score = 78 }) => {
       }}>
         <div>
           <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
+
+          {/* ↓ DYNAMIC: was hardcoded string, now uses guidance props */}
           <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
-            A balanced day.{' '}
-            <em style={{ fontStyle: 'italic', color: C.sage }}>Protect that feeling</em>
-            {' '}with gentle movement and a slow lunch.
+            {headline.headlineStart}{' '}
+            <em style={{ fontStyle: 'italic', color: C.sage }}>{headline.headlineEm}</em>
+            {headline.headlineEnd ? ` ${headline.headlineEnd}` : ''}
           </h2>
+
+          {/* ↓ DYNAMIC: was hardcoded string, now uses guidance body */}
           <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 28 }}>
-            Your stress is low and energy is steady — a good day for the harder
-            task you've been putting off. Hydrate before 11am.
+            {headline.body}
           </p>
+
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <Link to="/ai-coach" style={btnPrimary}>
               Open coach <ChevronRight size={12} strokeWidth={2} />
@@ -366,7 +379,7 @@ const HeroFocus = ({ score = 78 }) => {
           </div>
         </div>
 
-        {/* Glow Score ring */}
+        {/* Glow Score ring — unchanged */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
             <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
@@ -386,10 +399,10 @@ const HeroFocus = ({ score = 78 }) => {
             }}>
               <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
               <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
-              <div style={{ 
-                fontFamily: FF_UI, 
-                fontSize: 13, 
-                color: statusColor, 
+              <div style={{
+                fontFamily: FF_UI,
+                fontSize: 13,
+                color: statusColor,
                 fontWeight: 700,
                 letterSpacing: '0.05em',
                 textTransform: 'uppercase',
@@ -1070,6 +1083,7 @@ export default function Dashboard() {
     .reverse();
 
   const displayWeekScores = weekScores.length > 0 ? weekScores : [62, 70, 65, 74, 71, 76, 78];
+  const dailyGuidance = generateDailyGuidance(checkIns);
 
   if (loading) {
     return (
@@ -1095,7 +1109,7 @@ export default function Dashboard() {
             maxWidth: 1280, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} onLogout={handleLogout} />
-            <HeroFocus score={score} />
+             <HeroFocus score={score} guidance={dailyGuidance} />
             <Vitals today={today} />
             <div
               className="gw-twocol"
