@@ -110,7 +110,7 @@ export default function AICoach() {
   const [openMenu, setOpenMenu] = useState(null);
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
-  const { profile } = useUserData();
+  const { profile, checkIns, glowScore } = useUserData();
 
   const userName = profile?.name || 'there';
 
