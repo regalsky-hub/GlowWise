@@ -421,14 +421,15 @@ export default function AICoach() {
 
         /* Drawer now starts BELOW the GlowWise app header */
         .drawer-backdrop {
-          position: fixed; inset: 0; background: rgba(61, 74, 82, 0.35);
+          position: fixed; top: 0; right: 0; bottom: 0; left: 240px;
+          background: rgba(61, 74, 82, 0.35);
           backdrop-filter: blur(2px);
           z-index: 100; opacity: 0; pointer-events: none;
           transition: opacity 0.25s;
         }
         .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
         .drawer {
-          position: fixed; top: 64px; left: 0; bottom: 0;
+          position: fixed; top: 64px; left: 240px; bottom: 0;
           width: 340px; max-width: 85vw;
           background: #FAF8F5;
           z-index: 101;
@@ -438,6 +439,10 @@ export default function AICoach() {
           box-shadow: 4px 0 24px rgba(61, 74, 82, 0.08);
         }
         .drawer.open { transform: translateX(0); }
+        @media (max-width: 768px) {
+          .drawer-backdrop { left: 0; }
+          .drawer { left: 0; }
+        }
         .drawer-header {
           display: flex; align-items: center; justify-content: space-between;
           padding: 18px 22px;
