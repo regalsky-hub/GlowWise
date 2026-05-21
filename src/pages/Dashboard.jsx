@@ -934,23 +934,9 @@ backdropFilter: 'blur(2px)',
   position: 'relative',
   zIndex: 2,
 }}>
-        The Steady Bloomer
+        {glowTypeName}
       </h3>
       <>
-  <p style={{
-    fontFamily: FF_DISPLAY,
-    fontStyle: 'italic',
-    fontSize: 22,
-lineHeight: 1.5,
-color: C.sageDark,
-margin: '0 0 18px',
-    letterSpacing: '-0.01em',
-    position: 'relative',
-    zIndex: 2,
-  }}>
-    “You bloom through steadiness, not intensity.”
-  </p>
-
   <p style={{
     ...bodyText(14),
     color: C.body,
@@ -959,7 +945,7 @@ margin: '0 0 18px',
     position: 'relative',
     zIndex: 2,
   }}>
-    Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.
+    {glowTypeDesc}
   </p>
 </>
                   <div
@@ -972,7 +958,7 @@ margin: '0 0 18px',
           zIndex: 2,
         }}
       >
-        {['Gentle rhythm', 'Calm energy', 'Soft structure'].map((t) => {
+        {focusAreas.slice(0, 3).map((t) => {
           return (
             <span
               key={t}
