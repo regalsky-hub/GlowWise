@@ -1276,7 +1276,7 @@ export default function Dashboard() {
               }}
             >
               <WeekChart scores={displayWeekScores} />
-              <Coach name={firstName} />
+              <Coach name={firstName} checkIns={checkIns} />
             </div>
             <div className="gw-twocol" style={{
               display: 'grid', gridTemplateColumns: '1fr 1.4fr',
