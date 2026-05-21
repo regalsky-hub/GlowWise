@@ -678,7 +678,6 @@ const Coach = ({ name, checkIns = [] }) => {
       minHeight: '100%',
     }}
   >
-  >
     {/* Ambient Glow */}
     <div
       style={{
@@ -744,8 +743,7 @@ const Coach = ({ name, checkIns = [] }) => {
           maxWidth: 520,
         }}
       >
-        Your recent patterns suggest steadier recovery this week,
-        especially around sleep consistency and emotional balance.
+        {observation}
       </p>
       <p
         style={{
@@ -758,8 +756,7 @@ const Coach = ({ name, checkIns = [] }) => {
           maxWidth: 500,
         }}
       >
-        GlowWise has noticed calmer stress signals, more stable energy,
-        and improved evening recovery rhythms over the past few days.
+        {subtext}
       </p>
       <div
         style={{
@@ -810,9 +807,9 @@ const Coach = ({ name, checkIns = [] }) => {
         </Link>
       </div>
     </div>
-  </div>
-);
-
+ </div>
+  );
+};
 // ============ GLOW TYPE ============
 const GlowType = () => {
   const navigate = useNavigate();
