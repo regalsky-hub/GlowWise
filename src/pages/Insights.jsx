@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
-import { TrendingUp, TrendingDown, Sparkles, Droplet, Activity, Salad, Zap, Moon, Heart, Waves } from 'lucide-react';
+import { TrendingUp, TrendingDown, Sparkles, Droplet, Activity, Salad, Zap, Moon, Heart, Waves, Quote } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Insights() {
@@ -388,30 +388,14 @@ export default function Insights() {
                   }}
                 />
                 <div style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <div
+                 <Quote
+                    size={22}
+                    strokeWidth={1.6}
                     style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '50%',
-                      background:
-                        p.tone === 'positive'
-                          ? 'rgba(107,158,127,0.14)'
-                          : p.tone === 'warning'
-                            ? 'rgba(201,123,92,0.14)'
-                            : 'rgba(168,153,104,0.10)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      fontFamily: "'Fraunces', serif",
-                      fontSize: '22px',
-                      fontStyle: 'italic',
-                      lineHeight: 1,
                       color: p.tone === 'positive' ? '#557E64' : p.tone === 'warning' ? '#A85A3D' : '#A89968',
+                      flexShrink: 0,
                     }}
-                  >
-                    "
-                  </div>
+                  />
                   <div>
                     <h3 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '10px', lineHeight: 1.25 }}>
                       {p.title}
