@@ -180,16 +180,11 @@ export default function Login() {
         {/* Logo + brand */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginBottom: '24px' }}>
-            <div style={{
-              width: '36px', height: '36px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #6B9E7F 0%, #A89968 100%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#FAF8F5',
-              fontFamily: "'Fraunces', serif",
-              fontSize: '18px',
-              fontWeight: 500,
-            }}>g</div>
+            <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="46" r="28" stroke="#557E64" strokeWidth="6" fill="none" />
+  <path d="M 78 46 Q 78 78 50 80 Q 32 81 30 72" stroke="#6B9E7F" strokeWidth="6" strokeLinecap="round" fill="none" />
+  <circle cx="78" cy="46" r="6" fill="#C97B5C" />
+</svg>
             <span className="display" style={{ fontSize: '26px', fontWeight: 500, color: '#3D4A52' }}>
               GlowWise
             </span>
