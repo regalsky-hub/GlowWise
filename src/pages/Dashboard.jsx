@@ -1009,6 +1009,117 @@ const Plan = () => (
   </Card>
 );https://github.com/regalsky-hub/GlowWise/blob/main/src/pages/Dashboard.jsx
 
+// ============ MICRO HABITS / CONSISTENCY CARDS ============
+const MicroHabits = ({ checkIns, profile }) => {
+  const FF_DISPLAY = "'Fraunces', Georgia, serif";
+  const FF_UI = "'Manrope', system-ui, sans-serif";
+
+  const getWeekKey = () => {
+    const now = new Date();
+    const day = now.getDay();
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - ((day + 6) % 7));
+    return `week_${monday.toISOString().split('T')[0]}`;
+  };
+
+  const thisMonth = new Date().getMonth();
+  const thisYear = new Date().getFullYear();
+  const checkInsThisMonth = (checkIns || []).filter(c => {
+    const d = c.created_at?.toDate?.() || new Date(c.date || c.created_at);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  }).length;
+
+  const weekKey = getWeekKey();
+  const weekCompletions = profile?.[weekKey] || {};
+  const actionsCompleted = Object.values(weekCompletions).filter(Boolean).length;
+  const totalActions = 6;
+
+  const recent = (checkIns || []).slice(0, 7);
+  const getConsistency = (field) => {
+    const vals = recent.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
+    if (vals.length < 2) return 999;
+    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    return vals.reduce((sum, v) => sum + Math.abs(v - avg), 0) / vals.length;
+  };
+  const metrics = [
+    { key: 'sleep_hours', label: 'Sleep' },
+    { key: 'energy', label: 'Energy' },
+    { key: 'stress_level', label: 'Stress' },
+    { key: 'mood', label: 'Mood' },
+  ];
+  const mostConsistent = metrics.reduce((best, m) =>
+    getConsistency(m.key) < getConsistency(best.key) ? m : best, metrics[0]);
+
+  const cards = [
+    {
+      eyebrow: 'This month',
+      value: checkInsThisMonth,
+      label: checkInsThisMonth === 1 ? 'check-in logged' : 'check-ins logged',
+      note: 'Patterns take shape with consistency',
+      bg: '#EDF4EF', accent: '#557E64', text: '#3D5E48',
+    },
+    {
+      eyebrow: 'This week',
+      value: `${actionsCompleted} of ${totalActions}`,
+      label: 'wellness actions done',
+      note: 'Small actions compound over time',
+      bg: '#FAF3DC', accent: '#A07E3D', text: '#8B6A30',
+    },
+    {
+      eyebrow: 'Most consistent',
+      value: recent.length > 0 ? mostConsistent.label : '—',
+      label: recent.length > 0 ? 'your steadiest habit' : 'check in to see patterns',
+      note: 'Consistency over perfection, always',
+      bg: '#EDE2EC', accent: '#7A5C77', text: '#5D4459',
+    },
+  ];
+
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 18 }}>
+        <div style={{
+          fontFamily: FF_UI, fontSize: 11, fontWeight: 600,
+          letterSpacing: '0.18em', textTransform: 'uppercase',
+          color: '#A89968', marginBottom: 6,
+        }}>Your consistency</div>
+        <h3 style={{
+          fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 26,
+          lineHeight: 1.1, letterSpacing: '-0.02em', color: '#3D4A52', margin: 0,
+        }}>What you've been building</h3>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        {cards.map((card, i) => (
+          <div key={i} style={{
+            background: card.bg,
+            border: '1px solid rgba(168,153,104,0.10)',
+            borderRadius: 14,
+            padding: '20px 20px 22px',
+          }}>
+            <div style={{
+              fontFamily: FF_UI, fontSize: 10, fontWeight: 600,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: card.accent, marginBottom: 14,
+            }}>{card.eyebrow}</div>
+            <div style={{
+              fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 32,
+              color: card.text, marginBottom: 4,
+              lineHeight: 1.1, letterSpacing: '-0.02em',
+            }}>{card.value}</div>
+            <div style={{
+              fontFamily: FF_UI, fontSize: 13, color: card.accent,
+              fontWeight: 500, marginBottom: 10,
+            }}>{card.label}</div>
+            <div style={{
+              fontFamily: FF_DISPLAY, fontStyle: 'italic',
+              fontSize: 12.5, color: card.accent, lineHeight: 1.5,
+            }}>{card.note}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
   <div className="gw-bottomnav" style={{
