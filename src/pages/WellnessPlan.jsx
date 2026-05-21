@@ -183,7 +183,7 @@ const toggle = async (key) => {
 
             <h1 style={{ ...display(50), maxWidth: 800, lineHeight: 1.08, marginBottom: 18 }}>
               {userName}, this week we're focusing on{' '}
-              <em style={{ color: C.sage, fontStyle: 'italic' }}>rest and recovery.</em>
+              <em style={{ color: C.sage, fontStyle: 'italic' }}>{weekFocus.area.toLowerCase()}.</em>
             </h1>
 
             <p style={{ ...bodyText(17), maxWidth: 620, lineHeight: 1.82, marginBottom: 36 }}>
