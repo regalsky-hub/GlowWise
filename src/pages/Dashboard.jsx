@@ -811,9 +811,12 @@ const Coach = ({ name, checkIns = [] }) => {
   );
 };
 // ============ GLOW TYPE ============
-const GlowType = () => {
+const GlowType = ({ profile }) => {
   const navigate = useNavigate();
-  
+  const glowTypeName = profile?.glowType || 'The Steady Bloomer';
+  const glowTypeDesc = profile?.glowTypeDescription || 'Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.';
+  const focusAreas = profile?.focusAreas || ['Gentle rhythm', 'Calm energy', 'Soft structure'];
+
   return (
     <div
       className="gw-card-pad"
