@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
-import { TrendingUp, TrendingDown, Sparkles, Droplet, Activity, Salad, Zap, Moon, Heart, Waves, Quote } from 'lucide-react';
+import { TrendingUp, TrendingDown, Sparkles, Droplet, Activity, Salad, Zap, Moon, Heart, Waves, Quote, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Insights() {
