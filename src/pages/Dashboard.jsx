@@ -1271,7 +1271,7 @@ export default function Dashboard() {
               display: 'grid', gridTemplateColumns: '1fr 1.4fr',
               gap: 20, marginBottom: 28,
             }}>
-              <GlowType />
+              <GlowType profile={profile} />
               <Plan />
             </div>
             <div className="gw-mobile-photo-banner" style={{
