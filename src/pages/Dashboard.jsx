@@ -474,8 +474,27 @@ const Vitals = ({ today }) => (
 // ============ WEEK CHART ============
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   // Validate scores
-  if (!scores || scores.length < 2) {
-    scores = [62, 70, 65, 74, 71, 76, 78];
+if (!scores || scores.length < 2) {
+    return (
+      <Card>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
+          <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
+        </div>
+        <div style={{
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          padding: '40px 24px', textAlign: 'center', gap: 12,
+        }}>
+          <div style={{ fontFamily: FF_DISPLAY, fontSize: 22, color: C.ink, fontStyle: 'italic' }}>
+            Your trend is taking shape.
+          </div>
+          <p style={{ ...bodyText(14), maxWidth: 300, color: C.body }}>
+            Check in for a few more days and your glow trend will appear here.
+          </p>
+        </div>
+      </Card>
+    );
   }
 
   const max = Math.max(...scores);
