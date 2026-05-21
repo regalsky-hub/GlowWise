@@ -456,7 +456,9 @@ const Vitals = ({ today }) => (
   <div style={{ marginBottom: 28 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18, gap: 12 }}>
       <div>
-        <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>This morning</div>
+        <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>
+          {new Date().getHours() < 12 ? 'This morning' : new Date().getHours() < 18 ? 'This afternoon' : 'This evening'}
+        </div>
         <h3 style={{ ...display(26), margin: 0 }}>Your snapshot</h3>
       </div>
     </div>
