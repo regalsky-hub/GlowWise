@@ -1007,7 +1007,7 @@ const Plan = () => (
       </div>
     </Link>
   </Card>
-);
+);https://github.com/regalsky-hub/GlowWise/blob/main/src/pages/Dashboard.jsx
 
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
@@ -1028,7 +1028,6 @@ const MobileLogo = () => (
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
   const {
     profile,
     checkIns,
@@ -1036,7 +1035,6 @@ export default function Dashboard() {
     loading,
     getTodayCheckIn,
   } = useUserData();
-
   const firstName =
     (
       profile?.name ||
@@ -1045,7 +1043,6 @@ export default function Dashboard() {
       user?.displayName ||
       ''
     ).split(' ')[0] || 'there';
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -1054,7 +1051,6 @@ export default function Dashboard() {
       console.error(e);
     }
   };
-
   const todayCheckIn = getTodayCheckIn();
   const today = todayCheckIn ? {
     energy: todayCheckIn.energy || 7,
@@ -1067,9 +1063,7 @@ export default function Dashboard() {
     stress: 4,
     mood: 8,
   };
-
   const score = glowScore || 78;
-
   const weekScores = checkIns
     .slice(0, 7)
     .reverse()
@@ -1081,10 +1075,8 @@ export default function Dashboard() {
       return Math.round((energy + sleep + stress + mood) / 4);
     })
     .reverse();
-
   const displayWeekScores = weekScores.length > 0 ? weekScores : [62, 70, 65, 74, 71, 76, 78];
   const dailyGuidance = generateDailyGuidance(checkIns);
-
   if (loading) {
     return (
       <div style={{ display: 'flex', background: C.paper, minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
@@ -1095,13 +1087,11 @@ export default function Dashboard() {
       </div>
     );
   }
-
   return (
     <>
       <style>{responsiveCSS}</style>
       <div style={{ display: 'flex', background: C.paper, minHeight: '100vh' }}>
         <Sidebar />
-        
         <div style={{ flex: 1, minWidth: 0 }}>
           <MobileLogo />
           <main className="gw-main" style={{
@@ -1109,8 +1099,9 @@ export default function Dashboard() {
             maxWidth: 1280, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} onLogout={handleLogout} />
-             <HeroFocus score={score} guidance={dailyGuidance} />
+            <HeroFocus score={score} guidance={dailyGuidance} />
             <Vitals today={today} />
+            <MicroHabits checkIns={checkIns} profile={profile} />
             <div
               className="gw-twocol"
               style={{
@@ -1132,24 +1123,24 @@ export default function Dashboard() {
               <Plan />
             </div>
             <div className="gw-mobile-photo-banner" style={{
-  display: 'none',
-  padding: '16px 14px',
-  borderRadius: 14,
-  background: C.amberBg,
-  border: `1px solid rgba(168,153,104,0.2)`,
-  marginBottom: 28,
-}}>
-  <div style={{ ...eyebrow(C.amber), marginBottom: 8 }}>Coming soon</div>
-  <div style={{ fontFamily: FF_DISPLAY, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.4, marginBottom: 8 }}>
-    Photo Analysis
-  </div>
-  <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.body, lineHeight: 1.6, marginBottom: 10 }}>
-    Track your skin, hair, and glow visually over time. AI-powered insights from your photos — coming to GlowWise soon.
-  </div>
-  <div style={{ fontFamily: FF_UI, fontSize: 11, fontWeight: 600, color: C.amber }}>
-    We'll notify you when it's ready
-  </div>
-</div>
+              display: 'none',
+              padding: '16px 14px',
+              borderRadius: 14,
+              background: C.amberBg,
+              border: `1px solid rgba(168,153,104,0.2)`,
+              marginBottom: 28,
+            }}>
+              <div style={{ ...eyebrow(C.amber), marginBottom: 8 }}>Coming soon</div>
+              <div style={{ fontFamily: FF_DISPLAY, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.4, marginBottom: 8 }}>
+                Photo Analysis
+              </div>
+              <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.body, lineHeight: 1.6, marginBottom: 10 }}>
+                Track your skin, hair, and glow visually over time. AI-powered insights from your photos — coming to GlowWise soon.
+              </div>
+              <div style={{ fontFamily: FF_UI, fontSize: 11, fontWeight: 600, color: C.amber }}>
+                We'll notify you when it's ready
+              </div>
+            </div>
           </main>
         </div>
         <BottomNav />
