@@ -461,10 +461,10 @@ const Vitals = ({ today }) => (
       </div>
     </div>
     <div className="gw-vitals" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
-      <Vital Icon={Zap}   label="Energy" value={today.energy} suffix="/10" mood="Steady"  bg={C.amberBg}      accent={C.amber}      text="#8B6A30" />
-      <Vital Icon={Moon}  label="Sleep"  value={today.sleep}  suffix="h"    mood="Restful" bg={C.plumBg}       accent={C.plum}       text="#5D4459" />
-      <Vital Icon={Waves} label="Stress" value={today.stress} suffix="/10" mood="Calm"    bg={C.sageMint}     accent={C.sageDark}   text="#3D5E48" />
-      <Vital Icon={Heart} label="Mood"   value={today.mood}   suffix="/10" mood="Bright"  bg={C.terracottaBg} accent={C.terracotta} text="#8B4A30" />
+      <Vital Icon={Zap}   label="Energy" value={today.energy} suffix="/10" mood={today.energy <= 3 ? 'Exhausted' : today.energy <= 5 ? 'Low' : today.energy <= 7 ? 'Steady' : 'Energised'}  bg={C.amberBg}      accent={C.amber}      text="#8B6A30" />
+      <Vital Icon={Moon}  label="Sleep"  value={today.sleep}  suffix="h"    mood={today.sleep < 5 ? 'Restless' : today.sleep < 6 ? 'Light' : today.sleep < 7 ? 'Fair' : 'Restful'} bg={C.plumBg}       accent={C.plum}       text="#5D4459" />
+      <Vital Icon={Waves} label="Stress" value={today.stress} suffix="/10" mood={today.stress <= 3 ? 'Calm' : today.stress <= 5 ? 'Settled' : today.stress <= 7 ? 'Elevated' : 'Tense'}    bg={C.sageMint}     accent={C.sageDark}   text="#3D5E48" />
+      <Vital Icon={Heart} label="Mood"   value={today.mood}   suffix="/10" mood={today.mood <= 3 ? 'Low' : today.mood <= 5 ? 'Unsettled' : today.mood <= 7 ? 'Steady' : 'Bright'}  bg={C.terracottaBg} accent={C.terracotta} text="#8B4A30" />
     </div>
   </div>
 );
