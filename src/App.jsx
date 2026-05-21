@@ -25,8 +25,8 @@ import ChoosePlan from './pages/ChoosePlan';
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  const { profile, checkIns } = useUserData();
-  if (loading) {
+  const { profile, checkIns, loading: dataLoading } = useUserData();
+  if (loading || dataLoading) {
     return (
       <div className="min-h-screen bg-glow-cream flex items-center justify-center">
         <div className="text-center space-y-4">
