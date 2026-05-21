@@ -448,13 +448,33 @@ export default function Insights() {
                   maxWidth: '700px',
                 }}
               >
-                Your recent check-ins suggest a more{' '}
-                <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>balanced rhythm</em>
-                {' '}than last week.
+                Small consistent habits are{' '}
+                <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>beginning to compound</em>
+                {' '}gently over time.
               </h2>
-              <p style={{ fontSize: '15px', lineHeight: 1.8, color: '#5A6770', maxWidth: '620px' }}>
-                Slower mornings, steadier sleep, and reduced stress levels may be helping your energy feel more supported lately. Small consistent habits are beginning to compound gently over time.
+              <p style={{ fontSize: '15px', lineHeight: 1.8, color: '#5A6770', maxWidth: '620px', marginBottom: '28px' }}>
+                The more you check in, the clearer your patterns become. Your wellness plan turns those patterns into focused actions for the week ahead.
               </p>
+              <Link
+                to="/wellness-plan"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#6B9E7F',
+                  color: '#FAF8F5',
+                  padding: '12px 22px',
+                  borderRadius: '999px',
+                  fontFamily: "'Manrope', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  transition: 'background 0.2s',
+                }}
+              >
+                See your wellness plan
+                <ChevronRight size={14} strokeWidth={2} />
+              </Link>
             </div>
           </div>
         </section>
