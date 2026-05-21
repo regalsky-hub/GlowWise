@@ -36,11 +36,8 @@ function ProtectedRoute({ children }) {
       </div>
     );
   }
-  if (!user) {
+if (!user) {
     return <Navigate to="/" replace />;
-  }
-  if (!profile?.onboarding_completed && !(checkIns?.length > 0)) {
-    return <Navigate to="/onboarding" replace />;
   }
   return children;
 }
