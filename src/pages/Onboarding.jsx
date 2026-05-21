@@ -119,37 +119,38 @@ export default function Onboarding() {
     let glowTypeDescription = '';
 
     if (stress >= 8) {
-      glowType = 'Stress-Driven Recovery';
-      glowTypeDescription = 'Your stress is high enough that it\'s likely affecting other areas. We\'ll start by helping you build calm into your daily routine — the rest will follow.';
+      glowType = 'The Sensitive Nurturer';
+      glowTypeDescription = 'You feel deeply and your nervous system needs protecting. Calm routines, soft transitions and quiet recovery time are your highest leverage habits.';
     } else if (sleep < 6) {
-      glowType = 'Sleep Restoration Focus';
-      glowTypeDescription = 'Sleep is foundational to everything else — energy, hormones, skin, brain. We\'ll prioritise rebuilding your sleep first.';
+      glowType = 'The Steady Bloomer';
+      glowTypeDescription = 'Sleep is your foundation. Small daily rituals and a consistent bedtime will unlock your energy, mood and focus more than anything else.';
     } else if (energy <= 4) {
-      glowType = 'Energy Rebuilding Path';
-      glowTypeDescription = 'Low energy can have many causes — sleep, stress, nutrition, hormones. We\'ll work systematically to identify what\'s draining you.';
+      glowType = 'The Resilient Achiever';
+      glowTypeDescription = 'You have deep reserves but a habit of overriding rest. Building recovery into your routine will unlock sustained energy without the crash.';
     } else if (priorities.includes('hormones') || priorities.includes('fertility')) {
-      glowType = 'Hormonal Balance Journey';
-      glowTypeDescription = 'Hormonal health affects everything from mood and skin to energy and metabolism. We\'ll track patterns connected to your lifestyle.';
+      glowType = 'The Steady Bloomer';
+      glowTypeDescription = 'Hormonal health thrives on rhythm and consistency. Predictable sleep, calm mornings and steady daily rituals are your most powerful tools.';
     } else if (priorities.includes('weight')) {
-      glowType = 'Body Composition Focus';
-      glowTypeDescription = 'Sustainable changes come from understanding your patterns — sleep, stress, nutrition and movement. We\'ll help you spot what\'s actually moving the needle.';
+      glowType = 'The Resilient Achiever';
+      glowTypeDescription = 'Sustainable body changes come from recovery as much as effort. Understanding your patterns — sleep, stress, movement — is what moves the needle.';
     } else if (priorities.includes('hair')) {
-      glowType = 'Hair Health Focus';
-      glowTypeDescription = 'Hair health reflects internal health. We\'ll look at the underlying factors — stress, nutrition, hormones — that affect your hair.';
+      glowType = 'The Steady Bloomer';
+      glowTypeDescription = 'Hair health reflects internal rhythm. Consistent sleep, stress management and nourishing rituals compound into real results over time.';
     } else if (priorities.includes('skin')) {
-      glowType = 'Skin Clarity Path';
-      glowTypeDescription = 'Skin issues often stem from inflammation, hormones, or gut health. We\'ll connect your daily patterns to what your skin is telling you.';
+      glowType = 'The Sensitive Nurturer';
+      glowTypeDescription = 'Your skin reflects your internal environment. Calm, consistency and reduced inflammation are the levers that create lasting skin clarity.';
     } else if (priorities.includes('gut')) {
-      glowType = 'Gut Health Reset';
-      glowTypeDescription = 'Gut health influences mood, skin, energy, and immunity. We\'ll help you identify foods and habits that support your digestion.';
+      glowType = 'The Intuitive Explorer';
+      glowTypeDescription = 'Your gut responds to intuitive, body-led choices. Learning to listen to your body\'s signals around food, rest and movement is your superpower.';
     } else if (priorities.includes('brain')) {
-      glowType = 'Brain & Focus Boost';
-      glowTypeDescription = 'Mental clarity depends on sleep, blood sugar, hydration, and stress. We\'ll work on the foundations that sharpen your thinking.';
+      glowType = 'The Energy Optimizer';
+      glowTypeDescription = 'Your mind thrives on novelty and variety. Fresh inputs, new movement and avoiding monotony keep your focus and mental clarity sharp.';
     } else if (priorities.includes('nutrition')) {
-      glowType = 'Nutrition Foundations';
-      glowTypeDescription = 'Food affects everything — energy, mood, skin, sleep. We\'ll help you build eating patterns that work for your body and your goals.';
+      glowType = 'The Intuitive Explorer';
+      glowTypeDescription = 'You thrive when eating feels body-led rather than rule-driven. Learning your personal patterns around food and energy is your path forward.';
     } else {
-      glowTypeDescription = 'You\'re in a good place overall. We\'ll help you spot patterns and fine-tune the areas that matter most to you.';
+      glowType = 'The Steady Bloomer';
+      glowTypeDescription = 'Small daily rituals compound into a deep, quiet bloom. Consistent mornings, predictable rhythms and gentle habits are your foundation for thriving.';
     }
 
     // Identify top 3 priority focus areas
