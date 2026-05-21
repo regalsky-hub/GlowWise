@@ -1007,8 +1007,7 @@ const Plan = () => (
       </div>
     </Link>
   </Card>
-);https://github.com/regalsky-hub/GlowWise/blob/main/src/pages/Dashboard.jsx
-
+);
 // ============ MICRO HABITS / CONSISTENCY CARDS ============
 const MicroHabits = ({ checkIns, profile }) => {
   const FF_DISPLAY = "'Fraunces', Georgia, serif";
