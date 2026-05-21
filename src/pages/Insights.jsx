@@ -403,20 +403,14 @@ export default function Insights() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
+                      fontFamily: "'Fraunces', serif",
+                      fontSize: '22px',
+                      fontStyle: 'italic',
+                      lineHeight: 1,
+                      color: p.tone === 'positive' ? '#557E64' : p.tone === 'warning' ? '#A85A3D' : '#A89968',
                     }}
                   >
-                    <Sparkles
-                      size={17}
-                      strokeWidth={1.8}
-                      style={{
-                        color:
-                          p.tone === 'positive'
-                            ? '#557E64'
-                            : p.tone === 'warning'
-                              ? '#A85A3D'
-                              : '#A89968',
-                      }}
-                    />
+                    "
                   </div>
                   <div>
                     <h3 className="display" style={{ fontSize: '22px', color: '#3D4A52', fontWeight: 500, marginBottom: '10px', lineHeight: 1.25 }}>
