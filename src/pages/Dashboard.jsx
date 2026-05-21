@@ -1187,7 +1187,7 @@ export default function Dashboard() {
       return Math.round((energy + sleep + stress + mood) / 4);
     })
     .reverse();
-  const displayWeekScores = weekScores.length > 0 ? weekScores : [62, 70, 65, 74, 71, 76, 78];
+  const displayWeekScores = weekScores.length >= 3 ? weekScores : [];
   const dailyGuidance = generateDailyGuidance(checkIns);
   if (loading) {
     return (
