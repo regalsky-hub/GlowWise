@@ -21,7 +21,28 @@ export default function WellnessPlan() {
 
   // ─── Action completion state ──────────────────────────────────────────────────
   const [completed, setCompleted] = useState({});
-  const toggle = (key) => setCompleted((prev) => ({ ...prev, [key]: !prev[key] }));
+const { updateProfile } = useUserData();
+
+const getWeekKey = () => {
+  const now = new Date();
+  const day = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((day + 6) % 7));
+  return `week_${monday.toISOString().split('T')[0]}`;
+};
+
+useEffect(() => {
+  const weekKey = getWeekKey();
+  const saved = profile?.[weekKey] || {};
+  setCompleted(saved);
+}, [profile]);
+
+const toggle = async (key) => {
+  const updated = { ...completed, [key]: !completed[key] };
+  setCompleted(updated);
+  const weekKey = getWeekKey();
+  await updateProfile({ [weekKey]: updated });
+};
 
   // ─── Color palette ────────────────────────────────────────────────────────────
   const C = {
