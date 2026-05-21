@@ -625,7 +625,41 @@ if (!scores || scores.length < 2) {
 };
 
 // ============ COACH ============
-const Coach = ({ name }) => (
+const Coach = ({ name, checkIns = [] }) => {
+  const recent = checkIns.slice(0, 3);
+  const avg = (field) => {
+    const vals = recent.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  };
+  const avgSleep = avg('sleep_hours');
+  const avgStress = avg('stress_level');
+  const avgEnergy = avg('energy');
+  const avgMood = avg('mood');
+  let observation, subtext;
+  if (recent.length === 0) {
+    observation = "Welcome to GlowWise. Your coach is ready when you are.";
+    subtext = "Complete your first check-in and your coach will start noticing patterns in how you feel — so you never have to explain yourself twice.";
+  } else if (recent.length < 3) {
+    observation = "Your coach is getting to know you.";
+    subtext = "A few more check-ins and GlowWise will start connecting the dots between your energy, sleep, stress, and mood patterns.";
+  } else if (avgSleep !== null && avgSleep < 6) {
+    observation = "Sleep has been the most active signal in your recent check-ins.";
+    subtext = "Protecting rest time this week could shift how your energy and mood feel. Your data suggests sleep is the highest leverage habit right now.";
+  } else if (avgStress !== null && avgStress > 7) {
+    observation = "Stress has been elevated across your recent check-ins.";
+    subtext = "Your nervous system may need more recovery than it is currently getting. Even small reductions in evening stimulation can compound quickly.";
+  } else if (avgEnergy !== null && avgMood !== null && avgEnergy < 5 && avgMood < 5) {
+    observation = "Energy and mood have both been lower lately — these often move together.";
+    subtext = "One small consistent habit could start to shift the pattern. Your coach is watching which habits make the biggest difference for you.";
+  } else if (avgSleep !== null && avgStress !== null && avgSleep >= 7 && avgStress <= 4) {
+    observation = "Sleep and stress are both in a healthy range right now.";
+    subtext = "This is a strong foundation. Focus on keeping these consistent and your energy and mood will follow naturally over time.";
+  } else {
+    observation = "Your patterns are beginning to stabilise across your recent check-ins.";
+    subtext = "Consistency is the most powerful tool you have right now. GlowWise is tracking which habits are making the biggest difference for you.";
+  }
+  return (
   <div
     className="gw-card-pad"
     style={{
@@ -643,6 +677,7 @@ const Coach = ({ name }) => (
       justifyContent: 'space-between',
       minHeight: '100%',
     }}
+  >
   >
     {/* Ambient Glow */}
     <div
