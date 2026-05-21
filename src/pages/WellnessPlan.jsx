@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUserData } from '../context/UserDataContext';
 import AppLayout from './AppLayout';
 import { Moon, CheckCircle, Circle, ChevronRight } from 'lucide-react';
