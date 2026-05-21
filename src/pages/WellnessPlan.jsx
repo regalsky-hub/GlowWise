@@ -73,13 +73,31 @@ const toggle = async (key) => {
   });
 
   // ─── Plan data ────────────────────────────────────────────────────────────────
-  const weekFocus = {
-    area: 'Sleep & Nervous System Recovery',
-    goal: 'Establish a consistent wind-down routine that supports deeper sleep and calmer mornings.',
-    why: 'Your check-ins show stress peaking in the evenings and broken sleep patterns mid-week. Addressing this first will have the biggest knock-on effect on your mood and energy.',
-    accent: '#7A5C77',
-    bg: C.plumBg,
+  const getWeekFocus = () => {
+    const priorities = profile?.focusAreas || profile?.wellness_priorities || [];
+    const top = priorities[0] || '';
+
+    const focusMap = {
+      'Sleep & Recovery':        { area: 'Sleep & Nervous System Recovery',    goal: 'Establish a consistent wind-down routine that supports deeper sleep and calmer mornings.',         why: 'Sleep is foundational — improving it will have the biggest knock-on effect on your energy, mood, and stress.',          accent: '#7A5C77', bg: C.plumBg },
+      'Stress & Anxiety':        { area: 'Stress & Nervous System Support',    goal: 'Build small daily habits that calm your nervous system and reduce stress accumulation.',           why: 'Sustained stress affects sleep, focus, hormones, and recovery. Addressing it first unlocks everything else.',           accent: '#557E64', bg: '#EDF4EF' },
+      'Energy & Fatigue':        { area: 'Energy & Recovery',                  goal: 'Identify and remove the main drains on your daily energy through consistent habits.',             why: 'Low energy often reflects sleep debt, blood sugar instability, or stress — we will work through each systematically.',   accent: '#A07E3D', bg: '#FAF3DC' },
+      'Hormonal Balance':        { area: 'Hormonal Balance & Rhythm',          goal: 'Support your hormonal health through consistent sleep, stress management, and nutrition timing.', why: 'Hormones affect everything from mood and skin to energy and metabolism. Consistency is the most powerful lever.',        accent: '#7A5C77', bg: C.plumBg },
+      'Hair & Scalp':            { area: 'Hair Health from the Inside Out',    goal: 'Focus on the internal factors — stress, nutrition, and sleep — that most affect hair health.',    why: 'Hair reflects internal health. Addressing root causes creates lasting change rather than surface fixes.',                accent: '#557E64', bg: '#EDF4EF' },
+      'Skin & Acne':             { area: 'Skin Clarity & Gut Connection',      goal: 'Support skin health through reducing inflammation, balancing stress, and improving gut health.',  why: 'Skin issues often reflect internal imbalances. Addressing these first creates clearer, more consistent results.',        accent: '#A85A3D', bg: '#F5DDD0' },
+      'Brain & Focus':           { area: 'Brain Health & Mental Clarity',      goal: 'Sharpen focus and reduce brain fog through sleep consistency, hydration, and stress reduction.',  why: 'Mental clarity depends on sleep quality, blood sugar stability, and nervous system recovery — all improvable.',           accent: '#557E64', bg: '#EDF4EF' },
+      'Gut & Digestion':         { area: 'Gut Health & Digestive Rhythm',      goal: 'Build eating and lifestyle habits that support a calmer, more consistent digestive system.',      why: 'Gut health influences mood, immunity, skin, and energy. Small consistent changes compound quickly.',                    accent: '#A07E3D', bg: '#FAF3DC' },
+    };
+
+    return focusMap[top] || {
+      area: 'Sleep & Nervous System Recovery',
+      goal: 'Establish a consistent wind-down routine that supports deeper sleep and calmer mornings.',
+      why: 'Sleep is foundational to everything else — energy, hormones, mood, and focus all improve when sleep does.',
+      accent: '#7A5C77',
+      bg: C.plumBg,
+    };
   };
+
+  const weekFocus = getWeekFocus();
 
   const actionPlan = [
     {
