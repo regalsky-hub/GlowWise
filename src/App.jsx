@@ -25,8 +25,7 @@ import ChoosePlan from './pages/ChoosePlan';
 // Protected Route Component
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  const { profile } = useUserData();
-
+  const { profile, checkIns } = useUserData();
   if (loading) {
     return (
       <div className="min-h-screen bg-glow-cream flex items-center justify-center">
@@ -37,15 +36,12 @@ function ProtectedRoute({ children }) {
       </div>
     );
   }
-
   if (!user) {
     return <Navigate to="/" replace />;
   }
-
-  if (!profile?.onboarding_completed) {
+  if (!profile?.onboarding_completed && !(checkIns?.length > 0)) {
     return <Navigate to="/onboarding" replace />;
   }
-
   return children;
 }
 
