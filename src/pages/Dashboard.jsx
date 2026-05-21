@@ -1141,11 +1141,13 @@ const MicroHabits = ({ checkIns, profile }) => {
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: card.accent, marginBottom: 14,
             }}>{card.eyebrow}</div>
-            <div style={{
-              fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 32,
+                        <div style={{
+              fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 'clamp(20px, 5vw, 32px)',
               color: card.text, marginBottom: 4,
               lineHeight: 1.1, letterSpacing: '-0.02em',
+              whiteSpace: 'nowrap',
             }}>{card.value}</div>
+
             <div style={{
               fontFamily: FF_UI, fontSize: 13, color: card.accent,
               fontWeight: 500, marginBottom: 10,
