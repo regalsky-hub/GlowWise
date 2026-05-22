@@ -852,6 +852,8 @@ if (selectedPlan === 'paid') {
       'Caregiver demands',
       'Shift work',
       'Lack of time',
+      'Working or living in isolation',
+      'Loneliness',
     ].map(trigger => {
       const triggers = data.stress_trigger_list || [];
       const selected = triggers.includes(trigger);
