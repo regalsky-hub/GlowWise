@@ -476,7 +476,7 @@ const Vitals = ({ today }) => (
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78], dates = [] }) => {
   // Validate scores
 if (!scores || scores.length < 2) {
-    const ghostScores = [52, 61, 57, 68, 64, 72, 75];
+    const ghostScores = [5, 6, 5.5, 7, 6.5, 7.5, 7.8];
     const ghostMin = Math.min(...ghostScores);
     const ghostMax = Math.max(...ghostScores);
     const ghostRange = ghostMax - ghostMin || 1;
