@@ -473,7 +473,7 @@ const Vitals = ({ today }) => (
 );
 
 // ============ WEEK CHART ============
-const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
+const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78], dates = [] }) => {
   // Validate scores
 if (!scores || scores.length < 1) {
     return (
@@ -517,13 +517,11 @@ if (!scores || scores.length < 1) {
   });
   
   // Generate day labels (proper Mon-Sun)
-  const today = new Date();
-  const dayLabels = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    dayLabels.push(d.toLocaleDateString('en-GB', { weekday: 'short' }));
-  }
+ const dayLabels = dates && dates.length === scores.length ? dates : scores.map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (scores.length - 1 - i));
+    return d.toLocaleDateString('en-GB', { weekday: 'short' });
+  });
   
   // Build SVG path
   const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
