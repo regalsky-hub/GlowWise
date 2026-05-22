@@ -501,7 +501,8 @@ if (!scores || scores.length < 2) {
           </div>
         </div>
         <div style={{ width: '100%', overflow: 'visible', position: 'relative' }}>
-          <svg width="100%" height="auto" viewBox={`0 0 ${gw} ${gh}`} style={{ display: 'block', minHeight: '180px', maxWidth: '100%', opacity: 0.18 }} preserveAspectRatio="xMidYMid meet">
+          <svg width="100%" height="auto" viewBox={`0 0 ${gw} ${gh}`} style={{ display: 'block', minHeight: '180px', maxWidth: '100%' }} preserveAspectRatio="xMidYMid meet">
+            <g opacity="0.18">
             <defs>
               <linearGradient id="ghostGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor={C.sageDark} stopOpacity="0.4" />
@@ -511,8 +512,18 @@ if (!scores || scores.length < 2) {
             <path d={ghostArea} fill="url(#ghostGrad)" />
             <path d={ghostLine} fill="none" stroke={C.sageDark} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="6 3" />
             {ghostPts.map((p, i) => (
-              <circle key={i} cx={p.x} cy={p.y} r={i === ghostPts.length - 1 ? 6 : 4} fill={C.sageDark} opacity={0.6} />
+              <circle key={i} cx={p.x} cy={p.y} r={i === ghostPts.length - 1 ? 6 : 4} fill={C.sageDark} />
             ))}
+            </g>
+            {scores && scores.length === 1 && (() => {
+              const realY = gpy + gch - ((scores[0] - ghostMin) / ghostRange) * gch;
+              return (
+                <g>
+                  <circle cx={gpx + gcw / 2} cy={realY} r={8} fill={C.terracotta} />
+                  <text x={gpx + gcw / 2} y={gpy + gch + 28} textAnchor="middle" fontSize="12" fontWeight="600" fontFamily={FF_UI} fill={C.mute}>Today</text>
+                </g>
+              );
+            })()}
           </svg>
         </div>
       </Card>
