@@ -22,6 +22,16 @@ import WellnessPlan from './pages/WellnessPlan';
 import GlowType from './pages/GlowType';
 import ChoosePlan from './pages/ChoosePlan';
 import ForgotPassword from './pages/ForgotPassword';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
