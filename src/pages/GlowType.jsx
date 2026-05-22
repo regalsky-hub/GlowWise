@@ -275,7 +275,7 @@ const Compass = ({ onSelect }) => {
                 <div style={{ ...eyebrow(C.mute), marginBottom: 14 }}>Hover a type</div>
                 <h4 style={{ ...display(20), margin: "0 0 14px", fontWeight: 500 }}>Where do you sit on the map?</h4>
                 <p style={{ ...bodyText(13.5), margin: 0, lineHeight: 1.7 }}>
-                  Most people lean toward one quadrant, but everyone has a blend. Your daily check-ins reveal exactly where your centre of gravity sits.
+                  Most people lean toward one quadrant, but everyone has a blend. Your starting type comes from onboarding and your daily check-ins sharpen it over time, sometimes shifting it as your rhythm changes.
                 </p>
               </>
             )}
@@ -438,7 +438,7 @@ export default function GlowTypes() {
               Everyone has a natural rhythm for thriving. Glow Types map how <em style={{ fontFamily: FF_DISPLAY, fontStyle: "italic", fontSize: 18 }}>you</em> function — your energy needs, your pace, what depletes you, and what compounds beautifully. Six honest patterns. No hierarchy.
             </p>
             <div className="gt-hero-stats" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-              {[{ n: "6", l: "Glow Types" }, { n: "5", l: "Check-ins to clarity" }, { n: "∞", l: "Ways to thrive" }].map((s, i) => (
+              {[{ n: "6", l: "Glow Types" }, { n: "5", l: "Check-ins to sharpen it" }, { n: "∞", l: "Ways to thrive" }].map((s, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span style={{ ...display(38), color: C.sageDark, lineHeight: 1 }}>{s.n}</span>
                   <span style={{ ...eyebrow(C.mute), fontSize: 10.5, maxWidth: 100, lineHeight: 1.4 }}>{s.l}</span>
