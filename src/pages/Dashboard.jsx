@@ -518,10 +518,7 @@ if (!scores || scores.length < 2) {
             {scores && scores.length === 1 && (() => {
               const realY = gpy + gch - ((scores[0] - ghostMin) / ghostRange) * gch;
               return (
-                <g>
-                  <circle cx={gpx + gcw / 2} cy={realY} r={8} fill={C.terracotta} />
-                  <text x={gpx + gcw / 2} y={gpy + gch + 28} textAnchor="middle" fontSize="12" fontWeight="600" fontFamily={FF_UI} fill={C.mute}>Today</text>
-                </g>
+                <circle cx={gpx + gcw / 2} cy={realY} r={8} fill={C.terracotta} />
               );
             })()}
           </svg>
