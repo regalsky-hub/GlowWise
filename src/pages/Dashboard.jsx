@@ -1268,7 +1268,7 @@ export default function Dashboard() {
                 alignItems: 'stretch',
               }}
             >
-              <WeekChart scores={displayWeekScores} />
+               <WeekChart scores={displayWeekScores} dates={weekDates} />
               <Coach name={firstName} checkIns={checkIns} />
             </div>
             <div className="gw-twocol" style={{
