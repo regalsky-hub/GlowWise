@@ -511,7 +511,9 @@ if (!scores || scores.length < 1) {
   
   // Calculate points
   const pts = scores.map((v, i) => {
-    const x = padX + (i / (scores.length - 1)) * chartW;
+    const x = scores.length === 1
+      ? padX + chartW / 2
+      : padX + (i / (scores.length - 1)) * chartW;
     const y = padY + chartH - ((v - min) / range) * chartH;
     return { x, y, v };
   });
