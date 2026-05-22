@@ -512,7 +512,7 @@ export default function GlowTypes() {
             <div style={{ position: "absolute", width: 280, height: 280, borderRadius: "50%", background: "rgba(107,158,127,0.10)", filter: "blur(70px)", top: -100, right: -60 }}/>
             <Watermark size={360} style={{ bottom: -130, right: -20 }}/>
             <div style={{ position: "relative", zIndex: 2, maxWidth: 640, margin: "0 auto" }}>
-              <div style={{ ...eyebrow(C.sageDark), marginBottom: 20 }}>Your type <em style={{ fontStyle: "italic" }}>deepens with every check-in</em>.</div>
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 20 }}>Your type deepens with every check-in.</div>
              <h2 className="gt-closing-title" style={{ ...display(40), margin: "0 0 22px", lineHeight: 1.15 }}>
                 You already have a <em style={{ fontStyle: "italic", color: C.sage }}>starting type</em>.
               </h2>
