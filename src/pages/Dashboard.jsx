@@ -1217,7 +1217,13 @@ export default function Dashboard() {
     mood: 8,
   };
   const score = glowScore || 78;
-  const recentCheckIns = checkIns.slice(0, 7).reverse();
+  const recentCheckIns = [...checkIns]
+    .sort((a, b) => {
+      const dateA = a.created_at?.toDate?.() || new Date(a.date || a.created_at);
+      const dateB = b.created_at?.toDate?.() || new Date(b.date || b.created_at);
+      return dateA - dateB;
+    })
+    .slice(-7);
   const weekScores = recentCheckIns.map(c => {
     const energy = c.energy || 0;
     const sleep = (c.sleep_hours || 0) / 9 * 10;
