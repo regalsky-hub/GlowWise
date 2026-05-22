@@ -475,7 +475,7 @@ const Vitals = ({ today }) => (
 // ============ WEEK CHART ============
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78], dates = [] }) => {
   // Validate scores
-if (!scores || scores.length < 1) {
+if (!scores || scores.length < 2) {
     return (
       <Card>
         <div style={{ marginBottom: 16 }}>
@@ -1272,7 +1272,7 @@ export default function Dashboard() {
                 gridTemplateColumns: '1.15fr 1fr',
                 gap: 20,
                 marginBottom: 28,
-                alignItems: 'start',
+                alignItems: 'stretch',
               }}
             >
                <WeekChart scores={displayWeekScores} dates={weekDates} />
