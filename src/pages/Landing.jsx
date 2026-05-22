@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Globe, Menu, X, Check, ArrowRight, Plus, Minus } from 'lucide-react';
 import { db } from '../config/firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
 function AnimatedCoachDemo() {
   const conversations = [
