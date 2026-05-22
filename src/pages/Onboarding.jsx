@@ -62,6 +62,7 @@ export default function Onboarding() {
     supplements: '',
     // Lifestyle
     exercise_per_week: 3,
+    exercise_social: '',
     water_intake: 2,
     // Health context
     health_context: '',
@@ -947,6 +948,28 @@ if (selectedPlan === 'paid') {
                   <p style={{ fontSize: '12px', color: '#A89968', marginTop: '10px' }}>
                     Counts walking, dancing, gym, sports, yoga, swimming, cycling — anything that gets you moving.
                   </p>
+                </div>
+                <div>
+                  <label className="eyebrow" style={{ display: 'block', marginBottom: '14px' }}>When you move, do you prefer company? (optional)</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      { id: 'alone', label: 'On my own', desc: 'I prefer solo movement and quiet focus' },
+                      { id: 'with-others', label: 'With others', desc: 'Classes, friends, shared activity energise me' },
+                      { id: 'mix', label: 'A mix of both', desc: 'Depends on the day and my mood' },
+                    ].map(opt => (
+                      <button
+                        key={opt.id}
+                        onClick={() => setData(prev => ({ ...prev, exercise_social: opt.id }))}
+                        className={`choice-card ${data.exercise_social === opt.id ? 'selected' : ''}`}
+                      >
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{opt.label}</div>
+                          <div style={{ fontSize: '12px', color: '#A89968', marginTop: '2px', fontWeight: 400 }}>{opt.desc}</div>
+                        </div>
+                        {data.exercise_social === opt.id && <Check size={18} strokeWidth={2} style={{ color: '#6B9E7F' }} />}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
