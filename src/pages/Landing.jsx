@@ -205,13 +205,9 @@ export default function Landing() {
       return;
     }
     try {
-      const q = query(collection(db, 'subscribers'), where('email', '==', subscribeEmail));
-      const existing = await getDocs(q);
-      if (!existing.empty) {
-        setSubscribeStatus('already');
-        return;
-      }
-      await addDoc(collection(db, 'subscribers'), {
+      const { doc, setDoc } = await import('firebase/firestore');
+      const emailKey = subscribeEmail.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      await setDoc(doc(db, 'subscribers', emailKey), {
         email: subscribeEmail,
         subscribed_at: new Date(),
         source: 'landing_footer',
