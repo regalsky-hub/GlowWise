@@ -1219,17 +1219,18 @@ export default function Dashboard() {
     mood: 8,
   };
   const score = glowScore || 78;
-  const weekScores = checkIns
-    .slice(0, 7)
-    .reverse()
-    .map(c => {
-      const energy = c.energy || 0;
-      const sleep = (c.sleep_hours || 0) / 9 * 10;
-      const stress = 10 - (c.stress_level || 0);
-      const mood = c.mood || 0;
-      return Math.round((energy + sleep + stress + mood) / 4);
-    })
-    .reverse();
+  const recentCheckIns = checkIns.slice(0, 7).reverse();
+  const weekScores = recentCheckIns.map(c => {
+    const energy = c.energy || 0;
+    const sleep = (c.sleep_hours || 0) / 9 * 10;
+    const stress = 10 - (c.stress_level || 0);
+    const mood = c.mood || 0;
+    return Math.round((energy + sleep + stress + mood) / 4);
+  });
+  const weekDates = recentCheckIns.map(c => {
+    const d = c.created_at?.toDate?.() || new Date(c.date || c.created_at);
+    return d.toLocaleDateString('en-GB', { weekday: 'short' });
+  });
   const displayWeekScores = weekScores.length >= 1 ? weekScores : [];
   const dailyGuidance = generateDailyGuidance(checkIns);
   if (loading) {
