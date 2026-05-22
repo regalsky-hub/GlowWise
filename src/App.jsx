@@ -72,6 +72,7 @@ function AppRoutes() {
       <Route path="/choose-plan" element={<ChoosePlan />} />
       <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />  
 
       {/* Protected Routes */}
       <Route
