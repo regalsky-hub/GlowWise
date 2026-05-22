@@ -437,11 +437,11 @@ export default function GlowTypes() {
             <p style={{ ...bodyText(17), lineHeight: 1.8, maxWidth: 620, margin: "0 auto 32px" }}>
               Everyone has a natural rhythm for thriving. Glow Types map how <em style={{ fontFamily: FF_DISPLAY, fontStyle: "italic", fontSize: 18 }}>you</em> function — your energy needs, your pace, what depletes you, and what compounds beautifully. Six honest patterns. No hierarchy.
             </p>
-            <div className="gt-hero-stats" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+            <div className="gt-hero-stats" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "stretch", justifyContent: "center" }}>
               {[{ n: "6", l: "Glow Types" }, { n: "5", l: "Check-ins to sharpen it" }, { n: "∞", l: "Ways to thrive" }].map((s, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <span style={{ ...display(38), color: C.sageDark, lineHeight: 1 }}>{s.n}</span>
-                  <span style={{ ...eyebrow(C.mute), fontSize: 10.5, maxWidth: 100, lineHeight: 1.4 }}>{s.l}</span>
+                  <span style={{ ...eyebrow(C.mute), fontSize: 10.5, width: 84, lineHeight: 1.5 }}>{s.l}</span>
                   {i < 2 && <span style={{ width: 1, height: 28, background: C.line, marginLeft: 18 }}/>}
                 </div>
               ))}
