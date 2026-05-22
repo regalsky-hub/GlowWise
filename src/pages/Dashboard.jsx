@@ -1271,7 +1271,7 @@ export default function Dashboard() {
                 gridTemplateColumns: '1.15fr 1fr',
                 gap: 20,
                 marginBottom: 28,
-                alignItems: 'stretch',
+                alignItems: 'start',
               }}
             >
                <WeekChart scores={displayWeekScores} dates={weekDates} />
