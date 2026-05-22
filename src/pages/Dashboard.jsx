@@ -676,6 +676,8 @@ const Coach = ({ name, checkIns = [] }) => {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
+      height: '100%',
+      boxSizing: 'border-box',
     }}
   >
     {/* Ambient Glow */}
