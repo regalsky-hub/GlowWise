@@ -564,7 +564,7 @@ if (!scores || scores.length < 1) {
             viewBox={`0 0 ${w} ${h}`}
             style={{ 
               display: 'block',
-              minHeight: '220px',
+              minHeight: '160px',
               maxWidth: '100%'
             }}
             preserveAspectRatio="xMidYMid meet"
