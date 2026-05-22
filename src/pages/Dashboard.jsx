@@ -475,7 +475,7 @@ const Vitals = ({ today }) => (
 // ============ WEEK CHART ============
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78] }) => {
   // Validate scores
-if (!scores || scores.length < 2) {
+if (!scores || scores.length < 1) {
     return (
       <Card>
         <div style={{ marginBottom: 16 }}>
@@ -1230,7 +1230,7 @@ export default function Dashboard() {
       return Math.round((energy + sleep + stress + mood) / 4);
     })
     .reverse();
-  const displayWeekScores = weekScores.length >= 3 ? weekScores : [];
+  const displayWeekScores = weekScores.length >= 1 ? weekScores : [];
   const dailyGuidance = generateDailyGuidance(checkIns);
   if (loading) {
     return (
