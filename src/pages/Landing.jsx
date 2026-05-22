@@ -1118,6 +1118,8 @@ onMouseLeave={(e) => { e.currentTarget.style.background = '#FAF8F5'; e.currentTa
                 <input
                   type="email"
                   placeholder="your@email.com"
+                  value={subscribeEmail}
+                  onChange={(e) => { setSubscribeEmail(e.target.value); setSubscribeStatus(''); }}
                   style={{
                     flex: 1,
                     background: 'rgba(250, 248, 245, 0.08)',
@@ -1130,18 +1132,29 @@ onMouseLeave={(e) => { e.currentTarget.style.background = '#FAF8F5'; e.currentTa
                     outline: 'none',
                   }}
                 />
-                <button style={{
-                  background: '#6B9E7F',
-                  color: '#FAF8F5',
-                  border: 'none',
-                  borderRadius: '100px',
-                  padding: '10px 18px',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  fontFamily: "'Manrope', sans-serif",
-                }}>Subscribe</button>
+                <button
+                  onClick={handleSubscribe}
+                  style={{
+                    background: '#6B9E7F',
+                    color: '#FAF8F5',
+                    border: 'none',
+                    borderRadius: '100px',
+                    padding: '10px 18px',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    fontFamily: "'Manrope', sans-serif",
+                  }}>Subscribe</button>
               </div>
+              {subscribeStatus === 'success' && (
+                <p style={{ fontSize: '12px', color: '#6B9E7F', marginTop: '8px' }}>You're in! Monthly wellness insights coming your way.</p>
+              )}
+              {subscribeStatus === 'already' && (
+                <p style={{ fontSize: '12px', color: '#A89968', marginTop: '8px' }}>You're already subscribed.</p>
+              )}
+              {subscribeStatus === 'error' && (
+                <p style={{ fontSize: '12px', color: '#C97B5C', marginTop: '8px' }}>Please enter a valid email address.</p>
+              )}
             </div>
           </div>
 
