@@ -196,6 +196,32 @@ export default function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+  const [subscribeStatus, setSubscribeStatus] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!subscribeEmail || !subscribeEmail.includes('@')) {
+      setSubscribeStatus('error');
+      return;
+    }
+    try {
+      const q = query(collection(db, 'subscribers'), where('email', '==', subscribeEmail));
+      const existing = await getDocs(q);
+      if (!existing.empty) {
+        setSubscribeStatus('already');
+        return;
+      }
+      await addDoc(collection(db, 'subscribers'), {
+        email: subscribeEmail,
+        subscribed_at: new Date(),
+        source: 'landing_footer',
+      });
+      setSubscribeStatus('success');
+      setSubscribeEmail('');
+    } catch (err) {
+      setSubscribeStatus('error');
+    }
+  };
 
   useEffect(() => {
     // Inject Google Fonts (Fraunces + Manrope) once on mount
