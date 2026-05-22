@@ -74,6 +74,7 @@ const responsiveCSS = `
     .gw-header-h1 { font-size: 26px !important; }
     .gw-score-ring { width: 160px !important; height: 160px !important; }
     .gw-score-text { font-size: 40px !important; }
+    .gw-consistency-grid { grid-template-columns: 1fr !important; }
   }
 `;
 
@@ -1128,7 +1129,7 @@ const MicroHabits = ({ checkIns, profile }) => {
           lineHeight: 1.1, letterSpacing: '-0.02em', color: '#3D4A52', margin: 0,
         }}>What you've been building</h3>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }} className="gw-consistency-grid">
         {cards.map((card, i) => (
           <div key={i} style={{
             background: card.bg,
