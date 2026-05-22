@@ -275,7 +275,7 @@ const Compass = ({ onSelect }) => {
                 <div style={{ ...eyebrow(C.mute), marginBottom: 14 }}>Hover a type</div>
                 <h4 style={{ ...display(20), margin: "0 0 14px", fontWeight: 500 }}>Where do you sit on the map?</h4>
                 <p style={{ ...bodyText(13.5), margin: 0, lineHeight: 1.7 }}>
-                  Most people lean toward one quadrant, but everyone has a blend. Your starting type comes from onboarding and your daily check-ins sharpen it over time, sometimes shifting it as your rhythm changes.
+                  Most people lean toward one quadrant, but everyone has a blend. Your starting type comes from onboarding — and your daily check-ins sharpen it over time, sometimes shifting it as your rhythm changes.
                 </p>
               </>
             )}
@@ -512,12 +512,12 @@ export default function GlowTypes() {
             <div style={{ position: "absolute", width: 280, height: 280, borderRadius: "50%", background: "rgba(107,158,127,0.10)", filter: "blur(70px)", top: -100, right: -60 }}/>
             <Watermark size={360} style={{ bottom: -130, right: -20 }}/>
             <div style={{ position: "relative", zIndex: 2, maxWidth: 640, margin: "0 auto" }}>
-              <div style={{ ...eyebrow(C.sageDark), marginBottom: 20 }}>Your rhythm becomes <em style={{ fontStyle: "italic" }}>clearer with time</em>.</div>
-              <h2 className="gt-closing-title" style={{ ...display(40), margin: "0 0 22px", lineHeight: 1.15 }}>
-                Your type is <em style={{ fontStyle: "italic", color: C.sage }}>five check-ins</em> away.
+              <div style={{ ...eyebrow(C.sageDark), marginBottom: 20 }}>Your type <em style={{ fontStyle: "italic" }}>deepens with every check-in</em>.</div>
+             <h2 className="gt-closing-title" style={{ ...display(40), margin: "0 0 22px", lineHeight: 1.15 }}>
+                You already have a <em style={{ fontStyle: "italic", color: C.sage }}>starting type</em>.
               </h2>
               <p style={{ ...bodyText(15.5), maxWidth: 520, margin: "0 auto 30px", lineHeight: 1.8 }}>
-                Gentle check-ins reveal the patterns behind your energy, emotions, recovery, and growth.
+                Your Glow Type begins with your onboarding answers. Each gentle check-in sharpens it — and as your habits and rhythm shift, your type can evolve with you.
               </p>
               <button onClick={() => navigate('/checkin')} style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
