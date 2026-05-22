@@ -476,23 +476,44 @@ const Vitals = ({ today }) => (
 const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78], dates = [] }) => {
   // Validate scores
 if (!scores || scores.length < 2) {
+    const ghostScores = [52, 61, 57, 68, 64, 72, 75];
+    const ghostMin = Math.min(...ghostScores);
+    const ghostMax = Math.max(...ghostScores);
+    const ghostRange = ghostMax - ghostMin || 1;
+    const gw = 500, gh = 250, gpx = 40, gpy = 40;
+    const gcw = gw - gpx * 2;
+    const gch = gh - gpy * 2 - 30;
+    const ghostPts = ghostScores.map((v, i) => ({
+      x: gpx + (i / (ghostScores.length - 1)) * gcw,
+      y: gpy + gch - ((v - ghostMin) / ghostRange) * gch,
+    }));
+    const ghostLine = ghostPts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    const ghostArea = `${ghostLine} L ${ghostPts[ghostPts.length - 1].x} ${gpy + gch} L ${ghostPts[0].x} ${gpy + gch} Z`;
     return (
       <Card>
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
-          <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
-        </div>
-        <div style={{
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          padding: '40px 24px', textAlign: 'center', gap: 12,
-        }}>
-          <div style={{ fontFamily: FF_DISPLAY, fontSize: 22, color: C.ink, fontStyle: 'italic' }}>
-            Your trend is taking shape.
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
+            <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
           </div>
-          <p style={{ ...bodyText(14), maxWidth: 300, color: C.body }}>
-            Check in for a few more days and your glow trend will appear here.
-          </p>
+          <div style={{ fontFamily: FF_UI, fontSize: 11, color: C.mute, fontStyle: 'italic' }}>
+            Check in to reveal your trend
+          </div>
+        </div>
+        <div style={{ width: '100%', overflow: 'visible', position: 'relative' }}>
+          <svg width="100%" height="auto" viewBox={`0 0 ${gw} ${gh}`} style={{ display: 'block', minHeight: '180px', maxWidth: '100%', opacity: 0.18 }} preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="ghostGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={C.sageDark} stopOpacity="0.4" />
+                <stop offset="100%" stopColor={C.sageDark} stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d={ghostArea} fill="url(#ghostGrad)" />
+            <path d={ghostLine} fill="none" stroke={C.sageDark} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="6 3" />
+            {ghostPts.map((p, i) => (
+              <circle key={i} cx={p.x} cy={p.y} r={i === ghostPts.length - 1 ? 6 : 4} fill={C.sageDark} opacity={0.6} />
+            ))}
+          </svg>
         </div>
       </Card>
     );
