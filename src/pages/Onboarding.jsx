@@ -103,73 +103,125 @@ export default function Onboarding() {
     });
   };
 
-  // ============================
-  // Enhanced Glow Type calculation
-  // Creates a richer personalisation profile
-  // ============================
+  // ============================================================
+  // Glow Type — scoring engine
+  // Every type accumulates points from the onboarding profile.
+  // Highest score wins. All six types are reachable.
+  // Ties are broken by the TYPE_PRIORITY order below.
+  // This is the STARTING type — it re-evaluates after 5+ check-ins.
+  // ============================================================
   const generatePersonalisedProfile = (formData) => {
-    const priorities = formData.wellness_priorities;
+    const priorities = formData.wellness_priorities || [];
+    const triggers = formData.stress_trigger_list || [];
     const stress = formData.stress_level;
     const sleep = formData.sleep_hours;
     const energy = formData.energy_level;
     const exercise = formData.exercise_per_week;
     const water = formData.water_intake;
+    const social = formData.exercise_social;
+    const diet = formData.diet_type;
 
-    // Determine primary Glow Type (more nuanced than Haiku's version)
-    let glowType = 'Balanced Wellness Glow';
-    let glowTypeDescription = '';
+    // Score each type
+    const scores = {
+      bloomer: 0,
+      optimizer: 0,
+      nurturer: 0,
+      achiever: 0,
+      explorer: 0,
+      connector: 0,
+    };
 
-    if (stress >= 8) {
-      glowType = 'The Sensitive Nurturer';
-      glowTypeDescription = 'You feel deeply and your nervous system needs protecting. Calm routines, soft transitions and quiet recovery time are your highest leverage habits.';
-    } else if (sleep < 6) {
-      glowType = 'The Steady Bloomer';
-      glowTypeDescription = 'Sleep is your foundation. Small daily rituals and a consistent bedtime will unlock your energy, mood and focus more than anything else.';
-    } else if (energy <= 4) {
-      glowType = 'The Resilient Achiever';
-      glowTypeDescription = 'You have deep reserves but a habit of overriding rest. Building recovery into your routine will unlock sustained energy without the crash.';
-    } else if (priorities.includes('hormones') || priorities.includes('fertility')) {
-      glowType = 'The Steady Bloomer';
-      glowTypeDescription = 'Hormonal health thrives on rhythm and consistency. Predictable sleep, calm mornings and steady daily rituals are your most powerful tools.';
-    } else if (priorities.includes('weight')) {
-      glowType = 'The Resilient Achiever';
-      glowTypeDescription = 'Sustainable body changes come from recovery as much as effort. Understanding your patterns — sleep, stress, movement — is what moves the needle.';
-    } else if (priorities.includes('hair')) {
-      glowType = 'The Steady Bloomer';
-      glowTypeDescription = 'Hair health reflects internal rhythm. Consistent sleep, stress management and nourishing rituals compound into real results over time.';
-    } else if (priorities.includes('skin')) {
-      glowType = 'The Sensitive Nurturer';
-      glowTypeDescription = 'Your skin reflects your internal environment. Calm, consistency and reduced inflammation are the levers that create lasting skin clarity.';
-    } else if (priorities.includes('gut')) {
-      glowType = 'The Intuitive Explorer';
-      glowTypeDescription = 'Your gut responds to intuitive, body-led choices. Learning to listen to your body\'s signals around food, rest and movement is your superpower.';
-    } else if (priorities.includes('brain')) {
-      glowType = 'The Energy Optimizer';
-      glowTypeDescription = 'Your mind thrives on novelty and variety. Fresh inputs, new movement and avoiding monotony keep your focus and mental clarity sharp.';
-    } else if (priorities.includes('nutrition')) {
-      glowType = 'The Intuitive Explorer';
-      glowTypeDescription = 'You thrive when eating feels body-led rather than rule-driven. Learning your personal patterns around food and energy is your path forward.';
-    } else {
-      glowType = 'The Steady Bloomer';
-      glowTypeDescription = 'Small daily rituals compound into a deep, quiet bloom. Consistent mornings, predictable rhythms and gentle habits are your foundation for thriving.';
+    // The Steady Bloomer — rhythm and consistency
+    if (priorities.includes('hormones')) scores.bloomer += 3;
+    if (priorities.includes('fertility')) scores.bloomer += 3;
+    if (priorities.includes('hair')) scores.bloomer += 3;
+    if (priorities.includes('sleep')) scores.bloomer += 2;
+    if (sleep < 6) scores.bloomer += 3;
+
+    // The Energy Optimizer — variety and novelty
+    if (priorities.includes('energy')) scores.optimizer += 3;
+    if (priorities.includes('brain')) scores.optimizer += 3;
+    if (energy >= 7) scores.optimizer += 2;
+
+    // The Sensitive Nurturer — sensitivity and calm
+    if (priorities.includes('skin')) scores.nurturer += 3;
+    if (priorities.includes('stress')) scores.nurturer += 2;
+    if (stress >= 8) scores.nurturer += 3;
+    if (triggers.includes('Relationships')) scores.nurturer += 2;
+    if (triggers.includes('Caregiver demands')) scores.nurturer += 2;
+    if (triggers.includes('Mentally overloaded')) scores.nurturer += 2;
+
+    // The Resilient Achiever — big goals, deep reserves
+    if (priorities.includes('weight')) scores.achiever += 3;
+    if (exercise >= 5) scores.achiever += 3;
+    if (triggers.includes('Work pressure')) scores.achiever += 2;
+    if (energy <= 4) scores.achiever += 2;
+
+    // The Intuitive Explorer — body-led, dislikes rigid plans
+    if (priorities.includes('gut')) scores.explorer += 3;
+    if (priorities.includes('nutrition')) scores.explorer += 3;
+    if (diet === 'specific') scores.explorer += 2;
+
+    // The Community Connector — blooms with others
+    if (social === 'with-others') scores.connector += 3;
+    if (triggers.includes('Working or living in isolation')) scores.connector += 3;
+    if (triggers.includes('Loneliness')) scores.connector += 3;
+
+    // Pick the winner — ties broken by this order
+    const TYPE_PRIORITY = ['nurturer', 'achiever', 'connector', 'explorer', 'optimizer', 'bloomer'];
+    let winner = 'bloomer';
+    let best = -1;
+    for (const id of TYPE_PRIORITY) {
+      if (scores[id] > best) { best = scores[id]; winner = id; }
     }
+    // If nothing scored at all, fall back to Steady Bloomer
+    if (best === 0) winner = 'bloomer';
 
-    // Identify top 3 priority focus areas
+    const TYPE_LIBRARY = {
+      bloomer: {
+        name: 'The Steady Bloomer',
+        description: 'Routine is your soil. Small daily rituals — consistent sleep, calm mornings, repeated habits — compound into a deep, quiet bloom. Rhythm unlocks your energy, mood and focus more than anything else.',
+      },
+      optimizer: {
+        name: 'The Energy Optimizer',
+        description: 'You thrive on variety and novelty — monotony dims you. Fresh movement, new routines and avoiding repetitive days keep your energy and mental clarity sharp.',
+      },
+      nurturer: {
+        name: 'The Sensitive Nurturer',
+        description: 'You feel deeply, and your nervous system needs protecting. Calm routines, soft transitions and quiet recovery time are your highest-leverage habits.',
+      },
+      achiever: {
+        name: 'The Resilient Achiever',
+        description: 'You have deep reserves and big goals — and a habit of overriding rest. Building recovery into your routine unlocks sustained energy without the crash.',
+      },
+      explorer: {
+        name: 'The Intuitive Explorer',
+        description: 'You thrive when wellness feels body-led rather than rule-driven. Learning to listen to your own signals around food, rest and movement is your superpower.',
+      },
+      connector: {
+        name: 'The Community Connector',
+        description: 'You bloom in the company of others — shared movement, accountability and connection energise you. Building wellness around people, not solitude, is what makes it stick.',
+      },
+    };
+
+    const glowType = TYPE_LIBRARY[winner].name;
+    const glowTypeDescription = TYPE_LIBRARY[winner].description;
+
+    // Top focus areas from selected priorities
     const focusAreas = priorities.length > 0
       ? priorities.map(id => WELLNESS_TOPICS.find(t => t.id === id)?.label).filter(Boolean)
       : ['Overall wellness'];
 
-    // Generate immediate action recommendations
+    // Immediate wellness actions — real actions, never meta-actions
     const immediateActions = [];
-    if (sleep < 7) immediateActions.push('Aim for 7+ hours of sleep');
-    if (stress >= 7) immediateActions.push('Add a 5-minute calm break each day');
-    if (water < 2) immediateActions.push('Increase water intake to 2L+ daily');
-    if (exercise < 3) immediateActions.push('Add 2 short walks per week');
-    if (immediateActions.length === 0) immediateActions.push('Stay consistent with daily check-ins');
-    if (immediateActions.length < 3) immediateActions.push('Track patterns over the next 7 days');
+    if (sleep < 7) immediateActions.push('Aim for 7+ hours of sleep tonight');
+    if (stress >= 7) immediateActions.push('Take one 5-minute calm break today');
+    if (water < 2) immediateActions.push('Drink a glass of water before each meal');
+    if (exercise < 3) immediateActions.push('Add a 10-minute walk to your day');
+    if (immediateActions.length === 0) immediateActions.push('Step outside for 10 minutes of daylight');
+    if (immediateActions.length < 3) immediateActions.push('Eat a protein-rich breakfast tomorrow');
 
-    // Build the AI Coach context — this gets fed to OpenAI as part of the system prompt
-    // so the AI actually uses this profile in conversations
+    // AI Coach context — fed to OpenAI as part of the system prompt
     const aiContext = {
       name: formData.name || 'there',
       age: formData.age,
@@ -184,7 +236,7 @@ export default function Onboarding() {
         diet: formData.diet_type,
       },
       bodySignals: formData.body_signals || 'None reported',
-      stressTriggers: formData.stress_triggers || 'Not specified',
+      stressTriggers: (formData.stress_trigger_list || []).join(', ') || 'Not specified',
       supplements: formData.supplements || 'None reported',
       healthContext: formData.health_context || 'None disclosed',
       medications: formData.medications || 'None disclosed',
