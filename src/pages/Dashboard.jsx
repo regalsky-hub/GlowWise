@@ -1303,10 +1303,18 @@ export default function Dashboard() {
             </div>
             <Vitals today={today} />
             <MicroHabits checkIns={checkIns} profile={profile} />
-              <div style={{ marginBottom: 28, maxWidth: 720, width: '100%' }}>
+              <div className="gw-twocol" style={{
+              display: 'grid', gridTemplateColumns: '1.2fr 1fr',
+              gap: 20, marginBottom: 28, alignItems: 'start',
+            }}>
               <WeekChart scores={displayWeekScores} dates={weekDates} />
+              <Plan />
             </div>
-            <div style={{ marginBottom: 28 }}>
+            <div className="gw-twocol" style={{
+              display: 'grid', gridTemplateColumns: '1.2fr 1fr',
+              gap: 20, marginBottom: 28, alignItems: 'start',
+            }}>
+              <WeekChart scores={displayWeekScores} dates={weekDates} />
               <Plan />
             </div>
             <div className="gw-mobile-photo-banner" style={{
