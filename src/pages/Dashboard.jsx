@@ -1310,13 +1310,6 @@ export default function Dashboard() {
               <WeekChart scores={displayWeekScores} dates={weekDates} />
               <Plan />
             </div>
-            <div className="gw-twocol" style={{
-              display: 'grid', gridTemplateColumns: '1.2fr 1fr',
-              gap: 20, marginBottom: 28, alignItems: 'start',
-            }}>
-              <WeekChart scores={displayWeekScores} dates={weekDates} />
-              <Plan />
-            </div>
             <div className="gw-mobile-photo-banner" style={{
               display: 'none',
               padding: '16px 14px',
