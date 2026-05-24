@@ -1295,17 +1295,8 @@ export default function Dashboard() {
             <Vitals today={today} />
             <MicroHabits checkIns={checkIns} profile={profile} />
             <div
-              className="gw-twocol"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1.15fr 1fr',
-                gap: 20,
-                marginBottom: 28,
-                alignItems: 'stretch',
-              }}
-            >
-               <WeekChart scores={displayWeekScores} dates={weekDates} />
-              <Coach name={firstName} checkIns={checkIns} />
+              <div style={{ marginBottom: 28 }}>
+              <WeekChart scores={displayWeekScores} dates={weekDates} />
             </div>
             <div className="gw-twocol" style={{
               display: 'grid', gridTemplateColumns: '1fr 1.4fr',
