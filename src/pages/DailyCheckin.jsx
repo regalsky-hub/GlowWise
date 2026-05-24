@@ -236,7 +236,7 @@ export default function DailyCheckin() {
                 color: '#557E64',
               }}
             >
-              Daily check-in
+              Today
             </div>
 
             <h1
@@ -249,11 +249,11 @@ export default function DailyCheckin() {
                 maxWidth: '700px',
               }}
             >
-              Your daily wellness{' '}
+              How are you{' '}
               <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>
-                ritual
+                feeling
               </em>
-              {' '}starts here.
+              {' '}today?
             </h1>
 
             <p
