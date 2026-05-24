@@ -313,7 +313,7 @@ const Header = ({ name, onLogout }) => {
   <LogOut size={16} strokeWidth={1.6} color={C.mute} />
 </button>
         <Link to="/checkin" style={btnPrimary}>
-          <Plus size={14} strokeWidth={2} /> New check-in
+          <Plus size={14} strokeWidth={2} /> Today's check-in
         </Link>
       </div>
     </div>
