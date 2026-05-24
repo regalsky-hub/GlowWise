@@ -328,10 +328,9 @@ const getGlowStatus = (score) => {
   return { label: 'Recovering', color: C.terracotta };
 };
 
-const HeroFocus = ({ score = 78, guidance }) => {
+const HeroFocus = ({ score = 78, guidance, name = 'there' }) => {
   const { label: statusLabel, color: statusColor } = getGlowStatus(score);
 
-  // Fallback text if guidance hasn't loaded yet
   const headline = guidance || {
     headlineStart: 'Your patterns are steady.',
     headlineEm:    'A good day to build',
@@ -344,14 +343,14 @@ const HeroFocus = ({ score = 78, guidance }) => {
       position: 'relative', overflow: 'hidden',
       padding: '52px 48px',
       borderRadius: 28,
-      background: 'linear-gradient(135deg, rgba(107,158,127,0.18) 0%, rgba(237,226,236,0.55) 100%)',
-      border: '1px solid rgba(107,158,127,0.10)',
+      background: 'linear-gradient(135deg, rgba(107,158,127,0.20) 0%, rgba(237,226,236,0.55) 100%)',
+      border: '1px solid rgba(107,158,127,0.12)',
       boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
       marginBottom: 28,
     }}>
       <div style={{
         position: 'absolute', width: 320, height: 320, borderRadius: '50%',
-        background: 'rgba(107,158,127,0.12)', filter: 'blur(70px)',
+        background: 'rgba(107,158,127,0.14)', filter: 'blur(70px)',
         top: -120, right: -80,
       }} />
       <div className="gw-hero-grid" style={{
@@ -359,28 +358,39 @@ const HeroFocus = ({ score = 78, guidance }) => {
         gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
       }}>
         <div>
-          <div style={{ ...eyebrow(C.sageDark), marginBottom: 16 }}>Today's focus</div>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+          }}>
+            <Orbit size={22} color={C.sageDark} tail={C.sage} accent={C.terracottaMid} />
+            <div style={{ ...eyebrow(C.sageDark) }}>Your wellness coach</div>
+          </div>
 
-          {/* ↓ DYNAMIC: was hardcoded string, now uses guidance props */}
-          <h2 className="gw-hero-title" style={{ ...display(44), margin: 0, marginBottom: 22, maxWidth: 540 }}>
+          <h2 className="gw-hero-title" style={{ ...display(40), margin: 0, marginBottom: 18, maxWidth: 540, lineHeight: 1.15 }}>
             {headline.headlineStart}{' '}
             <em style={{ fontStyle: 'italic', color: C.sage }}>{headline.headlineEm}</em>
             {headline.headlineEnd ? ` ${headline.headlineEnd}` : ''}
           </h2>
 
-          {/* ↓ DYNAMIC: was hardcoded string, now uses guidance body */}
-          <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 28 }}>
+          <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 14 }}>
             {headline.body}
           </p>
 
+          <p style={{ ...bodyText(15), maxWidth: 480, marginBottom: 26, color: C.sageDark, fontWeight: 500 }}>
+            Whatever's on your mind today, {name} — your coach is here to talk it through with you.
+          </p>
+
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Link to="/ai-coach" style={btnPrimary}>
-              Open coach <ChevronRight size={12} strokeWidth={2} />
+            <Link to="/ai-coach" style={{
+              ...btnPrimary,
+              padding: '14px 26px',
+              fontSize: 14,
+            }}>
+              <MessageCircle size={15} strokeWidth={2} />
+              Talk with your coach
             </Link>
           </div>
         </div>
 
-        {/* Glow Score ring — unchanged */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
             <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
@@ -401,12 +411,8 @@ const HeroFocus = ({ score = 78, guidance }) => {
               <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
               <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
               <div style={{
-                fontFamily: FF_UI,
-                fontSize: 13,
-                color: statusColor,
-                fontWeight: 700,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
+                fontFamily: FF_UI, fontSize: 13, color: statusColor,
+                fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
                 transition: 'color 0.3s ease',
               }}>
                 {statusLabel}
@@ -1291,7 +1297,7 @@ export default function Dashboard() {
             maxWidth: 1280, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} onLogout={handleLogout} />
-            <HeroFocus score={score} guidance={dailyGuidance} />
+            <HeroFocus score={score} guidance={dailyGuidance} name={firstName} />
             <div style={{ marginBottom: 28 }}>
               <GlowType profile={profile} />
             </div>
