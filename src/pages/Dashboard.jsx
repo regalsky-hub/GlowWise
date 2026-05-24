@@ -1303,7 +1303,7 @@ export default function Dashboard() {
             </div>
             <Vitals today={today} />
             <MicroHabits checkIns={checkIns} profile={profile} />
-              <div style={{ marginBottom: 28 }}>
+              <div style={{ marginBottom: 28, maxWidth: 720, width: '100%' }}>
               <WeekChart scores={displayWeekScores} dates={weekDates} />
             </div>
             <div style={{ marginBottom: 28 }}>
