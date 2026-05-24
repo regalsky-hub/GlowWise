@@ -1294,7 +1294,6 @@ export default function Dashboard() {
             <HeroFocus score={score} guidance={dailyGuidance} />
             <Vitals today={today} />
             <MicroHabits checkIns={checkIns} profile={profile} />
-            <div
               <div style={{ marginBottom: 28 }}>
               <WeekChart scores={displayWeekScores} dates={weekDates} />
             </div>
