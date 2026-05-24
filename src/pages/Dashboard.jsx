@@ -1292,16 +1292,15 @@ export default function Dashboard() {
           }}>
             <Header name={firstName} onLogout={handleLogout} />
             <HeroFocus score={score} guidance={dailyGuidance} />
+            <div style={{ marginBottom: 28 }}>
+              <GlowType profile={profile} />
+            </div>
             <Vitals today={today} />
             <MicroHabits checkIns={checkIns} profile={profile} />
               <div style={{ marginBottom: 28 }}>
               <WeekChart scores={displayWeekScores} dates={weekDates} />
             </div>
-            <div className="gw-twocol" style={{
-              display: 'grid', gridTemplateColumns: '1fr 1.4fr',
-              gap: 20, marginBottom: 28,
-            }}>
-              <GlowType profile={profile} />
+            <div style={{ marginBottom: 28 }}>
               <Plan />
             </div>
             <div className="gw-mobile-photo-banner" style={{
