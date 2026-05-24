@@ -128,8 +128,8 @@ const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
 // ============ NAV ITEMS DATA ============
 const navItems = [
   { Icon: Sun,           label: 'Dashboard',      to: '/dashboard' },
-  { Icon: Calendar,      label: 'Check-in',       to: '/checkin' },
   { Icon: MessageCircle, label: 'Wellness Coach', to: '/ai-coach' },
+  { Icon: Calendar,      label: 'Today',          to: '/checkin' },
   { Icon: BarChart3,     label: 'Insights',       to: '/insights' },
   { Icon: User,          label: 'Profile',        to: '/settings' },
 ];
