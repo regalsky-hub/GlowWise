@@ -26,8 +26,8 @@ export default function AppLayout({ children }) {
 
   const navItems = [
     { path: '/dashboard', icon: Home, label: 'Dashboard' },
-    { path: '/checkin', icon: Calendar, label: 'Check-in' },
     { path: '/ai-coach', icon: MessageCircle, label: 'Wellness Coach' },
+    { path: '/checkin', icon: Calendar, label: 'Today' },
     { path: '/insights', icon: BarChart3, label: 'Insights' },
     { path: '/settings', icon: Settings, label: 'Profile' },
   ];
