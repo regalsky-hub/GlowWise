@@ -22,11 +22,13 @@ export default async function handler(req, res) {
       { role: 'system', content: SYSTEM_PROMPT },
     ];
 
-    // Optionally include user context (profile, focus areas, recent check-ins)
+    // Include the user's wellness context as the coach's "memory" of them
     if (userContext) {
       messages.push({
         role: 'system',
-        content: `User context:\n${JSON.stringify(userContext, null, 2)}`,
+        content:
+          `This is what you already know about the person you are talking to — treat it as your memory of them, built from their past check-ins. Use it naturally: open with their name when it is present, weave in their real figures and patterns, and never ask for anything already answered here. Do not invent details that are not present.\n\n` +
+          JSON.stringify(userContext, null, 2),
       });
     }
 
