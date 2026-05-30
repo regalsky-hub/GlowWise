@@ -53,10 +53,12 @@ export function UserDataProvider({ children }) {
         const q = query(checkInsRef);
         const querySnapshot = await getDocs(q);
         
-        const checkInsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const checkInsData = querySnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
         
         setCheckIns(checkInsData);
         calculateGlowScore(checkInsData);
@@ -127,10 +129,12 @@ export function UserDataProvider({ children }) {
 
       // Reload check-ins and recalculate score
       const allCheckIns = await getDocs(checkInRef);
-      const checkInsData = allCheckIns.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const checkInsData = allCheckIns.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
       setCheckIns(checkInsData);
       calculateGlowScore(checkInsData);
     } catch (error) {
