@@ -113,6 +113,48 @@ const buildUserContext = (profile, checkIns, glowScore) => {
     recent.flatMap(c => c.symptoms || []).filter(Boolean)
   )].slice(0, 10);
 
+  const recurringSymptoms = {};
+
+recent.forEach(c => {
+  (c.symptoms || []).forEach(symptom => {
+    recurringSymptoms[symptom] =
+      (recurringSymptoms[symptom] || 0) + 1;
+  });
+});
+
+const topRecurringSymptoms = Object.entries(recurringSymptoms)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5)
+  .map(([symptom, count]) => ({
+    symptom,
+    count,
+  }));
+
+const wellnessPriorities =
+  profile?.wellness_priorities || [];
+
+const recentTrend = {
+  sleep:
+    recent.length >= 2
+      ? recent[recent.length - 1]?.sleep_hours - recent[0]?.sleep_hours
+      : null,
+
+  stress:
+    recent.length >= 2
+      ? recent[recent.length - 1]?.stress_level - recent[0]?.stress_level
+      : null,
+
+  energy:
+    recent.length >= 2
+      ? recent[recent.length - 1]?.energy - recent[0]?.energy
+      : null,
+
+  mood:
+    recent.length >= 2
+      ? recent[recent.length - 1]?.mood - recent[0]?.mood
+      : null,
+};
+
   const checkInSummaries = recent.map(c => ({
     date: c.created_at?.toDate?.().toLocaleDateString('en-GB') || 'recent',
     energy: c.energy,
@@ -135,6 +177,10 @@ const buildUserContext = (profile, checkIns, glowScore) => {
     recentSymptoms,
     recentCheckIns: checkInSummaries,
     totalCheckIns: (checkIns || []).length,
+
+  topRecurringSymptoms,
+  wellnessPriorities,
+  recentTrend,
   };
 };
 
