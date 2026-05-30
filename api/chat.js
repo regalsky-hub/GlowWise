@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     }
 
     // Include recent conversation history (last 10 messages max for cost control)
-    const recentHistory = history.slice(-10).map((m) => ({
+    const recentHistory = history.slice(-20).map((m) => ({
       role: m.role,
       content: m.content,
     }));
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'gpt-4.1-mini',
         messages,
-        max_tokens: 400,
+        max_tokens: 900,
         temperature: 0.7,
       }),
     });
