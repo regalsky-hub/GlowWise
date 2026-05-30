@@ -133,26 +133,27 @@ const topRecurringSymptoms = Object.entries(recurringSymptoms)
 const wellnessPriorities =
   profile?.wellness_priorities || [];
 
+// recent is newest-first, so compare the most recent days with the earlier ones
+const trendFor = (field, higherIsBetter = true) => {
+  if (recent.length < 4) return null;
+  const mid = Math.floor(recent.length / 2);
+  const toNums = (arr) => arr.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
+  const newer = toNums(recent.slice(0, mid));
+  const older = toNums(recent.slice(mid));
+  if (!newer.length || !older.length) return null;
+  const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+  const change = mean(newer) - mean(older); // positive = value has risen recently
+  let direction = 'steady';
+  if (change > 0.5) direction = higherIsBetter ? 'improving' : 'rising';
+  else if (change < -0.5) direction = higherIsBetter ? 'declining' : 'easing';
+  return { direction, change: Number(change.toFixed(1)) };
+};
+
 const recentTrend = {
-  sleep:
-    recent.length >= 2
-      ? recent[recent.length - 1]?.sleep_hours - recent[0]?.sleep_hours
-      : null,
-
-  stress:
-    recent.length >= 2
-      ? recent[recent.length - 1]?.stress_level - recent[0]?.stress_level
-      : null,
-
-  energy:
-    recent.length >= 2
-      ? recent[recent.length - 1]?.energy - recent[0]?.energy
-      : null,
-
-  mood:
-    recent.length >= 2
-      ? recent[recent.length - 1]?.mood - recent[0]?.mood
-      : null,
+  sleep: trendFor('sleep_hours', true),
+  stress: trendFor('stress_level', false),
+  energy: trendFor('energy', true),
+  mood: trendFor('mood', true),
 };
 
   const checkInSummaries = recent.map(c => ({
