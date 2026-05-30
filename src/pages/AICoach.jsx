@@ -182,6 +182,19 @@ const recentTrend = {
   topRecurringSymptoms,
   wellnessPriorities,
   recentTrend,
+  // Stable onboarding context — what the user told us about themselves up front
+  about: {
+    age: profile?.age || null,
+    gender: profile?.gender || null,
+    glowTypeDescription: profile?.glowTypeDescription || null,
+    focusAreas: profile?.focusAreas || [],
+    healthContext: profile?.health_context || null,
+    medications: profile?.medications || null,
+    supplements: profile?.supplements || null,
+    stressTriggers: profile?.stress_trigger_list || [],
+    dietType: profile?.diet_type || null,
+    initialBodySignals: profile?.body_signals || null,
+  },
   };
 };
 
