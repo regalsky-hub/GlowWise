@@ -1,10 +1,16 @@
 import React from 'react';
 import LegalLayout from './LegalLayout';
 import { Mail, Clock, MapPin } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function Contact() {
   return (
-    <LegalLayout eyebrow="Get in touch" title={<>We'd love to <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>hear from you.</em></>}>
+    <>
+      <Helmet>
+        <title>Contact Us | GlowWise</title>
+        <meta name="description" content="Get in touch with the GlowWise team. We read every message and respond within 24–72 hours." />
+      </Helmet>
+      <LegalLayout eyebrow="Get in touch" title={<>We'd love to <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>hear from you.</em></>}>
       <p>Whether you have a question about your account, feedback on the app, a privacy request, or just want to say hello — we read every message.</p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginTop: '32px', marginBottom: '32px' }}>
@@ -40,6 +46,7 @@ export default function Contact() {
       <div className="info-box">
         <strong>A note on response times:</strong> GlowWise is built and maintained by a small team. We genuinely read every message and reply personally — please be patient with us during busy periods.
       </div>
-    </LegalLayout>
+   </LegalLayout>
+    </>
   );
 }
