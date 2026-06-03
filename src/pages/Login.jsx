@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -174,6 +175,10 @@ export default function Login() {
       `}</style>
 
       <div className="grain"></div>
+      <Helmet>
+        <title>Login | GlowWise AI Wellness Coach</title>
+        <meta name="description" content="Log in to GlowWise and continue your personalised AI wellness journey." />
+      </Helmet>
 
       <div className="fade-up" style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 2 }}>
 
