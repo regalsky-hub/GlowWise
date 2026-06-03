@@ -1,9 +1,15 @@
 import React from 'react';
 import LegalLayout from './LegalLayout';
+import { Helmet } from 'react-helmet-async';
 
 export default function Disclaimer() {
   return (
-    <LegalLayout
+    <>
+      <Helmet>
+        <title>Medical Disclaimer | GlowWise</title>
+        <meta name="description" content="GlowWise provides wellness guidance, not medical advice. Always consult a qualified healthcare professional before making health decisions." />
+      </Helmet>
+      <LegalLayout
       eyebrow="Medical Disclaimer"
       title={<>Wellness, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>not medical advice.</em></>}
       lastUpdated="26 April 2026"
@@ -110,5 +116,6 @@ export default function Disclaimer() {
       <h2>12. Contact</h2>
       <p>If you have questions about this disclaimer, email <a href="mailto:support@glowwise.app">support@glowwise.app</a>.</p>
     </LegalLayout>
+    </>
   );
 }
