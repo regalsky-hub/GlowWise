@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, Shield, Check } from 'lucide-react';
@@ -81,6 +82,10 @@ export default function Signup() {
       padding: '40px 20px',
       position: 'relative',
     }}>
+      <Helmet>
+        <title>Create Your Account | GlowWise AI Wellness Coach</title>
+        <meta name="description" content="Sign up for GlowWise and start your personalised AI wellness journey. Free to start — no credit card required." />
+      </Helmet>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         .display { font-family: 'Fraunces', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
