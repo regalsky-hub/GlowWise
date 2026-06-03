@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { UserDataProvider, useUserData } from './context/UserDataContext';
-
+import ReactGA from 'react-ga4';
 // Pages
 import Landing from './pages/Landing';
 import Signup from './pages/Signup';
@@ -28,6 +28,7 @@ function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    ReactGA.send({ hitType: 'pageview', page: pathname });
   }, [pathname]);
   return null;
 }
@@ -114,6 +115,8 @@ function AppRoutes() {
     </>
   );
 }
+
+ReactGA.initialize('G-Y83F3HK4KN');
 
 export default function App() {
   return (
