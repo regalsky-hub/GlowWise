@@ -1,9 +1,15 @@
 import React from 'react';
 import LegalLayout from './LegalLayout';
+import { Helmet } from 'react-helmet-async';
 
 export default function Privacy() {
   return (
-    <LegalLayout
+    <>
+      <Helmet>
+        <title>Privacy Policy | GlowWise</title>
+        <meta name="description" content="GlowWise Privacy Policy. We never sell your data. GDPR compliant. You control your wellness data." />
+      </Helmet>
+      <LegalLayout
       eyebrow="Privacy Policy"
       title={<>Your data, <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>your control.</em></>}
       lastUpdated="26 April 2026"
@@ -112,5 +118,6 @@ export default function Privacy() {
       <p>For any privacy questions, data requests, or concerns, please email <a href="mailto:privacy@glowwise.app">privacy@glowwise.app</a>. We aim to resolve every issue directly with you and will respond within one calendar month.</p>
       <p>You also have the right to lodge a complaint with a supervisory authority. In the UK, this is the Information Commissioner's Office (<a href="https://ico.org.uk" target="_blank" rel="noreferrer">ico.org.uk</a>). We'd ask that you contact us first so we can address any concerns directly.</p>
     </LegalLayout>
+    </>
   );
 }
