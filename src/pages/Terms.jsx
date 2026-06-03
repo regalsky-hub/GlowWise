@@ -1,9 +1,15 @@
 import React from 'react';
 import LegalLayout from './LegalLayout';
+import { Helmet } from 'react-helmet-async';
 
 export default function Terms() {
   return (
-    <LegalLayout
+    <>
+      <Helmet>
+        <title>Terms of Service | GlowWise</title>
+        <meta name="description" content="GlowWise Terms of Service. Free to start, £4.99/month to upgrade. Cancel anytime. GDPR compliant." />
+      </Helmet>
+      <LegalLayout
       eyebrow="Terms of Service"
       title={<>The <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>fine print</em>, kept clear.</>}
       lastUpdated="26 April 2026"
@@ -108,5 +114,6 @@ export default function Terms() {
       <h2>14. Contact</h2>
       <p>For questions about these Terms, email <a href="mailto:support@glowwise.app">support@glowwise.app</a>.</p>
     </LegalLayout>
+    </>
   );
 }
