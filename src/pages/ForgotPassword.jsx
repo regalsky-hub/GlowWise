@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -78,6 +79,10 @@ export default function ForgotPassword() {
       `}</style>
 
       <div className="grain" />
+      <Helmet>
+        <title>Reset Password | GlowWise</title>
+        <meta name="description" content="Reset your GlowWise password. Enter your email and we'll send you a reset link." />
+      </Helmet>
 
       <div className="fade-up" style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 2 }}>
 
