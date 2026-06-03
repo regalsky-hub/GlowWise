@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { Globe, Menu, X, Check, ArrowRight, Plus, Minus } from 'lucide-react';
 import { db } from '../config/firebase';
@@ -189,8 +190,6 @@ function AnimatedCoachDemo() {
     </div>
   );
 }
-
-import { Helmet } from 'react-helmet-async';
 
 export default function Landing() {
   const navigate = useNavigate();
