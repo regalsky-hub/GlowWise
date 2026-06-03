@@ -190,6 +190,8 @@ function AnimatedCoachDemo() {
   );
 }
 
+import { Helmet } from 'react-helmet-async';
+
 export default function Landing() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
@@ -302,6 +304,11 @@ export default function Landing() {
 
   return (
     <div style={{ background: '#F5F3F0', minHeight: '100vh', fontFamily: "'Manrope', system-ui, sans-serif", color: '#3D4A52' }}>
+      <Helmet>
+        <title>GlowWise: AI Wellness Coach | Hormones, Hair, Energy & Skin</title>
+        <meta name="description" content="GlowWise is your personal AI wellness coach. Track energy, sleep, stress, hormones, hair and skin — and get guidance built around your body, not someone else's." />
+        <meta name="keywords" content="AI wellness coach, hormone health, hair loss, energy crashes, brain fog, skin health, sleep tracking, stress management" />
+      </Helmet>
       <style>{`
         .glowwise-landing * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
