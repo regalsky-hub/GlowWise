@@ -1,9 +1,15 @@
 import React from 'react';
 import LegalLayout from './LegalLayout';
+import { Helmet } from 'react-helmet-async';
 
 export default function Cookies() {
   return (
-    <LegalLayout
+    <>
+      <Helmet>
+        <title>Cookie Policy | GlowWise</title>
+        <meta name="description" content="GlowWise Cookie Policy. We use essential cookies to keep you logged in. Analytics cookies are optional and you can opt out anytime." />
+      </Helmet>
+      <LegalLayout
       eyebrow="Cookie Policy"
       title={<>About <em style={{ fontStyle: 'italic', color: '#6B9E7F' }}>cookies.</em></>}
       lastUpdated="26 April 2026"
@@ -81,5 +87,6 @@ export default function Cookies() {
       <h2>7. Contact</h2>
       <p>If you have questions about cookies or our use of them, email <a href="mailto:privacy@glowwise.app">privacy@glowwise.app</a>.</p>
     </LegalLayout>
+    </>
   );
 }
