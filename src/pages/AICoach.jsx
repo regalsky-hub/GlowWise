@@ -206,6 +206,12 @@ export default function AICoach() {
   const [conversations, setConversations] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
+  const [dailyCount, setDailyCount] = useState(0);
+  const [showTeaser, setShowTeaser] = useState(false);
+
+  const isPaid = profile?.subscription_tier === 'paid';
+  const FREE_LIMIT = 2;
+  const atLimit = !isPaid && dailyCount >= FREE_LIMIT;
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
   const { profile, checkIns, glowScore } = useUserData();
@@ -312,6 +318,7 @@ export default function AICoach() {
     e?.preventDefault();
     const text = input.trim();
     if (!text || loading) return;
+    if (atLimit) return;
 
     // Lazy-create the conversation doc on first message
     let convId = conversationId;
@@ -337,6 +344,9 @@ export default function AICoach() {
 
     try {
       const aiText = await getAIResponse(text, afterUser, buildUserContext(profile, checkIns, glowScore));
+      const newCount = dailyCount + 1;
+      setDailyCount(newCount);
+      if (!isPaid && newCount >= FREE_LIMIT) setShowTeaser(true);
       const aiMsg = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -861,9 +871,40 @@ export default function AICoach() {
               <Send size={18} strokeWidth={2} />
             </button>
           </form>
-          <p className="footer-note">
-            <strong>Wellness, not medical advice.</strong> Consult a healthcare provider for medical concerns.
-          </p>
+          {showTeaser && (
+            <div style={{ margin: '0 0 12px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(107, 158, 127, 0.25)' }}>
+              <div style={{ position: 'relative' }}>
+                <div style={{ padding: '14px 18px', filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none', background: 'linear-gradient(135deg, rgba(237,244,239,0.95), rgba(250,248,245,0.98))', fontSize: '14px', fontFamily: "'Manrope', sans-serif", lineHeight: 1.6, color: '#3D4A52' }}>
+                  Your coach has identified a deeper pattern in your recent check-ins — including specific connections between your sleep, stress levels, and the symptoms you've been tracking. There's a personalised 3-step plan ready for you based on your data from the past 7 days...
+                </div>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(245,243,240,0.7) 40%, rgba(245,243,240,0.97) 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', padding: '16px' }}>
+                  <p style={{ fontFamily: "'Fraunces', serif", fontSize: '15px', color: '#3D4A52', marginBottom: '10px', textAlign: 'center', fontStyle: 'italic' }}>Your coach has more to share.</p>
+                  <a href="/choose-plan" style={{ background: '#6B9E7F', color: '#FAF8F5', padding: '10px 22px', borderRadius: '100px', fontFamily: "'Manrope', sans-serif", fontSize: '13px', fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
+                    Unlock GlowWise Plus — £4.99/month
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+          {atLimit && !showTeaser && (
+            <div style={{ background: 'rgba(201, 123, 92, 0.1)', border: '1px solid rgba(201, 123, 92, 0.3)', borderRadius: '8px', padding: '12px 16px', marginBottom: '10px', textAlign: 'center' }}>
+              <p style={{ fontFamily: "'Manrope', sans-serif", fontSize: '13px', color: '#C97B5C', margin: 0 }}>
+                You've used your 2 free questions today.{' '}
+                <a href="/choose-plan" style={{ color: '#557E64', fontWeight: 600, textDecoration: 'none' }}>Upgrade to GlowWise Plus</a>{' '}
+                for unlimited access.
+              </p>
+            </div>
+          )}
+          {!isPaid && !atLimit && (
+            <p className="footer-note">
+              <strong>{FREE_LIMIT - dailyCount} free question{FREE_LIMIT - dailyCount !== 1 ? 's' : ''} remaining today.</strong>
+            </p>
+          )}
+          {isPaid && (
+            <p className="footer-note">
+              <strong>Wellness, not medical advice.</strong> Consult a healthcare provider for medical concerns.
+            </p>
+          )}
         </div>
       </div>
     </AppLayout>
