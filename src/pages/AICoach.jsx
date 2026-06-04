@@ -208,15 +208,14 @@ export default function AICoach() {
   const [openMenu, setOpenMenu] = useState(null);
   const [dailyCount, setDailyCount] = useState(0);
   const [showTeaser, setShowTeaser] = useState(false);
-
-  const isPaid = profile?.subscription_tier === 'paid';
-  const FREE_LIMIT = 2;
-  const atLimit = !isPaid && dailyCount >= FREE_LIMIT;
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
   const { profile, checkIns, glowScore } = useUserData();
 
   const userName = profile?.name || 'there';
+  const isPaid = profile?.subscription_tier === 'paid';
+  const FREE_LIMIT = 2;
+  const atLimit = !isPaid && dailyCount >= FREE_LIMIT;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
