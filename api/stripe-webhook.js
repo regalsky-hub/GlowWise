@@ -17,9 +17,15 @@ module.exports = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
+  const rawBody = await new Promise((resolve) => {
+    let data = '';
+    req.on('data', (chunk) => { data += chunk; });
+    req.on('end', () => resolve(data));
+  });
+
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
