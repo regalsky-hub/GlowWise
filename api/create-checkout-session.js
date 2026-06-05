@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `https://www.glowwise.app/signup?success=true`,
+      success_url: `https://www.glowwise.app/dashboard?payment=success`,
       cancel_url: `https://www.glowwise.app/#pricing`,
     });
 
