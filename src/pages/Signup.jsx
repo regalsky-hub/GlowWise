@@ -300,8 +300,9 @@ export default function Signup() {
           </button>
 
           {selectedPlan === 'paid' && (
-            <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968', marginTop: '-8px' }}>
-              Payment after your short personalisation. Cancel anytime.
+            <p style={{ textAlign: 'center', fontSize: '12px', color: '#A89968', marginTop: '-8px', lineHeight: 1.6 }}>
+              GlowWise Plus is <strong style={{ color: '#5A6770' }}>£4.99/month</strong>, billed monthly. Your subscription renews automatically until cancelled.{' '}
+              You can cancel anytime from your account settings. Payment collected after your personalisation steps.
             </p>
           )}
         </form>
