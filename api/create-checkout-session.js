@@ -15,6 +15,11 @@ module.exports = async (req, res) => {
         },
       ],
       mode: 'subscription',
+      custom_text: {
+        submit_button: {
+          message: 'GlowWise Plus is £4.99/month, billed monthly. Renews automatically until cancelled. Cancel anytime in account settings.',
+        },
+      },
       success_url: `https://www.glowwise.app/dashboard?payment=success`,
       cancel_url: `https://www.glowwise.app/#pricing`,
     });
