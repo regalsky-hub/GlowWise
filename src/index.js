@@ -5,6 +5,11 @@ import App from './App';
 import { HelmetProvider } from 'react-helmet-async';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
 root.render(
   <HelmetProvider>
     <React.StrictMode>
