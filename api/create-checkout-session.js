@@ -15,7 +15,11 @@ module.exports = async (req, res) => {
         },
       ],
       mode: 'subscription',
-      success_url: `https://www.glowwise.app/dashboard?payment=success`,
+customer_email: req.body.email,
+metadata: {
+  firebaseUID: req.body.uid,
+},
+success_url: `https://www.glowwise.app/dashboard?payment=success`,
       cancel_url: `https://www.glowwise.app/#pricing`,
     });
 
