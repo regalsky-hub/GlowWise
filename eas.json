@@ -14,8 +14,7 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-        "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64"
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
     }
   },
