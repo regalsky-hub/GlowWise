@@ -217,6 +217,19 @@ const handleManageSubscription = async () => {
               )}
             </div>
           </div>
+        {/* Subscription */}
+          {profile?.subscription_tier === 'paid' && (
+            <div className="card fade-up">
+              <h2 className="display" style={{ fontSize: '22px', color: '#3D4A52', marginBottom: '8px', fontWeight: 500 }}>Subscription</h2>
+              <p style={{ fontSize: '13px', color: '#A89968', marginBottom: '20px' }}>GlowWise Plus · £4.99/month</p>
+              <button onClick={handleManageSubscription} disabled={portalLoading} className="choice-card">
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600 }}>{portalLoading ? 'Loading...' : 'Manage subscription'}</div>
+                  <div style={{ fontSize: '12px', color: '#A89968', marginTop: '2px', fontWeight: 400 }}>Cancel, update payment method or view invoices</div>
+                </div>
+              </button>
+            </div>
+          )}
 
           {/* Notifications */}
           <div className="card fade-up">
