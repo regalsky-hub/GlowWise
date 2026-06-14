@@ -21,6 +21,25 @@ export default function Settings() {
   const [exporting, setExporting] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [notificationFrequency, setNotificationFrequency] = useState(profile?.notification_frequency || 'daily');
+const [portalLoading, setPortalLoading] = useState(false);
+
+const handleManageSubscription = async () => {
+  setPortalLoading(true);
+  try {
+    const res = await fetch('/api/create-portal-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email }),
+    });
+    const { url } = await res.json();
+    window.location.href = url;
+  } catch (err) {
+    console.error('Portal error:', err);
+    alert('Could not open subscription portal. Please try again.');
+  } finally {
+    setPortalLoading(false);
+  }
+};
 
   const handleSavePreferences = async () => {
     setSaving(true);
