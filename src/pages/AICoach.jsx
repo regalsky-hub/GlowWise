@@ -266,7 +266,6 @@ export default function AICoach() {
     const openingText = openers[ctx.fromCard] || `Let's talk about this: ${ctx.text}`;
     await sendMessageProgrammatically(openingText);
   };
-</parameter>
 
   const loadAllConversations = async () => {
     try {
