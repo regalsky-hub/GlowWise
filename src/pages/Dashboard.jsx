@@ -895,6 +895,7 @@ export default function Dashboard() {
             <Header name={firstName} onLogout={handleLogout} score={score} />
             <CoachHero name={firstName} summary={dailySummary} profile={profile} score={score} />
             <InsightCards cards={dailySummary} anchor={anchor} />
+            <GlowTypeRow profile={profile} />
           </main>
         </div>
         <BottomNav />
