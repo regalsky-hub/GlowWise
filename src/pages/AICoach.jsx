@@ -212,8 +212,17 @@ export default function AICoach() {
   const messagesEndRef = useRef(null);
   const { user } = useAuth();
   const { profile, checkIns, glowScore } = useUserData();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const userName = profile?.name || 'there';
+
+  // Card context — set when arriving from a Home insight card (Discovery/
+  // Improvement/Recommendation). Consumed once, then cleared from history so
+  // refreshing the page or navigating back doesn't re-trigger the auto-send.
+  const cardContext = location.state?.fromCard
+    ? { fromCard: location.state.fromCard, text: location.state.text }
+    : null;
   const isPaid = profile?.subscription_tier === 'paid';
   const FREE_LIMIT = 2;
   const atLimit = !isPaid && dailyCount >= FREE_LIMIT;
