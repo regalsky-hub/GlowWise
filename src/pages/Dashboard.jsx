@@ -594,6 +594,30 @@ const InsightCards = ({ cards, anchor }) => {
   );
 };
 
+// ============ GLOW TYPE ROW (slim, links to Insights) ============
+// Deliberately not a card — plain text row, no background/border/shadow.
+// Sits below the 3 insight cards as a quiet identity anchor, not competing
+// with the coach's daily content above it.
+const GlowTypeRow = ({ profile }) => {
+  const glowType = profile?.glowType;
+  if (!glowType) return null; // nothing to show if onboarding hasn't set this yet
+
+  return (
+    <Link to="/insights" style={{
+      display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap',
+      textDecoration: 'none', marginBottom: 8, cursor: 'pointer',
+    }}>
+      <span style={{ ...eyebrow(C.mute) }}>Your glow type</span>
+      <span style={{
+        fontFamily: FF_DISPLAY, fontStyle: 'italic', fontWeight: 500,
+        fontSize: 16, color: C.sageDark, letterSpacing: '-0.01em',
+      }}>
+        {glowType}
+      </span>
+    </Link>
+  );
+};
+
 // ============ CHECK-IN FAB + MODAL ============
 const energyLabels = ['Drained', 'Low', 'Okay', 'Good', 'Energised'];
 const moodOptions = [
