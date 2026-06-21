@@ -239,8 +239,34 @@ export default function AICoach() {
 
   const initialiseChat = async () => {
     await loadAllConversations();
-    await loadLatestConversation();
+    if (cardContext) {
+      // Arriving from a Home card always starts a fresh, topic-specific
+      // conversation rather than continuing an old thread — keeps each
+      // conversation coherent around the thing the user clicked into.
+      setConversationId(null);
+      setMessages([]);
+      // Clear the router state immediately so a refresh or back-navigation
+      // doesn't re-trigger the auto-send on the same page instance.
+      navigate(location.pathname, { replace: true, state: {} });
+      await sendCardOpeningMessage(cardContext);
+    } else {
+      await loadLatestConversation();
+    }
   };
+
+  // Builds a coach-voiced opening line from the card's text and sends it
+  // immediately on arrival, as if the coach is continuing the thought from
+  // the card rather than waiting for the user to start typing.
+  const sendCardOpeningMessage = async (ctx) => {
+    const openers = {
+      discovery: `I wanted to dig into something I noticed: ${ctx.text}`,
+      improvement: `I wanted to follow up on this: ${ctx.text}`,
+      recommendation: `Let's talk through this recommendation: ${ctx.text}`,
+    };
+    const openingText = openers[ctx.fromCard] || `Let's talk about this: ${ctx.text}`;
+    await sendMessageProgrammatically(openingText);
+  };
+</parameter>
 
   const loadAllConversations = async () => {
     try {
