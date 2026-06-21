@@ -223,6 +223,7 @@ export default function AICoach() {
   const cardContext = location.state?.fromCard
     ? { fromCard: location.state.fromCard, text: location.state.text }
     : null;
+
   const isPaid = profile?.subscription_tier === 'paid';
   const FREE_LIMIT = 2;
   const atLimit = !isPaid && dailyCount >= FREE_LIMIT;
@@ -236,6 +237,77 @@ export default function AICoach() {
     initialiseChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  // ---------- Shared send logic ----------
+  // Used by both the manual input form and the programmatic card-opening
+  // auto-send. `text` is passed explicitly rather than read from `input`
+  // state, since the auto-send path has no input box interaction at all.
+  // Defined before initialiseChat/sendCardOpeningMessage below since both
+  // of those call it on mount — order matters for const arrow functions.
+  const sendMessageProgrammatically = async (text) => {
+    if (!text || loading) return;
+    if (atLimit) return;
+
+    let convId = conversationId;
+    if (!convId) {
+      convId = await createConversationDoc();
+      if (!convId) {
+        console.error('Could not create conversation');
+        return;
+      }
+    }
+
+    const userMsg = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text,
+      timestamp: new Date().toISOString(),
+    };
+    const afterUser = [...messages, userMsg];
+    setMessages(afterUser);
+    setLoading(true);
+    persistMessages(afterUser, convId);
+
+    try {
+      const aiText = await getAIResponse(text, afterUser, buildUserContext(profile, checkIns, glowScore));
+      const newCount = dailyCount + 1;
+      setDailyCount(newCount);
+      if (!isPaid && newCount >= FREE_LIMIT) setShowTeaser(true);
+      const aiMsg = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: aiText,
+        timestamp: new Date().toISOString(),
+      };
+      const afterAI = [...afterUser, aiMsg];
+      setMessages(afterAI);
+      persistMessages(afterAI, convId);
+    } catch (err) {
+      console.error('AI response failed:', err);
+      const errMsg = {
+        id: (Date.now() + 2).toString(),
+        role: 'assistant',
+        content: "Sorry — I couldn't respond just now. Please try again.",
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, errMsg]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Builds a coach-voiced opening line from the card's text and sends it
+  // immediately on arrival, as if the coach is continuing the thought from
+  // the card rather than waiting for the user to start typing.
+  const sendCardOpeningMessage = async (ctx) => {
+    const openers = {
+      discovery: `I wanted to dig into something I noticed: ${ctx.text}`,
+      improvement: `I wanted to follow up on this: ${ctx.text}`,
+      recommendation: `Let's talk through this recommendation: ${ctx.text}`,
+    };
+    const openingText = openers[ctx.fromCard] || `Let's talk about this: ${ctx.text}`;
+    await sendMessageProgrammatically(openingText);
+  };
 
   const initialiseChat = async () => {
     await loadAllConversations();
@@ -252,19 +324,6 @@ export default function AICoach() {
     } else {
       await loadLatestConversation();
     }
-  };
-
-  // Builds a coach-voiced opening line from the card's text and sends it
-  // immediately on arrival, as if the coach is continuing the thought from
-  // the card rather than waiting for the user to start typing.
-  const sendCardOpeningMessage = async (ctx) => {
-    const openers = {
-      discovery: `I wanted to dig into something I noticed: ${ctx.text}`,
-      improvement: `I wanted to follow up on this: ${ctx.text}`,
-      recommendation: `Let's talk through this recommendation: ${ctx.text}`,
-    };
-    const openingText = openers[ctx.fromCard] || `Let's talk about this: ${ctx.text}`;
-    await sendMessageProgrammatically(openingText);
   };
 
   const loadAllConversations = async () => {
@@ -351,61 +410,12 @@ export default function AICoach() {
   const handleSendMessage = async (e) => {
     e?.preventDefault();
     const text = input.trim();
-    if (!text || loading) return;
-    if (atLimit) return;
-
-    // Lazy-create the conversation doc on first message
-    let convId = conversationId;
-    if (!convId) {
-      convId = await createConversationDoc();
-      if (!convId) {
-        console.error('Could not create conversation');
-        return;
-      }
-    }
-
-    const userMsg = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: text,
-      timestamp: new Date().toISOString(),
-    };
-    const afterUser = [...messages, userMsg];
-    setMessages(afterUser);
     setInput('');
     if (e?.target) {
       const textarea = e.target.querySelector?.('.chat-input') || document.querySelector('.chat-input');
       if (textarea) textarea.style.height = 'auto';
     }
-    setLoading(true);
-    persistMessages(afterUser, convId);
-
-    try {
-      const aiText = await getAIResponse(text, afterUser, buildUserContext(profile, checkIns, glowScore));
-      const newCount = dailyCount + 1;
-      setDailyCount(newCount);
-      if (!isPaid && newCount >= FREE_LIMIT) setShowTeaser(true);
-      const aiMsg = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: aiText,
-        timestamp: new Date().toISOString(),
-      };
-      const afterAI = [...afterUser, aiMsg];
-      setMessages(afterAI);
-      persistMessages(afterAI, convId);
-    } catch (err) {
-      console.error('AI response failed:', err);
-      const errMsg = {
-        id: (Date.now() + 2).toString(),
-        role: 'assistant',
-        content: "Sorry — I couldn't respond just now. Please try again.",
-        timestamp: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, errMsg]);
-    } finally {
-      setLoading(false);
-    }
+    await sendMessageProgrammatically(text);
   };
 
   const deleteMessage = (id) => {
@@ -613,7 +623,7 @@ export default function AICoach() {
           font-family: 'Manrope', sans-serif; font-size: 15px; color: #3D4A52;
           outline: none; transition: all 0.2s;
           resize: none; max-height: 120px; min-height: 22px;
-          line-height: 1.4; font-family: 'Manrope', sans-serif;
+          line-height: 1.4;
         }
         .chat-input:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
         .send-btn {
