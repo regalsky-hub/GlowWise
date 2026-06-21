@@ -54,6 +54,8 @@ const responsiveCSS = `
     .gw-header-h1 { font-size: 36px !important; }
     .gw-main { padding: 32px 24px 110px !important; }
     .gw-cards-grid { grid-template-columns: 1fr !important; }
+    .gw-hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .gw-score-ring { width: 160px !important; height: 160px !important; margin: 0 auto; }
   }
   @media (max-width: 768px) {
     .gw-sidebar { display: none !important; }
@@ -65,10 +67,10 @@ const responsiveCSS = `
     .gw-header-h1 { font-size: 28px !important; }
     .gw-hero-pad { padding: 30px 24px !important; }
     .gw-hero-title { font-size: 24px !important; }
-    .gw-score-ring-sm { width: 56px !important; height: 56px !important; }
   }
   @media (max-width: 480px) {
     .gw-header-h1 { font-size: 24px !important; }
+    .gw-score-ring { width: 140px !important; height: 140px !important; }
   }
   .gw-fab:active { transform: scale(0.94); }
   .gw-sheet-enter { animation: gwSheetUp 0.28s cubic-bezier(0.16,1,0.3,1); }
@@ -267,7 +269,7 @@ const btnGhost = {
   textDecoration: 'none',
 };
 
-// ============ SMALL GLOW SCORE (static, non-pressable) ============
+// ============ HERO GLOW SCORE (full ring, lives inside the hero box) ============
 const getGlowStatus = (score) => {
   if (score >= 91) return { label: 'Glowing', color: C.sage };
   if (score >= 76) return { label: 'Thriving', color: C.sage };
@@ -275,24 +277,38 @@ const getGlowStatus = (score) => {
   return { label: 'Recovering', color: C.terracotta };
 };
 
-const SmallGlowScore = ({ score = 78 }) => {
+const HeroGlowScore = ({ score = 78 }) => {
+  const { label: statusLabel } = getGlowStatus(score);
   return (
-    <div
-      title={`Glow score ${score}`}
-      style={{ position: 'relative', width: 64, height: 64, flexShrink: 0, cursor: 'default' }}
-      className="gw-score-ring-sm"
-    >
+    <div className="gw-score-ring" style={{ position: 'relative', width: 200, height: 200, flexShrink: 0 }}>
       <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="9" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(250,248,245,0.22)" strokeWidth="6" />
         <circle cx="50" cy="50" r="42" fill="none"
-          stroke={C.sage} strokeWidth="9" strokeLinecap="round"
+          stroke="#FAF8F5" strokeWidth="6" strokeLinecap="round"
           strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
+        <circle
+          cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
+          cy={50 + 42 * Math.sin((score / 100) * 2 * Math.PI - Math.PI / 2)}
+          r="3.5" fill={C.terracottaMid}
+        />
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
+        alignItems: 'center', justifyContent: 'center', textAlign: 'center',
       }}>
-        <div style={{ ...display(18), color: C.sageDark, lineHeight: 1 }}>{score}</div>
+        <div style={{
+          fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
+          textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)', marginBottom: 6,
+        }}>
+          Glow score
+        </div>
+        <div style={{ ...display(48), color: C.paper }}>{score}</div>
+        <div style={{
+          fontFamily: FF_UI, fontSize: 12, color: '#FAF8F5',
+          fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
+        }}>
+          {statusLabel}
+        </div>
       </div>
     </div>
   );
@@ -321,7 +337,6 @@ const Header = ({ name, onLogout, score }) => {
         </h1>
       </div>
       <div className="gw-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <SmallGlowScore score={score} />
         <button
           onClick={onLogout}
           style={{
@@ -396,7 +411,7 @@ const buildHeroLines = (anchor, name) => {
 // { greetingLines: [string, string], discovery, improvement, recommendation }
 // When `summary` is null (no AI job yet, or job hasn't run today), the hero
 // falls back to the rule-based anchor lines built from onboarding data above.
-const CoachHero = ({ name, summary, profile }) => {
+const CoachHero = ({ name, summary, profile, score }) => {
   const anchor = resolveAnchor(profile);
   const lines = summary?.greetingLines || buildHeroLines(anchor, name);
   const isColdStart = !summary && anchor.type === 'cold_start';
@@ -404,7 +419,7 @@ const CoachHero = ({ name, summary, profile }) => {
   return (
     <div className="gw-hero-pad" style={{
       position: 'relative', overflow: 'hidden',
-      padding: '40px 44px',
+      padding: '44px 48px',
       borderRadius: 24,
       background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
       boxShadow: '0 24px 60px -32px rgba(85,126,100,0.40)',
@@ -415,40 +430,49 @@ const CoachHero = ({ name, summary, profile }) => {
         background: 'rgba(250,248,245,0.07)', filter: 'blur(70px)',
         top: -110, right: -90,
       }} />
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: 560 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <Orbit size={20} color={C.paper} tail="#C0DAC8" accent={C.terracottaMid} />
-          <div style={{
-            fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
-            textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
-          }}>
-            Your wellness coach
+      <div className="gw-hero-grid" style={{
+        position: 'relative', zIndex: 2, display: 'grid',
+        gridTemplateColumns: '1.6fr 1fr', gap: 32, alignItems: 'center',
+      }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <Orbit size={20} color={C.paper} tail="#C0DAC8" accent={C.terracottaMid} />
+            <div style={{
+              fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
+            }}>
+              Your wellness coach
+            </div>
           </div>
+
+          <h2 className="gw-hero-title" style={{ ...display(28), color: C.paper, margin: 0, marginBottom: 10, lineHeight: 1.3 }}>
+            Good to see you, {name}.
+          </h2>
+
+          <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 6 }}>
+            {lines[0]}
+          </p>
+          {lines[1] && (
+            <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 24 }}>
+              {lines[1]}
+            </p>
+          )}
+
+          <Link to="/ai-coach" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '13px 24px', borderRadius: 999,
+            background: C.paper, color: C.sageDark, border: 'none',
+            fontFamily: FF_UI, fontSize: 13.5, fontWeight: 700,
+            textDecoration: 'none', marginTop: lines[1] ? 0 : 18,
+          }}>
+            <MessageCircle size={15} strokeWidth={2} />
+            {isColdStart ? "Tell my coach" : "Let's talk"}
+          </Link>
         </div>
 
-        <h2 className="gw-hero-title" style={{ ...display(28), color: C.paper, margin: 0, marginBottom: 10, lineHeight: 1.3 }}>
-          {isColdStart ? `Good to see you, ${name}.` : `Good to see you, ${name}.`}
-        </h2>
-
-        <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 6 }}>
-          {lines[0]}
-        </p>
-        {lines[1] && (
-          <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 24 }}>
-            {lines[1]}
-          </p>
-        )}
-
-        <Link to="/ai-coach" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '13px 24px', borderRadius: 999,
-          background: C.paper, color: C.sageDark, border: 'none',
-          fontFamily: FF_UI, fontSize: 13.5, fontWeight: 700,
-          textDecoration: 'none', marginTop: lines[1] ? 0 : 18,
-        }}>
-          <MessageCircle size={15} strokeWidth={2} />
-          {isColdStart ? "Tell my coach" : "Let's talk"}
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <HeroGlowScore score={score} />
+        </div>
       </div>
     </div>
   );
@@ -848,7 +872,7 @@ export default function Dashboard() {
             maxWidth: 880, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} onLogout={handleLogout} score={score} />
-            <CoachHero name={firstName} summary={dailySummary} profile={profile} />
+            <CoachHero name={firstName} summary={dailySummary} profile={profile} score={score} />
             <InsightCards cards={dailySummary} anchor={anchor} />
           </main>
         </div>
