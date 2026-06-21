@@ -55,7 +55,7 @@ const responsiveCSS = `
     .gw-main { padding: 32px 24px 110px !important; }
     .gw-cards-grid { grid-template-columns: 1fr !important; }
     .gw-hero-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-    .gw-score-ring { width: 160px !important; height: 160px !important; margin: 0 auto; }
+    .gw-score-ring { width: 180px !important; height: 180px !important; margin: 0 auto; }
   }
   @media (max-width: 768px) {
     .gw-sidebar { display: none !important; }
@@ -71,7 +71,7 @@ const responsiveCSS = `
   }
   @media (max-width: 480px) {
     .gw-header-h1 { font-size: 24px !important; }
-    .gw-score-ring { width: 140px !important; height: 140px !important; }
+    .gw-score-ring { width: 160px !important; height: 160px !important; }
   }
   .gw-fab:active { transform: scale(0.94); }
   .gw-sheet-enter { animation: gwSheetUp 0.28s cubic-bezier(0.16,1,0.3,1); }
@@ -135,14 +135,14 @@ const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
 const WELLNESS_TOPIC_LABELS = {
   hormones: 'hormonal balance',
   fertility: 'fertility',
-  weight: 'body & weight',
-  energy: 'energy & fatigue',
-  sleep: 'sleep & recovery',
-  stress: 'stress & anxiety',
-  brain: 'brain & focus',
-  gut: 'gut & digestion',
-  skin: 'skin & acne',
-  hair: 'hair & scalp',
+  weight: 'body and weight',
+  energy: 'energy and fatigue',
+  sleep: 'sleep and recovery',
+  stress: 'stress and anxiety',
+  brain: 'brain and focus',
+  gut: 'gut and digestion',
+  skin: 'skin and acne',
+  hair: 'hair and scalp',
   nutrition: 'nutrition',
 };
 
@@ -281,7 +281,7 @@ const getGlowStatus = (score) => {
 const HeroGlowScore = ({ score = 78 }) => {
   const { label: statusLabel, color: statusColor } = getGlowStatus(score);
   return (
-    <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220, flexShrink: 0 }}>
+    <div className="gw-score-ring" style={{ position: 'relative', width: 248, height: 248, flexShrink: 0 }}>
       <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
         <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
         <circle cx="50" cy="50" r="42" fill="none"
@@ -389,7 +389,12 @@ const buildHeroLines = (anchor, name) => {
   }
 
   if (anchor.type === 'wellness_priorities') {
-    const list = anchor.value.join(' and ');
+    const items = anchor.value;
+    const list = items.length === 1
+      ? items[0]
+      : items.length === 2
+        ? `${items[0]} and ${items[1]}`
+        : `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
     return [
       `You told us ${list} matter most to you right now.`,
       `Let's start connecting your daily check-ins to what's actually driving that.`,
