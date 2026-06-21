@@ -1,16 +1,25 @@
-// src/pages/Dashboard.jsx — GlowWise dashboard (v2.1 responsive)
-// WITH LINKS TO /insights on: vitals cards, glow trend, explore patterns
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+// src/pages/Dashboard.jsx — GlowWise Home (v3.0 AI-first rebuild)
+// Home is now: Header + small Glow Score + Coach Hero + 3 Insight Cards + FAB check-in
+//
+// ANCHOR LOGIC (CoachHero):
+// The hero greeting references the user's specific concern in this priority order:
+//   1. profile.body_signals      — free text from onboarding step 4 (most specific)
+//   2. profile.wellness_priorities — category picks from onboarding step 3 (fallback)
+//   3. cold-start question        — if both are empty, ask in-product instead of guessing
+// Replace the `dailySummary` null below with a real Firestore read once the
+// daily-summary AI job exists — see the TODO inside Dashboard().
+//
+// Legacy sections (GlowType, Vitals, MicroHabits, WeekChart, old Plan, old Coach)
+// are preserved at the bottom of this file as commented-out source — not rendered —
+// so the future Insights/Plan tabs can be built from them directly.
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
-import { useNavigate } from 'react-router-dom';
 import {
-  Sun, Moon, Zap, Heart, Waves, MessageCircle,
-  Calendar, BarChart3, User, ChevronRight,
-  Plus, LogOut,
+  Sun, MessageCircle, Calendar, BarChart3, User, ChevronRight,
+  Plus, LogOut, X, Search, TrendingUp, Sparkles,
 } from 'lucide-react';
-import { generateDailyGuidance } from './dailyGuidance';
 
 // ============ PALETTE ============
 const C = {
@@ -42,40 +51,32 @@ const FF_UI = "'Manrope', system-ui, sans-serif";
 // ============ RESPONSIVE STYLES ============
 const responsiveCSS = `
   @media (max-width: 900px) {
-    .gw-hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
-    .gw-hero-pad { padding: 36px 28px !important; }
-    .gw-hero-title { font-size: 32px !important; }
-    .gw-score-ring { width: 180px !important; height: 180px !important; }
-    .gw-score-text { font-size: 40px !important; }
     .gw-header-h1 { font-size: 36px !important; }
-    .gw-twocol { grid-template-columns: 1fr !important; }
-    .gw-vitals { grid-template-columns: repeat(2, 1fr) !important; }
-    .gw-plan-grid { grid-template-columns: 1fr !important; }
-    .gw-main { padding: 32px 24px 100px !important; }
-    .gw-mobile-photo-banner { display: block !important; }
+    .gw-main { padding: 32px 24px 110px !important; }
+    .gw-cards-grid { grid-template-columns: 1fr !important; }
   }
   @media (max-width: 768px) {
     .gw-sidebar { display: none !important; }
     .gw-bottomnav { display: flex !important; }
-    .gw-main { padding: 24px 18px 100px !important; }
+    .gw-main { padding: 24px 18px 110px !important; }
     .gw-header { flex-direction: column !important; align-items: flex-start !important; }
-    .gw-header-actions { width: 100% !important; }
-    
+    .gw-header-actions { width: 100%; justify-content: space-between !important; }
     .gw-logout-btn { display: inline-flex !important; }
-    
-    .gw-hero-pad { padding: 28px 22px !important; }
-    .gw-hero-title { font-size: 26px !important; }
-    .gw-header-h1 { font-size: 30px !important; }
-    .gw-card-pad { padding: 22px !important; }
-    .gw-vitals { gap: 10px !important; }
+    .gw-header-h1 { font-size: 28px !important; }
+    .gw-hero-pad { padding: 30px 24px !important; }
+    .gw-hero-title { font-size: 24px !important; }
+    .gw-score-ring-sm { width: 56px !important; height: 56px !important; }
   }
   @media (max-width: 480px) {
-    .gw-hero-title { font-size: 23px !important; }
-    .gw-header-h1 { font-size: 26px !important; }
-    .gw-score-ring { width: 160px !important; height: 160px !important; }
-    .gw-score-text { font-size: 40px !important; }
-    .gw-consistency-grid { grid-template-columns: 1fr !important; }
+    .gw-header-h1 { font-size: 24px !important; }
   }
+  .gw-fab:active { transform: scale(0.94); }
+  .gw-sheet-enter { animation: gwSheetUp 0.28s cubic-bezier(0.16,1,0.3,1); }
+  @keyframes gwSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .gw-backdrop-enter { animation: gwFadeIn 0.2s ease; }
+  @keyframes gwFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .gw-card-hover { transition: all 0.25s cubic-bezier(0.16,1,0.3,1); }
+  .gw-card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -16px rgba(61,74,82,0.20); }
 `;
 
 // ============ BRAND ============
@@ -125,13 +126,30 @@ const Card = ({ children, style = {}, bg = C.paper, className = '' }) => (
   }}>{children}</div>
 );
 
-// ============ NAV ITEMS DATA ============
+// ============ WELLNESS TOPIC LABELS (mirrors Onboarding.jsx WELLNESS_TOPICS) ============
+// Used only to turn stored wellness_priorities ids back into readable labels
+// for the hero fallback. Keep this in sync with Onboarding.jsx if topics change.
+const WELLNESS_TOPIC_LABELS = {
+  hormones: 'hormonal balance',
+  fertility: 'fertility',
+  weight: 'body & weight',
+  energy: 'energy & fatigue',
+  sleep: 'sleep & recovery',
+  stress: 'stress & anxiety',
+  brain: 'brain & focus',
+  gut: 'gut & digestion',
+  skin: 'skin & acne',
+  hair: 'hair & scalp',
+  nutrition: 'nutrition',
+};
+
+// ============ NAV ITEMS DATA (renamed to 5-tab AI-first structure) ============
 const navItems = [
-  { Icon: Sun,           label: 'Dashboard',      to: '/dashboard' },
-  { Icon: MessageCircle, label: 'Wellness Coach', to: '/ai-coach' },
-  { Icon: Calendar,      label: 'Today',          to: '/checkin' },
-  { Icon: BarChart3,     label: 'Insights',       to: '/insights' },
-  { Icon: User,          label: 'Profile',        to: '/settings' },
+  { Icon: Sun,           label: 'Home',     to: '/dashboard' },
+  { Icon: MessageCircle, label: 'Coach',    to: '/ai-coach' },
+  { Icon: BarChart3,     label: 'Insights', to: '/insights' },
+  { Icon: Calendar,      label: 'Plan',     to: '/plan' },
+  { Icon: User,          label: 'Profile',  to: '/settings' },
 ];
 
 // ============ DESKTOP SIDEBAR ============
@@ -165,13 +183,10 @@ const Sidebar = () => (
     position: 'sticky', top: 0, height: '100vh',
     boxSizing: 'border-box', flexShrink: 0,
   }}>
-    <div style={{
-  display: 'flex', alignItems: 'center', gap: 12,
-  padding: '0 8px 28px',
-}}>
-  <Orbit size={38} />
-  <Wordmark size={26} />
-</div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 8px 28px' }}>
+      <Orbit size={38} />
+      <Wordmark size={26} />
+    </div>
     {navItems.map((item) => (
       <NavItem key={item.to} {...item} />
     ))}
@@ -184,32 +199,15 @@ const Sidebar = () => (
     }}>
       <div style={{ ...eyebrow(C.amber), marginBottom: 8 }}>Coming soon</div>
       <div style={{
-        fontFamily: FF_DISPLAY,
-        fontSize: 15,
-        fontWeight: 500,
-        color: C.ink,
-        lineHeight: 1.4,
-        marginBottom: 8,
-        letterSpacing: '-0.01em',
+        fontFamily: FF_DISPLAY, fontSize: 15, fontWeight: 500, color: C.ink,
+        lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.01em',
       }}>
         Photo Analysis
       </div>
-      <div style={{
-        fontFamily: FF_UI,
-        fontSize: 12,
-        color: C.body,
-        lineHeight: 1.6,
-        marginBottom: 10,
-      }}>
+      <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.body, lineHeight: 1.6, marginBottom: 10 }}>
         Track your skin, hair, and glow visually over time. AI-powered insights from your photos — coming to GlowWise soon.
       </div>
-      <div style={{
-        fontFamily: FF_UI,
-        fontSize: 11,
-        fontWeight: 600,
-        color: C.amber,
-        letterSpacing: '0.04em',
-      }}>
+      <div style={{ fontFamily: FF_UI, fontSize: 11, fontWeight: 600, color: C.amber, letterSpacing: '0.04em' }}>
         We'll notify you when it's ready
       </div>
     </div>
@@ -229,10 +227,9 @@ const BottomNavItem = ({ Icon, label, to }) => {
       color: active ? C.sageDark : C.body,
     }}>
       <Icon size={20} strokeWidth={active ? 2 : 1.6} />
-      <span style={{
-        fontFamily: FF_UI, fontSize: 10, fontWeight: active ? 700 : 500,
-        letterSpacing: '0.02em',
-      }}>{label}</span>
+      <span style={{ fontFamily: FF_UI, fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.02em' }}>
+        {label}
+      </span>
     </Link>
   );
 };
@@ -247,10 +244,7 @@ const BottomNav = () => (
     zIndex: 100,
     boxShadow: '0 -2px 12px -4px rgba(61,74,82,0.08)',
   }}>
-    {navItems.map((item) => {
-      const shortLabel = item.label === 'Wellness Coach' ? 'Coach' : item.label;
-      return <BottomNavItem key={item.to} {...item} label={shortLabel} />;
-    })}
+    {navItems.map((item) => <BottomNavItem key={item.to} {...item} />)}
   </nav>
 );
 
@@ -273,8 +267,39 @@ const btnGhost = {
   textDecoration: 'none',
 };
 
+// ============ SMALL GLOW SCORE (static, non-pressable) ============
+const getGlowStatus = (score) => {
+  if (score >= 91) return { label: 'Glowing', color: C.sage };
+  if (score >= 76) return { label: 'Thriving', color: C.sage };
+  if (score >= 61) return { label: 'Balancing', color: C.sageDark };
+  return { label: 'Recovering', color: C.terracotta };
+};
+
+const SmallGlowScore = ({ score = 78 }) => {
+  return (
+    <div
+      title={`Glow score ${score}`}
+      style={{ position: 'relative', width: 64, height: 64, flexShrink: 0, cursor: 'default' }}
+      className="gw-score-ring-sm"
+    >
+      <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="9" />
+        <circle cx="50" cy="50" r="42" fill="none"
+          stroke={C.sage} strokeWidth="9" strokeLinecap="round"
+          strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
+      </svg>
+      <div style={{
+        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+      }}>
+        <div style={{ ...display(18), color: C.sageDark, lineHeight: 1 }}>{score}</div>
+      </div>
+    </div>
+  );
+};
+
 // ============ HEADER ============
-const Header = ({ name, onLogout }) => {
+const Header = ({ name, onLogout, score }) => {
   const today = new Date();
   const hour = today.getHours();
   let greeting = 'Good morning';
@@ -286,7 +311,7 @@ const Header = ({ name, onLogout }) => {
   return (
     <div className="gw-header" style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      marginBottom: 36, flexWrap: 'wrap', gap: 16,
+      marginBottom: 32, flexWrap: 'wrap', gap: 16,
     }}>
       <div>
         <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>{weekday} · {monthDay}</div>
@@ -295,910 +320,432 @@ const Header = ({ name, onLogout }) => {
           <em style={{ fontStyle: 'italic', color: C.sage }}>{name}.</em>
         </h1>
       </div>
-      <div className="gw-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-     <button
-  onClick={onLogout}
-  style={{
-    padding: '10px 12px',
-    borderRadius: 100,
-    background: 'transparent',
-    border: `1px solid ${C.lineSoft}`,
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
-  aria-label="Log out"
->
-  <LogOut size={16} strokeWidth={1.6} color={C.mute} />
-</button>
-        <Link to="/checkin" style={btnPrimary}>
-          <Plus size={14} strokeWidth={2} /> Today's check-in
-        </Link>
+      <div className="gw-header-actions" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <SmallGlowScore score={score} />
+        <button
+          onClick={onLogout}
+          style={{
+            padding: '10px 12px', borderRadius: 100, background: 'transparent',
+            border: `1px solid ${C.lineSoft}`, cursor: 'pointer',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          }}
+          aria-label="Log out"
+        >
+          <LogOut size={16} strokeWidth={1.6} color={C.mute} />
+        </button>
       </div>
     </div>
   );
 };
 
-// ============ HERO FOCUS ============
-const getGlowStatus = (score) => {
-  if (score >= 91) return { label: 'Glowing', color: C.sage };
-  if (score >= 76) return { label: 'Thriving', color: C.sage };
-  if (score >= 61) return { label: 'Balancing', color: C.sageDark };
-  return { label: 'Recovering', color: C.terracotta };
+// ============ ANCHOR RESOLUTION ============
+// Decides what the coach hero should reference, in priority order:
+//   1. body_signals (free text, most specific — onboarding step 4)
+//   2. wellness_priorities (category picks — onboarding step 3, fallback)
+//   3. null (cold start — both empty, ask instead of guessing)
+// `profile` is the object returned by useUserData().profile, which is the
+// same shape saved by Onboarding.jsx's updateProfile() call.
+const resolveAnchor = (profile) => {
+  const bodySignals = (profile?.body_signals || '').trim();
+  if (bodySignals) {
+    return { type: 'body_signals', value: bodySignals };
+  }
+
+  const priorities = profile?.wellness_priorities || [];
+  if (priorities.length > 0) {
+    const labels = priorities
+      .map((id) => WELLNESS_TOPIC_LABELS[id])
+      .filter(Boolean);
+    if (labels.length > 0) {
+      return { type: 'wellness_priorities', value: labels };
+    }
+  }
+
+  return { type: 'cold_start', value: null };
 };
 
-const HeroFocus = ({ score = 78, guidance, name = 'there' }) => {
-  const { label: statusLabel, color: statusColor } = getGlowStatus(score);
+// Builds the two hero lines from the resolved anchor. This is the mock/
+// rule-based version — once the daily-summary AI job exists, replace this
+// function's output with the job's generated greetingLines, but keep
+// resolveAnchor() feeding into that job's prompt context either way.
+const buildHeroLines = (anchor, name) => {
+  if (anchor.type === 'body_signals') {
+    return [
+      `You mentioned: "${anchor.value}"`,
+      `I don't have enough check-ins yet to spot a pattern — but that's exactly what we're tracking toward.`,
+    ];
+  }
 
-  const headline = guidance || {
-    headlineStart: 'Your patterns are steady.',
-    headlineEm:    'A good day to build',
-    headlineEnd:   'on what\'s already working.',
-    body: 'Energy, sleep, and stress are in a healthy range. Focus on consistency — a regular bedtime and one nourishing meal will reinforce what\'s working.',
-  };
+  if (anchor.type === 'wellness_priorities') {
+    const list = anchor.value.join(' and ');
+    return [
+      `You told us ${list} matter most to you right now.`,
+      `Let's start connecting your daily check-ins to what's actually driving that.`,
+    ];
+  }
+
+  // Cold start — no onboarding signal at all, ask rather than guess
+  return [
+    `I don't know much about you yet.`,
+    `What's the one thing about your hair, skin, energy, or sleep you'd like to understand better?`,
+  ];
+};
+
+// ============ COACH HERO ============
+// `summary` shape (the future daily-summary job's contract):
+// { greetingLines: [string, string], discovery, improvement, recommendation }
+// When `summary` is null (no AI job yet, or job hasn't run today), the hero
+// falls back to the rule-based anchor lines built from onboarding data above.
+const CoachHero = ({ name, summary, profile }) => {
+  const anchor = resolveAnchor(profile);
+  const lines = summary?.greetingLines || buildHeroLines(anchor, name);
+  const isColdStart = !summary && anchor.type === 'cold_start';
 
   return (
     <div className="gw-hero-pad" style={{
       position: 'relative', overflow: 'hidden',
-      padding: '52px 48px',
-      borderRadius: 28,
-      background: 'linear-gradient(135deg, rgba(107,158,127,0.20) 0%, rgba(237,226,236,0.55) 100%)',
-      border: '1px solid rgba(107,158,127,0.12)',
-      boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
-      marginBottom: 28,
+      padding: '40px 44px',
+      borderRadius: 24,
+      background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
+      boxShadow: '0 24px 60px -32px rgba(85,126,100,0.40)',
+      marginBottom: 24,
     }}>
       <div style={{
-        position: 'absolute', width: 320, height: 320, borderRadius: '50%',
-        background: 'rgba(107,158,127,0.14)', filter: 'blur(70px)',
-        top: -120, right: -80,
+        position: 'absolute', width: 280, height: 280, borderRadius: '50%',
+        background: 'rgba(250,248,245,0.07)', filter: 'blur(70px)',
+        top: -110, right: -90,
       }} />
-      <div className="gw-hero-grid" style={{
-        position: 'relative', display: 'grid',
-        gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
-      }}>
-        <div>
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: 560 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+          <Orbit size={20} color={C.paper} tail="#C0DAC8" accent={C.terracottaMid} />
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+            fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
           }}>
-            <Orbit size={22} color={C.sageDark} tail={C.sage} accent={C.terracottaMid} />
-            <div style={{ ...eyebrow(C.sageDark) }}>Your wellness coach</div>
-          </div>
-
-          <h2 className="gw-hero-title" style={{ ...display(40), margin: 0, marginBottom: 18, maxWidth: 540, lineHeight: 1.15 }}>
-            {headline.headlineStart}{' '}
-            <em style={{ fontStyle: 'italic', color: C.sage }}>{headline.headlineEm}</em>
-            {headline.headlineEnd ? ` ${headline.headlineEnd}` : ''}
-          </h2>
-
-          <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 14 }}>
-            {headline.body}
-          </p>
-
-          <p style={{ ...bodyText(15), maxWidth: 480, marginBottom: 26, color: C.sageDark, fontWeight: 500 }}>
-            Whatever's on your mind today, {name} — your coach is here to talk it through with you.
-          </p>
-
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Link to="/ai-coach" style={{
-              ...btnPrimary,
-              padding: '14px 26px',
-              fontSize: 14,
-            }}>
-              <MessageCircle size={15} strokeWidth={2} />
-              Talk with your coach
-            </Link>
+            Your wellness coach
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220 }}>
-            <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
-              <circle cx="50" cy="50" r="42" fill="none"
-                stroke={C.sage} strokeWidth="6" strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
-              <circle
-                cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
-                cy={50 + 42 * Math.sin((score / 100) * 2 * Math.PI - Math.PI / 2)}
-                r="3.5" fill={C.terracottaMid}
-              />
-            </svg>
-            <div style={{
-              position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-            }}>
-              <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
-              <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
-              <div style={{
-                fontFamily: FF_UI, fontSize: 13, color: statusColor,
-                fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
-                transition: 'color 0.3s ease',
-              }}>
-                {statusLabel}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+        <h2 className="gw-hero-title" style={{ ...display(28), color: C.paper, margin: 0, marginBottom: 10, lineHeight: 1.3 }}>
+          {isColdStart ? `Good to see you, ${name}.` : `Good to see you, ${name}.`}
+        </h2>
 
-// ============ VITALS ============
-const Vital = ({ Icon, label, value, suffix, mood, bg, accent, text }) => (
-  <Link to="/insights" style={{ textDecoration: 'none' }}>
-    <div style={{
-      background: bg,
-      border: `1px solid ${C.lineSoft}`,
-      borderRadius: 14,
-      padding: '20px 20px 22px',
-      cursor: 'pointer',
-      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
-      e.currentTarget.style.transform = 'translateY(-2px)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.boxShadow = 'none';
-      e.currentTarget.style.transform = 'translateY(0)';
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, color: accent }}>
-        <Icon size={14} strokeWidth={1.6} />
-        <span style={{ ...eyebrow(accent), fontSize: 10 }}>{label}</span>
-      </div>
-      <div style={{ ...display(32), color: text, marginBottom: 6 }}>
-        {value}
-        <span style={{ fontSize: 13, color: accent, marginLeft: 3 }}>{suffix}</span>
-      </div>
-      <div style={{ fontFamily: FF_DISPLAY, fontStyle: 'italic', fontSize: 14, color: accent }}>
-        {mood}
-      </div>
-    </div>
-  </Link>
-);
-
-const Vitals = ({ today }) => (
-  <div style={{ marginBottom: 28 }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18, gap: 12 }}>
-      <div>
-        <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>
-          {new Date().getHours() < 12 ? 'This morning' : new Date().getHours() < 18 ? 'This afternoon' : 'This evening'}
-        </div>
-        <h3 style={{ ...display(26), margin: 0 }}>Your snapshot</h3>
-      </div>
-    </div>
-    <div className="gw-vitals" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
-      <Vital Icon={Zap}   label="Energy" value={today.energy} suffix="/10" mood={today.energy <= 3 ? 'Exhausted' : today.energy <= 5 ? 'Low' : today.energy <= 7 ? 'Steady' : 'Energised'}  bg={C.amberBg}      accent={C.amber}      text="#8B6A30" />
-      <Vital Icon={Moon}  label="Sleep"  value={today.sleep}  suffix="h"    mood={today.sleep < 5 ? 'Restless' : today.sleep < 6 ? 'Light' : today.sleep < 7 ? 'Fair' : 'Restful'} bg={C.plumBg}       accent={C.plum}       text="#5D4459" />
-      <Vital Icon={Waves} label="Stress" value={today.stress} suffix="/10" mood={today.stress <= 3 ? 'Calm' : today.stress <= 5 ? 'Settled' : today.stress <= 7 ? 'Elevated' : 'Tense'}    bg={C.sageMint}     accent={C.sageDark}   text="#3D5E48" />
-      <Vital Icon={Heart} label="Mood"   value={today.mood}   suffix="/10" mood={today.mood <= 3 ? 'Low' : today.mood <= 5 ? 'Unsettled' : today.mood <= 7 ? 'Steady' : 'Bright'}  bg={C.terracottaBg} accent={C.terracotta} text="#8B4A30" />
-    </div>
-  </div>
-);
-
-// ============ WEEK CHART ============
-const WeekChart = ({ scores = [62, 70, 65, 74, 71, 76, 78], dates = [] }) => {
-  // Validate scores
-if (!scores || scores.length < 2) {
-    const ghostScores = [52, 61, 57, 68, 64, 72, 75];
-    const ghostMin = Math.min(...ghostScores);
-    const ghostMax = Math.max(...ghostScores);
-    const ghostRange = ghostMax - ghostMin || 1;
-    const gw = 500, gh = 250, gpx = 40, gpy = 40;
-    const gcw = gw - gpx * 2;
-    const gch = gh - gpy * 2 - 30;
-    const ghostPts = ghostScores.map((v, i) => ({
-      x: gpx + (i / (ghostScores.length - 1)) * gcw,
-      y: gpy + gch - ((v - ghostMin) / ghostRange) * gch,
-    }));
-    const ghostLine = ghostPts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-    const ghostArea = `${ghostLine} L ${ghostPts[ghostPts.length - 1].x} ${gpy + gch} L ${ghostPts[0].x} ${gpy + gch} Z`;
-    return (
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
-            <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
-          </div>
-          <div style={{ fontFamily: FF_UI, fontSize: 11, color: C.mute, fontStyle: 'italic' }}>
-            Check in to reveal your trend
-          </div>
-        </div>
-        <div style={{ width: '100%', overflow: 'visible', position: 'relative' }}>
-          <svg width="100%" height="auto" viewBox={`0 0 ${gw} ${gh}`} style={{ display: 'block', minHeight: '180px', maxWidth: '100%' }} preserveAspectRatio="xMidYMid meet">
-            <g opacity="0.18">
-            <defs>
-              <linearGradient id="ghostGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={C.sageDark} stopOpacity="0.4" />
-                <stop offset="100%" stopColor={C.sageDark} stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path d={ghostArea} fill="url(#ghostGrad)" />
-            <path d={ghostLine} fill="none" stroke={C.sageDark} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="6 3" />
-            {ghostPts.map((p, i) => (
-              <circle key={i} cx={p.x} cy={p.y} r={i === ghostPts.length - 1 ? 6 : 4} fill={C.sageDark} />
-            ))}
-            </g>
-            {scores && scores.length === 1 && (() => {
-              const realY = gpy + gch - ((scores[0] - ghostMin) / ghostRange) * gch;
-              return (
-                <circle cx={gpx + gcw / 2} cy={realY} r={8} fill={C.terracotta} />
-              );
-            })()}
-          </svg>
-        </div>
-      </Card>
-    );
-  }
-
-  const max = Math.max(...scores);
-  const min = Math.min(...scores);
-  const range = max - min || 1;
-  
-  const w = 500;
-  const h = 250;
-  const padX = 40;
-  const padY = 40;
-  const chartW = w - padX * 2;
-  const chartH = h - padY * 2 - 30; // Extra space for labels
-  
-  // Calculate points
-  const pts = scores.map((v, i) => {
-    const x = scores.length === 1
-      ? padX + chartW / 2
-      : padX + (i / (scores.length - 1)) * chartW;
-    const y = padY + chartH - ((v - min) / range) * chartH;
-    return { x, y, v };
-  });
-  
-  // Generate day labels (proper Mon-Sun)
- const dayLabels = dates && dates.length === scores.length ? dates : scores.map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (scores.length - 1 - i));
-    return d.toLocaleDateString('en-GB', { weekday: 'short' });
-  });
-  
-  // Build SVG path
-  const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-  const areaPath = `${linePath} L ${pts[pts.length - 1].x} ${padY + chartH} L ${pts[0].x} ${padY + chartH} Z`;
-  
-  const delta = Math.round(scores[scores.length - 1] - scores[0]);
-
-  return (
-    <Link to="/insights" style={{ textDecoration: 'none' }}>
-      <Card style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = '0 12px 32px rgba(61,74,82,0.16)';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = '0 1px 0 rgba(0,0,0,0.02), 0 10px 30px -24px rgba(61,74,82,0.18)';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Last 7 days</div>
-            <h3 style={{ ...display(22), margin: 0 }}>Your glow trend</h3>
-          </div>
-          <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.sageDark, fontWeight: 600 }}>
-            {delta >= 0 ? '↑' : '↓'} {delta >= 0 ? '+' : ''}{delta} pts
-          </div>
-        </div>
-        <p style={{ ...bodyText(12.5), marginBottom: 20, maxWidth: 360 }}>
-          How your overall wellbeing is trending — so daily ups and downs don't
-          cloud the bigger picture.
+        <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 6 }}>
+          {lines[0]}
         </p>
+        {lines[1] && (
+          <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 24 }}>
+            {lines[1]}
+          </p>
+        )}
 
-        {/* Chart Container */}
-        <div style={{ width: '100%', overflow: 'visible' }}>
-          <svg 
-            width="100%" 
-            height="auto"
-            viewBox={`0 0 ${w} ${h}`}
-            style={{ 
-              display: 'block',
-              minHeight: '160px',
-              maxWidth: '100%'
-            }}
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <linearGradient id="gloGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={C.sage} stopOpacity="0.28" />
-                <stop offset="100%" stopColor={C.sage} stopOpacity="0.02" />
-              </linearGradient>
-            </defs>
-
-            {/* Gradient area under line */}
-            <path 
-              d={areaPath}
-              fill="url(#gloGrad)"
-            />
-
-            {/* Main trend line */}
-            <path 
-              d={linePath}
-              fill="none"
-              stroke={C.sageDark}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-            {/* Data points and labels */}
-            {pts.map((p, i) => (
-              <g key={`point-${i}`}>
-                {/* Circle marker */}
-                <circle 
-                  cx={p.x} 
-                  cy={p.y}
-                  r={i === pts.length - 1 ? 6 : 4}
-                  fill={i === pts.length - 1 ? C.terracotta : C.sageDark}
-                  opacity={i === pts.length - 1 ? 1 : 0.8}
-                />
-
-                {/* Day label below chart */}
-                <text
-                  x={p.x}
-                  y={padY + chartH + 28}
-                  textAnchor="middle"
-                  fontSize="12"
-                  fontWeight="600"
-                  fontFamily={FF_UI}
-                  fill={C.mute}
-                >
-                  {dayLabels[i]}
-                </text>
-              </g>
-            ))}
-          </svg>
-        </div>
-      </Card>
-    </Link>
-  );
-};
-
-// ============ COACH ============
-const Coach = ({ name, checkIns = [] }) => {
-  const recent = checkIns.slice(0, 3);
-  const avg = (field) => {
-    const vals = recent.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
-    if (!vals.length) return null;
-    return vals.reduce((a, b) => a + b, 0) / vals.length;
-  };
-  const avgSleep = avg('sleep_hours');
-  const avgStress = avg('stress_level');
-  const avgEnergy = avg('energy');
-  const avgMood = avg('mood');
-  let observation, subtext;
-  if (recent.length === 0) {
-    observation = "Welcome to GlowWise. Your coach is ready when you are.";
-    subtext = "Complete your first check-in and your coach will start noticing patterns in how you feel — so you never have to explain yourself twice.";
-  } else if (recent.length < 3) {
-    observation = "Your coach is getting to know you.";
-    subtext = "A few more check-ins and GlowWise will start connecting the dots between your energy, sleep, stress, and mood patterns.";
-  } else if (avgSleep !== null && avgSleep < 6) {
-    observation = "Sleep has been the most active signal in your recent check-ins.";
-    subtext = "Protecting rest time this week could shift how your energy and mood feel. Your data suggests sleep is the highest leverage habit right now.";
-  } else if (avgStress !== null && avgStress > 7) {
-    observation = "Stress has been elevated across your recent check-ins.";
-    subtext = "Your nervous system may need more recovery than it is currently getting. Even small reductions in evening stimulation can compound quickly.";
-  } else if (avgEnergy !== null && avgMood !== null && avgEnergy < 5 && avgMood < 5) {
-    observation = "Energy and mood have both been lower lately — these often move together.";
-    subtext = "One small consistent habit could start to shift the pattern. Your coach is watching which habits make the biggest difference for you.";
-  } else if (avgSleep !== null && avgStress !== null && avgSleep >= 7 && avgStress <= 4) {
-    observation = "Sleep and stress are both in a healthy range right now.";
-    subtext = "This is a strong foundation. Focus on keeping these consistent and your energy and mood will follow naturally over time.";
-  } else {
-    observation = "Your patterns are beginning to stabilise across your recent check-ins.";
-    subtext = "Consistency is the most powerful tool you have right now. GlowWise is tracking which habits are making the biggest difference for you.";
-  }
-  return (
-  <div
-    className="gw-card-pad"
-    style={{
-      padding: '34px 34px',
-      borderRadius: 20,
-      background:
-        'linear-gradient(135deg, #6B9E7F 0%, #5B8D70 100%)',
-      color: C.paper,
-      position: 'relative',
-      overflow: 'hidden',
-      boxShadow:
-        '0 24px 60px -30px rgba(85,126,100,0.45)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      height: '100%',
-      boxSizing: 'border-box',
-    }}
-  >
-    {/* Ambient Glow */}
-    <div
-      style={{
-        position: 'absolute',
-        width: 260,
-        height: 260,
-        borderRadius: '50%',
-        background:
-          'rgba(250,248,245,0.06)',
-        filter: 'blur(60px)',
-        top: -120,
-        right: -100,
-      }}
-    />
-    {/* Decorative G */}
-    <div
-      style={{
-        position: 'absolute',
-        top: -30,
-        right: -20,
-        fontFamily: FF_DISPLAY,
-        fontStyle: 'italic',
-        fontSize: 220,
-        color: 'rgba(250,248,245,0.05)',
-        lineHeight: 1,
-        pointerEvents: 'none',
-      }}
-    >
-      g
-    </div>
-    <div style={{ position: 'relative', zIndex: 2 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          marginBottom: 18,
-        }}
-      >
-        <Orbit
-          size={26}
-          color={C.paper}
-          tail="#C0DAC8"
-          accent={C.terracottaMid}
-        />
-        <div
-          style={{
-            fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
-          }}
-        >
-          Today's observation
-        </div>
-      </div>
-      <p
-        style={{
-          fontFamily: FF_DISPLAY,
-          fontSize: 30,
-          lineHeight: 1.22,
-          letterSpacing: '-0.03em',
-          color: C.paper,
-          margin: 0,
-          marginBottom: 18,
-          maxWidth: 520,
-        }}
-      >
-        {observation}
-      </p>
-      <p
-        style={{
-          fontFamily: FF_UI,
-          fontSize: 14.5,
-          lineHeight: 1.75,
-          color: 'rgba(250,248,245,0.82)',
-          margin: 0,
-          marginBottom: 28,
-          maxWidth: 500,
-        }}
-      >
-        {subtext}
-      </p>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 10,
-        }}
-      >
-        <Link
-          to="/ai-coach"
-          style={{
-            background: C.paper,
-            color: C.sageDark,
-            border: 'none',
-            padding: '11px 20px',
-            borderRadius: 999,
-            fontFamily: FF_UI,
-            fontSize: 13,
-            fontWeight: 600,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            textDecoration: 'none',
-          }}
-        >
-          <MessageCircle size={14} strokeWidth={1.6} />
-          Reflect with coach
-        </Link>
-        <Link
-          to="/insights"
-          style={{
-            background: 'transparent',
-            color: 'rgba(250,248,245,0.92)',
-            border: '1px solid rgba(250,248,245,0.22)',
-            padding: '11px 18px',
-            borderRadius: 999,
-            fontFamily: FF_UI,
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: 'pointer',
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-          }}
-        >
-          Explore patterns <ChevronRight size={12} strokeWidth={2} />
+        <Link to="/ai-coach" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '13px 24px', borderRadius: 999,
+          background: C.paper, color: C.sageDark, border: 'none',
+          fontFamily: FF_UI, fontSize: 13.5, fontWeight: 700,
+          textDecoration: 'none', marginTop: lines[1] ? 0 : 18,
+        }}>
+          <MessageCircle size={15} strokeWidth={2} />
+          {isColdStart ? "Tell my coach" : "Let's talk"}
         </Link>
       </div>
     </div>
- </div>
-  );
-};
-// ============ GLOW TYPE ============
-const GlowType = ({ profile }) => {
-  const navigate = useNavigate();
-  const glowTypeName = profile?.glowType || 'The Steady Bloomer';
-  const glowTypeDesc = profile?.glowTypeDescription || 'Gentle rituals, calm mornings, and predictable rhythms help you feel grounded and energised.';
-  const focusAreas = profile?.focusAreas || ['Gentle rhythm', 'Calm energy', 'Soft structure'];
-
-  return (
-    <div
-      className="gw-card-pad"
-      onClick={() => navigate('/glow-type')}
-      style={{
-  padding: '36px 34px 40px',
-  minHeight: 340,
-  borderRadius: 16,
-  background:
-  'linear-gradient(145deg, rgba(107,158,127,0.14) 0%, rgba(237,226,236,0.62) 52%, rgba(245,221,208,0.30) 100%)',
-border: '1px solid rgba(107,158,127,0.10)',
-boxShadow: '0 30px 80px -42px rgba(61,74,82,0.22)',
-backdropFilter: 'blur(2px)',
-  position: 'relative',
-  overflow: 'hidden',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-}}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = '0 12px 32px rgba(61,74,82,0.16)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = '0 24px 60px -36px rgba(61,74,82,0.16)';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
-    >
-      <>
-  <div style={{
-    position: 'absolute',
-    width: '220px',
-    height: '220px',
-    borderRadius: '50%',
-    background: 'rgba(107,158,127,0.10)',
-    filter: 'blur(60px)',
-    top: '-80px',
-    right: '-40px',
-  }} />
-
-    {/* Editorial watermark */}
-  <div style={{
-    position: 'absolute',
-    bottom: '-55px',
-    left: '-10px',
-    fontFamily: FF_DISPLAY,
-    fontStyle: 'italic',
-    fontSize: 160,
-    color: 'rgba(85,126,100,0.04)',
-    lineHeight: 1,
-    pointerEvents: 'none',
-    userSelect: 'none',
-    zIndex: 1,
-  }}>
-    g
-  </div>
-
-  {/* Orbital motif */}
-  <svg
-    width="120"
-    height="120"
-    viewBox="0 0 120 120"
-    style={{
-      position: 'absolute',
-      top: '16px',
-      right: '18px',
-      opacity: 0.18,
-      pointerEvents: 'none',
-    }}
-  >
-    <circle
-      cx="60"
-      cy="60"
-      r="34"
-      stroke={C.sageDark}
-      strokeWidth="1.5"
-      fill="none"
-      strokeDasharray="3 6"
-    />
-
-    <circle
-      cx="60"
-      cy="60"
-      r="20"
-      stroke={C.sage}
-      strokeWidth="1.2"
-      fill="none"
-    />
-
-    <circle
-      cx="94"
-      cy="60"
-      r="4"
-      fill={C.terracottaMid}
-    />
-
-    <circle
-      cx="60"
-      cy="60"
-      r="5"
-      fill={C.sageDark}
-    />
-  </svg>
-</>
-      <div style={{ ...eyebrow(C.sageDark), marginBottom: 12, position: 'relative', zIndex: 2 }}>
-        Your glow type
-      </div>
-     <h3 style={{
-  ...display(36),
-  margin: 0,
-  marginBottom: 18,
-  lineHeight: 1,
-  fontStyle: 'italic',
-  fontWeight: 500,
-  letterSpacing: '-0.03em',
-  position: 'relative',
-  zIndex: 2,
-}}>
-        {glowTypeName}
-      </h3>
-      <>
-  <p style={{
-    ...bodyText(14),
-    color: C.body,
-    marginBottom: 26,
-    lineHeight: 1.8,
-    position: 'relative',
-    zIndex: 2,
-  }}>
-    {glowTypeDesc}
-  </p>
-</>
-                  <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 8,
-          marginBottom: 22,
-          position: 'relative',
-          zIndex: 2,
-        }}
-      >
-        {focusAreas.slice(0, 3).map((t) => {
-          return (
-            <span
-              key={t}
-              style={{
-                padding: '5px 12px',
-                borderRadius: 999,
-                background: 'rgba(107,158,127,0.12)',
-                color: C.sageDark,
-                fontSize: 11.5,
-                fontWeight: 600,
-                fontFamily: FF_UI,
-              }}
-            >
-              {t}
-            </span>
-          );
-        })}
-      </div>
-
-            <div
-        style={{
-          color: C.sageDark,
-          fontFamily: FF_UI,
-          fontSize: 13,
-          fontWeight: 700,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          padding: '10px 16px',
-          borderRadius: 999,
-          background: 'rgba(107,158,127,0.10)',
-          border: '1px solid rgba(107,158,127,0.12)',
-          position: 'relative',
-          zIndex: 2,
-        }}
-      >
-        Explore your rhythm
-        <ChevronRight size={12} strokeWidth={2.2} />
-      </div>
-    </div>
   );
 };
 
-// ============ PLAN ============
-const planItems = [
-  { eyebrow: 'Sleep Support',   title: 'Consistent bedtime by 10:30pm', note: '4 / 7 this week',     accent: C.plum,       bg: C.plumBg },
-  { eyebrow: 'Stress Recovery', title: '10 min slow breathing',          note: 'Building consistency', accent: C.sageDark,   bg: C.sageMint },
-  { eyebrow: 'Daily Movement',  title: 'Walk after lunch',               note: '5 / 7 this week',     accent: C.terracotta, bg: C.terracottaBg },
+// ============ INSIGHT CARDS: Discovery / Improvement / Recommendation ============
+// `cards` mock shape — replace with the daily-summary doc fields when the AI job exists:
+// { discovery: { text }, improvement: { text }, recommendation: { text } }
+const insightCardMeta = [
+  {
+    key: 'discovery',
+    Icon: Search,
+    eyebrow: 'Discovery',
+    accent: C.plum,
+    bg: C.plumBg,
+    text: '#5D4459',
+    ctaLabel: 'Explore',
+    ctaTo: '/ai-coach',
+  },
+  {
+    key: 'improvement',
+    Icon: TrendingUp,
+    eyebrow: 'Improvement',
+    accent: C.sageDark,
+    bg: C.sageMint,
+    text: '#3D5E48',
+    ctaLabel: 'Tell me more',
+    ctaTo: '/ai-coach',
+  },
+  {
+    key: 'recommendation',
+    Icon: Sparkles,
+    eyebrow: 'Recommendation',
+    accent: C.amber,
+    bg: C.amberBg,
+    text: '#8B6A30',
+    ctaLabel: 'Add to plan',
+    ctaTo: '/plan',
+  },
 ];
 
-const Plan = () => (
-  <Card>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20, gap: 12, flexWrap: 'wrap' }}>
+const InsightCard = ({ meta, text, onCta }) => {
+  const { Icon, eyebrow: label, accent, bg, text: textColor, ctaLabel } = meta;
+  return (
+    <div className="gw-card-hover" style={{
+      background: bg,
+      border: `1px solid ${C.lineSoft}`,
+      borderRadius: 16,
+      padding: '22px 22px 20px',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      minHeight: 168,
+    }}>
       <div>
-        <div style={{ ...eyebrow(C.mute), marginBottom: 6 }}>Your plan</div>
-        <h3 style={{ ...display(24), margin: 0 }}>Your wellness plan</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14, color: accent }}>
+          <Icon size={14} strokeWidth={1.8} />
+          <span style={{ ...eyebrow(accent), fontSize: 10 }}>{label}</span>
+        </div>
+        <p style={{
+          fontFamily: FF_DISPLAY, fontSize: 16.5, lineHeight: 1.45,
+          color: textColor, margin: 0, letterSpacing: '-0.01em',
+        }}>
+          {text}
+        </p>
       </div>
+      <button
+        onClick={onCta}
+        style={{
+          marginTop: 16, alignSelf: 'flex-start',
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          background: 'transparent', border: 'none', cursor: 'pointer',
+          color: accent, fontFamily: FF_UI, fontSize: 12.5, fontWeight: 700,
+          padding: 0,
+        }}
+      >
+        {ctaLabel} <ChevronRight size={12} strokeWidth={2.2} />
+      </button>
     </div>
-    <Link to="/wellness-plan" style={{ textDecoration: 'none' }}>
-      <div className="gw-plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, cursor: 'pointer' }}>
-        {planItems.map((p, i) => (
-          <div key={i} style={{
-            padding: '20px 20px 22px', borderRadius: 14,
-            background: p.bg, border: `1px solid ${C.lineSoft}`,
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = '0 8px 24px rgba(61,74,82,0.12)';
-            e.currentTarget.style.transform = 'translateY(-2px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = 'none';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}>
-            <div style={{ ...eyebrow(p.accent), marginBottom: 12, fontSize: 10 }}>{p.eyebrow}</div>
-            <div style={{
-              fontFamily: FF_DISPLAY, fontSize: 19,
-              color: C.ink, lineHeight: 1.3, marginBottom: 16,
-              letterSpacing: '-0.01em',
-            }}>
-              {p.title}
-            </div>
-            <div style={{ fontFamily: FF_UI, fontSize: 12, color: p.accent, fontWeight: 600 }}>
-              {p.note}
-            </div>
-          </div>
-        ))}
-      </div>
-    </Link>
-  </Card>
-);
-// ============ MICRO HABITS / CONSISTENCY CARDS ============
-const MicroHabits = ({ checkIns, profile }) => {
-  const FF_DISPLAY = "'Fraunces', Georgia, serif";
-  const FF_UI = "'Manrope', system-ui, sans-serif";
+  );
+};
 
-  const getWeekKey = () => {
-    const now = new Date();
-    const day = now.getDay();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - ((day + 6) % 7));
-    return `week_${monday.toISOString().split('T')[0]}`;
+// Fallback card copy used only when no daily-summary doc exists yet AND
+// there isn't enough check-in history to generate anything real. Once the
+// AI job exists, `cards` will be populated from Firestore and this object
+// is never reached.
+const buildFallbackCards = (anchor) => {
+  if (anchor.type === 'body_signals') {
+    return {
+      discovery: `We're just getting started — once you've logged a few check-ins, I'll be able to connect them to "${anchor.value}".`,
+      improvement: `Nothing to compare yet. Check in today and tomorrow, and I'll start tracking what's changing.`,
+      recommendation: `Try a check-in today so I have something real to work from.`,
+    };
+  }
+  return {
+    discovery: "You're most consistent with check-ins on weekday mornings — weekends are where things slip.",
+    improvement: "Stress has dropped from an average of 6.8 to 5.1 over the past two weeks.",
+    recommendation: "Add a 10-minute wind-down before bed tonight — your sleep tends to dip after high-stress days.",
   };
+};
 
-  const thisMonth = new Date().getMonth();
-  const thisYear = new Date().getFullYear();
-  const checkInsThisMonth = (checkIns || []).filter(c => {
-    const d = c.created_at?.toDate?.() || new Date(c.date || c.created_at);
-    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
-  }).length;
+const InsightCards = ({ cards, anchor }) => {
+  const navigate = useNavigate();
+  const data = cards || buildFallbackCards(anchor);
 
-  const weekKey = getWeekKey();
-  const weekCompletions = profile?.[weekKey] || {};
-  const actionsCompleted = Object.values(weekCompletions).filter(Boolean).length;
-  const totalActions = 6;
-
-  const recent = (checkIns || []).slice(0, 7);
-  const getConsistency = (field) => {
-    const vals = recent.map(c => parseFloat(c[field])).filter(v => !isNaN(v));
-    if (vals.length < 2) return 999;
-    const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-    return vals.reduce((sum, v) => sum + Math.abs(v - avg), 0) / vals.length;
+  const handleCta = (meta) => {
+    // Stubbed routing for now — Coach tab will accept context, Plan tab will accept additions
+    navigate(meta.ctaTo, { state: { fromCard: meta.key, text: data[meta.key] } });
   };
-  const metrics = [
-    { key: 'sleep_hours', label: 'Sleep' },
-    { key: 'energy', label: 'Energy' },
-    { key: 'stress_level', label: 'Stress' },
-    { key: 'mood', label: 'Mood' },
-  ];
-  const mostConsistent = metrics.reduce((best, m) =>
-    getConsistency(m.key) < getConsistency(best.key) ? m : best, metrics[0]);
-
-  const cards = [
-    {
-      eyebrow: 'This month',
-      value: checkInsThisMonth,
-      label: checkInsThisMonth === 1 ? 'check-in logged' : 'check-ins logged',
-      note: 'Patterns take shape with consistency',
-      bg: '#EDF4EF', accent: '#557E64', text: '#3D5E48',
-    },
-    {
-      eyebrow: 'This week',
-      value: `${actionsCompleted} of ${totalActions}`,
-      label: 'wellness actions done',
-      note: 'Small actions compound over time',
-      bg: '#FAF3DC', accent: '#A07E3D', text: '#8B6A30',
-    },
-    {
-      eyebrow: 'Most consistent',
-      value: recent.length > 0 ? mostConsistent.label : '—',
-      label: recent.length > 0 ? 'your steadiest habit' : 'check in to see patterns',
-      note: 'Consistency over perfection, always',
-      bg: '#EDE2EC', accent: '#7A5C77', text: '#5D4459',
-    },
-  ];
 
   return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ marginBottom: 18 }}>
-        <div style={{
-          fontFamily: FF_UI, fontSize: 11, fontWeight: 600,
-          letterSpacing: '0.18em', textTransform: 'uppercase',
-          color: '#A89968', marginBottom: 6,
-        }}>Your consistency</div>
-        <h3 style={{
-          fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 26,
-          lineHeight: 1.1, letterSpacing: '-0.02em', color: '#3D4A52', margin: 0,
-        }}>What you've been building</h3>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }} className="gw-consistency-grid">
-        {cards.map((card, i) => (
-          <div key={i} style={{
-            background: card.bg,
-            border: '1px solid rgba(168,153,104,0.10)',
-            borderRadius: 14,
-            padding: '20px 20px 22px',
-          }}>
-            <div style={{
-              fontFamily: FF_UI, fontSize: 10, fontWeight: 600,
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-              color: card.accent, marginBottom: 14,
-            }}>{card.eyebrow}</div>
-                        <div style={{
-              fontFamily: FF_DISPLAY, fontWeight: 400, fontSize: 'clamp(20px, 5vw, 32px)',
-              color: card.text, marginBottom: 4,
-              lineHeight: 1.1, letterSpacing: '-0.02em',
-              whiteSpace: 'nowrap',
-            }}>{card.value}</div>
+    <div className="gw-cards-grid" style={{
+      display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28,
+    }}>
+      {insightCardMeta.map((meta) => (
+        <InsightCard
+          key={meta.key}
+          meta={meta}
+          text={data[meta.key]}
+          onCta={() => handleCta(meta)}
+        />
+      ))}
+    </div>
+  );
+};
 
+// ============ CHECK-IN FAB + MODAL ============
+const energyLabels = ['Drained', 'Low', 'Okay', 'Good', 'Energised'];
+const moodOptions = [
+  { key: 'low', label: 'Low' },
+  { key: 'unsettled', label: 'Unsettled' },
+  { key: 'steady', label: 'Steady' },
+  { key: 'bright', label: 'Bright' },
+];
+const sleepOptions = [
+  { key: 'restless', label: 'Restless' },
+  { key: 'light', label: 'Light' },
+  { key: 'fair', label: 'Fair' },
+  { key: 'restful', label: 'Restful' },
+];
+const stressOptions = [
+  { key: 'calm', label: 'Calm' },
+  { key: 'elevated', label: 'Elevated' },
+  { key: 'tense', label: 'Tense' },
+];
+
+const OptionPills = ({ options, value, onChange, accent }) => (
+  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+    {options.map((opt) => {
+      const active = value === opt.key;
+      return (
+        <button
+          key={opt.key}
+          onClick={() => onChange(opt.key)}
+          style={{
+            padding: '9px 16px', borderRadius: 999,
+            border: `1px solid ${active ? accent : C.lineSoft}`,
+            background: active ? accent : 'transparent',
+            color: active ? C.paper : C.body,
+            fontFamily: FF_UI, fontSize: 13, fontWeight: 600,
+            cursor: 'pointer', transition: 'all 0.15s ease',
+          }}
+        >
+          {opt.label}
+        </button>
+      );
+    })}
+  </div>
+);
+
+const CheckInModal = ({ open, onClose, onSubmit }) => {
+  const [energy, setEnergy] = useState(3);
+  const [mood, setMood] = useState(null);
+  const [sleep, setSleep] = useState(null);
+  const [stress, setStress] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+
+  if (!open) return null;
+
+  const canSubmit = mood && sleep && stress;
+
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    onSubmit({ energy, mood, sleep, stress });
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setEnergy(3); setMood(null); setSleep(null); setStress(null);
+      onClose();
+    }, 1100);
+  };
+
+  return (
+    <div
+      className="gw-backdrop-enter"
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(61,74,82,0.32)',
+        zIndex: 200, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+      }}
+    >
+      <div
+        className="gw-sheet-enter"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: C.paper, borderRadius: '24px 24px 0 0',
+          width: '100%', maxWidth: 560, maxHeight: '88vh', overflowY: 'auto',
+          padding: '28px 26px calc(32px + env(safe-area-inset-bottom))',
+          boxShadow: '0 -16px 50px -10px rgba(61,74,82,0.25)',
+        }}
+      >
+        {submitted ? (
+          <div style={{ textAlign: 'center', padding: '40px 0' }}>
             <div style={{
-              fontFamily: FF_UI, fontSize: 13, color: card.accent,
-              fontWeight: 500, marginBottom: 10,
-            }}>{card.label}</div>
-            <div style={{
-              fontFamily: FF_DISPLAY, fontStyle: 'italic',
-              fontSize: 12.5, color: card.accent, lineHeight: 1.5,
-            }}>{card.note}</div>
+              width: 56, height: 56, borderRadius: '50%', background: C.sageMint,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}>
+              <Sparkles size={24} color={C.sageDark} strokeWidth={1.8} />
+            </div>
+            <p style={{ ...display(20), margin: 0 }}>Thanks, check-in recorded.</p>
           </div>
-        ))}
+        ) : (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <h3 style={{ ...display(22), margin: 0 }}>Today's check-in</h3>
+              <button onClick={onClose} aria-label="Close" style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                padding: 6, color: C.mute,
+              }}>
+                <X size={20} strokeWidth={1.8} />
+              </button>
+            </div>
+
+            <div style={{ marginBottom: 26 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Energy</div>
+              <input
+                type="range" min="1" max="5" step="1"
+                value={energy}
+                onChange={(e) => setEnergy(Number(e.target.value))}
+                style={{ width: '100%', accentColor: C.sage, marginBottom: 8 }}
+              />
+              <div style={{ fontFamily: FF_DISPLAY, fontStyle: 'italic', fontSize: 15, color: C.sageDark }}>
+                {energyLabels[energy - 1]}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 26 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Mood</div>
+              <OptionPills options={moodOptions} value={mood} onChange={setMood} accent={C.terracotta} />
+            </div>
+
+            <div style={{ marginBottom: 26 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Sleep quality</div>
+              <OptionPills options={sleepOptions} value={sleep} onChange={setSleep} accent={C.plum} />
+            </div>
+
+            <div style={{ marginBottom: 30 }}>
+              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Stress level</div>
+              <OptionPills options={stressOptions} value={stress} onChange={setStress} accent={C.sageDark} />
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              style={{
+                width: '100%', padding: '15px', borderRadius: 999,
+                background: canSubmit ? C.sage : C.lineSoft,
+                color: canSubmit ? C.paper : C.mute,
+                border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed',
+                fontFamily: FF_UI, fontSize: 14.5, fontWeight: 700,
+              }}
+            >
+              Save check-in
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
 };
+
+const CheckInFAB = ({ onClick }) => (
+  <button
+    className="gw-fab"
+    onClick={onClick}
+    aria-label="Add today's check-in"
+    style={{
+      position: 'fixed', right: 24, bottom: 88,
+      width: 56, height: 56, borderRadius: '50%',
+      background: C.sage, border: 'none', cursor: 'pointer',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: '0 12px 28px -8px rgba(85,126,100,0.55)',
+      zIndex: 90, transition: 'transform 0.15s ease',
+    }}
+  >
+    <Plus size={24} color={C.paper} strokeWidth={2.2} />
+  </button>
+);
 
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
@@ -1215,7 +762,7 @@ const MobileLogo = () => (
   </div>
 );
 
-// ============ DASHBOARD ============
+// ============ DASHBOARD (HOME) ============
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -1224,8 +771,11 @@ export default function Dashboard() {
     checkIns,
     glowScore,
     loading,
-    getTodayCheckIn,
+    addCheckIn, // assumed existing context method that writes to Firestore check-in collection
   } = useUserData();
+
+  const [checkInOpen, setCheckInOpen] = useState(false);
+
   const firstName =
     (
       profile?.name ||
@@ -1234,6 +784,7 @@ export default function Dashboard() {
       user?.displayName ||
       ''
     ).split(' ')[0] || 'there';
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -1242,39 +793,38 @@ export default function Dashboard() {
       console.error(e);
     }
   };
-  const todayCheckIn = getTodayCheckIn();
-  const today = todayCheckIn ? {
-    energy: todayCheckIn.energy || 7,
-    sleep: todayCheckIn.sleep_hours || 7.2,
-    stress: todayCheckIn.stress_level || 4,
-    mood: todayCheckIn.mood || 8,
-  } : {
-    energy: 7,
-    sleep: 7.2,
-    stress: 4,
-    mood: 8,
-  };
+
   const score = glowScore || 78;
-  const recentCheckIns = [...checkIns]
-    .sort((a, b) => {
-      const dateA = a.created_at?.toDate?.() || new Date(a.date || a.created_at);
-      const dateB = b.created_at?.toDate?.() || new Date(b.date || b.created_at);
-      return dateA - dateB;
-    })
-    .slice(-7);
-  const weekScores = recentCheckIns.map(c => {
-    const energy = c.energy || 0;
-    const sleep = (c.sleep_hours || 0) / 9 * 10;
-    const stress = 10 - (c.stress_level || 0);
-    const mood = c.mood || 0;
-    return Math.round((energy + sleep + stress + mood) / 4);
-  });
-  const weekDates = recentCheckIns.map(c => {
-    const d = c.created_at?.toDate?.() || new Date(c.date || c.created_at);
-    return d.toLocaleDateString('en-GB', { weekday: 'short' });
-  });
-  const displayWeekScores = weekScores.length >= 1 ? weekScores : [];
-  const dailyGuidance = generateDailyGuidance(checkIns);
+
+  // Resolve which onboarding signal anchors the hero (body_signals first,
+  // wellness_priorities fallback, cold-start question if both are empty).
+  const anchor = resolveAnchor(profile);
+
+  // TODO: replace with a real Firestore read once the daily-summary AI job
+  // exists. Expected doc shape: { greetingLines: [string, string], discovery,
+  // improvement, recommendation, generated_at }. That job's prompt MUST
+  // receive `anchor` (or the raw profile.body_signals / wellness_priorities)
+  // as context and be instructed to lead with it — see CoachHero/buildHeroLines
+  // and buildFallbackCards above for the rule-based version this replaces.
+  const dailySummary = null;
+
+  const handleCheckInSubmit = (data) => {
+    // Maps modal selections to the existing Firestore check-in field names
+    // (energy, mood, sleep_hours/sleep, stress_level) — wire to real field names
+    // once confirmed; addCheckIn is assumed to already exist on UserDataContext.
+    if (typeof addCheckIn === 'function') {
+      addCheckIn({
+        energy: data.energy,
+        mood: data.mood,
+        sleep_quality: data.sleep,
+        stress_level: data.stress,
+        created_at: new Date(),
+      });
+    } else {
+      console.warn('addCheckIn is not available on UserDataContext yet — check-in not persisted.');
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ display: 'flex', background: C.paper, minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
@@ -1285,6 +835,7 @@ export default function Dashboard() {
       </div>
     );
   }
+
   return (
     <>
       <style>{responsiveCSS}</style>
@@ -1294,45 +845,42 @@ export default function Dashboard() {
           <MobileLogo />
           <main className="gw-main" style={{
             padding: '44px 48px 80px',
-            maxWidth: 1280, width: '100%', boxSizing: 'border-box',
+            maxWidth: 880, width: '100%', boxSizing: 'border-box',
           }}>
-            <Header name={firstName} onLogout={handleLogout} />
-            <HeroFocus score={score} guidance={dailyGuidance} name={firstName} />
-            <div style={{ marginBottom: 28 }}>
-              <GlowType profile={profile} />
-            </div>
-            <Vitals today={today} />
-            <MicroHabits checkIns={checkIns} profile={profile} />
-              <div className="gw-twocol" style={{
-              display: 'grid', gridTemplateColumns: '1.2fr 1fr',
-              gap: 20, marginBottom: 28, alignItems: 'start',
-            }}>
-              <WeekChart scores={displayWeekScores} dates={weekDates} />
-              <Plan />
-            </div>
-            <div className="gw-mobile-photo-banner" style={{
-              display: 'none',
-              padding: '16px 14px',
-              borderRadius: 14,
-              background: C.amberBg,
-              border: `1px solid rgba(168,153,104,0.2)`,
-              marginBottom: 28,
-            }}>
-              <div style={{ ...eyebrow(C.amber), marginBottom: 8 }}>Coming soon</div>
-              <div style={{ fontFamily: FF_DISPLAY, fontSize: 15, fontWeight: 500, color: C.ink, lineHeight: 1.4, marginBottom: 8 }}>
-                Photo Analysis
-              </div>
-              <div style={{ fontFamily: FF_UI, fontSize: 12, color: C.body, lineHeight: 1.6, marginBottom: 10 }}>
-                Track your skin, hair, and glow visually over time. AI-powered insights from your photos — coming to GlowWise soon.
-              </div>
-              <div style={{ fontFamily: FF_UI, fontSize: 11, fontWeight: 600, color: C.amber }}>
-                We'll notify you when it's ready
-              </div>
-            </div>
+            <Header name={firstName} onLogout={handleLogout} score={score} />
+            <CoachHero name={firstName} summary={dailySummary} profile={profile} />
+            <InsightCards cards={dailySummary} anchor={anchor} />
           </main>
         </div>
         <BottomNav />
+        <CheckInFAB onClick={() => setCheckInOpen(true)} />
+        <CheckInModal
+          open={checkInOpen}
+          onClose={() => setCheckInOpen(false)}
+          onSubmit={handleCheckInSubmit}
+        />
       </div>
     </>
   );
 }
+
+/* ============================================================
+   LEGACY COMPONENTS — not rendered on Home anymore as of v3.0.
+   Kept here as commented-out source so Insights and Plan tabs
+   can be built from these directly instead of rewritten from
+   scratch. Uncomment + move into a new file when building those
+   tabs; do not uncomment back into this file.
+
+   - GlowType    → candidate for Insights tab ("Your glow type" section)
+   - Vitals      → folded into check-in flow, not a permanent fixture
+   - MicroHabits → "most consistent" -> Insights, "actions done" -> Plan
+   - WeekChart   → candidate for Insights tab (trends section)
+   - Plan (old)  → candidate starting point for new Plan tab
+   - Coach (old) → was defined but never rendered even before this
+                   rebuild; superseded by CoachHero above
+
+   See chat history / previous Dashboard.jsx (v2.1) for the full
+   source of each — omitted here to keep this file from growing
+   unbounded. Ask Claude to retrieve the v2.1 source for any of
+   these by name when building Insights or Plan.
+   ============================================================ */
