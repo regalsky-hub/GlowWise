@@ -278,13 +278,13 @@ const getGlowStatus = (score) => {
 };
 
 const HeroGlowScore = ({ score = 78 }) => {
-  const { label: statusLabel } = getGlowStatus(score);
+  const { label: statusLabel, color: statusColor } = getGlowStatus(score);
   return (
-    <div className="gw-score-ring" style={{ position: 'relative', width: 200, height: 200, flexShrink: 0 }}>
+    <div className="gw-score-ring" style={{ position: 'relative', width: 220, height: 220, flexShrink: 0 }}>
       <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(250,248,245,0.22)" strokeWidth="6" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(168,153,104,0.18)" strokeWidth="6" />
         <circle cx="50" cy="50" r="42" fill="none"
-          stroke="#FAF8F5" strokeWidth="6" strokeLinecap="round"
+          stroke={C.sage} strokeWidth="6" strokeLinecap="round"
           strokeDasharray={`${2 * Math.PI * 42 * (score / 100)} ${2 * Math.PI * 42}`} />
         <circle
           cx={50 + 42 * Math.cos((score / 100) * 2 * Math.PI - Math.PI / 2)}
@@ -296,16 +296,12 @@ const HeroGlowScore = ({ score = 78 }) => {
         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', textAlign: 'center',
       }}>
+        <div style={{ ...eyebrow(C.sageDark), marginBottom: 6 }}>Glow score</div>
+        <div className="gw-score-text" style={{ ...display(56), color: C.sageDark }}>{score}</div>
         <div style={{
-          fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
-          textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)', marginBottom: 6,
-        }}>
-          Glow score
-        </div>
-        <div style={{ ...display(48), color: C.paper }}>{score}</div>
-        <div style={{
-          fontFamily: FF_UI, fontSize: 12, color: '#FAF8F5',
+          fontFamily: FF_UI, fontSize: 13, color: statusColor,
           fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
+          transition: 'color 0.3s ease',
         }}>
           {statusLabel}
         </div>
@@ -419,51 +415,46 @@ const CoachHero = ({ name, summary, profile, score }) => {
   return (
     <div className="gw-hero-pad" style={{
       position: 'relative', overflow: 'hidden',
-      padding: '44px 48px',
-      borderRadius: 24,
-      background: 'linear-gradient(135deg, #6B9E7F 0%, #557E64 100%)',
-      boxShadow: '0 24px 60px -32px rgba(85,126,100,0.40)',
-      marginBottom: 24,
+      padding: '52px 48px',
+      borderRadius: 28,
+      background: 'linear-gradient(135deg, rgba(107,158,127,0.20) 0%, rgba(237,226,236,0.55) 100%)',
+      border: '1px solid rgba(107,158,127,0.12)',
+      boxShadow: '0 24px 60px -36px rgba(61,74,82,0.22)',
+      marginBottom: 28,
     }}>
       <div style={{
-        position: 'absolute', width: 280, height: 280, borderRadius: '50%',
-        background: 'rgba(250,248,245,0.07)', filter: 'blur(70px)',
-        top: -110, right: -90,
+        position: 'absolute', width: 320, height: 320, borderRadius: '50%',
+        background: 'rgba(107,158,127,0.14)', filter: 'blur(70px)',
+        top: -120, right: -80,
       }} />
       <div className="gw-hero-grid" style={{
         position: 'relative', zIndex: 2, display: 'grid',
-        gridTemplateColumns: '1.6fr 1fr', gap: 32, alignItems: 'center',
+        gridTemplateColumns: '1.5fr 1fr', gap: 40, alignItems: 'center',
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <Orbit size={20} color={C.paper} tail="#C0DAC8" accent={C.terracottaMid} />
-            <div style={{
-              fontFamily: FF_UI, fontSize: 10, fontWeight: 600, letterSpacing: '0.18em',
-              textTransform: 'uppercase', color: 'rgba(250,248,245,0.76)',
-            }}>
-              Your wellness coach
-            </div>
+            <Orbit size={22} color={C.sageDark} tail={C.sage} accent={C.terracottaMid} />
+            <div style={{ ...eyebrow(C.sageDark) }}>Your wellness coach</div>
           </div>
 
-          <h2 className="gw-hero-title" style={{ ...display(28), color: C.paper, margin: 0, marginBottom: 10, lineHeight: 1.3 }}>
-            Good to see you, {name}.
+          <h2 className="gw-hero-title" style={{ ...display(36), margin: 0, marginBottom: 18, maxWidth: 520, lineHeight: 1.2 }}>
+            {lines[0]}
           </h2>
 
-          <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 6 }}>
-            {lines[0]}
-          </p>
           {lines[1] && (
-            <p style={{ fontFamily: FF_UI, fontSize: 15, lineHeight: 1.7, color: 'rgba(250,248,245,0.88)', margin: 0, marginBottom: 24 }}>
+            <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 14 }}>
               {lines[1]}
             </p>
           )}
 
+          <p style={{ ...bodyText(15), maxWidth: 480, marginBottom: 26, color: C.sageDark, fontWeight: 500 }}>
+            Whatever's on your mind today, {name} — your coach is here to talk it through with you.
+          </p>
+
           <Link to="/ai-coach" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '13px 24px', borderRadius: 999,
-            background: C.paper, color: C.sageDark, border: 'none',
-            fontFamily: FF_UI, fontSize: 13.5, fontWeight: 700,
-            textDecoration: 'none', marginTop: lines[1] ? 0 : 18,
+            ...btnPrimary,
+            padding: '14px 26px',
+            fontSize: 14,
           }}>
             <MessageCircle size={15} strokeWidth={2} />
             {isColdStart ? "Tell my coach" : "Let's talk"}
