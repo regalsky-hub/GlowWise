@@ -728,7 +728,7 @@ export default function AICoach() {
                 <circle cx="78" cy="46" r="6" fill="#C97B5C" />
               </svg>
               <div>
-                <div className="topbar-name">Wellness coach</div>
+                <div className="topbar-name">Wellness Coach</div>
                 <div className="topbar-status">Always here</div>
               </div>
             </div>
