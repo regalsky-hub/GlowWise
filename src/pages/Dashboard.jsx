@@ -60,6 +60,7 @@ const responsiveCSS = `
   @media (max-width: 768px) {
     .gw-sidebar { display: none !important; }
     .gw-bottomnav { display: flex !important; }
+    .gw-mobile-logo { display: flex !important; }
     .gw-main { padding: 24px 18px 110px !important; }
     .gw-header { flex-direction: column !important; align-items: flex-start !important; }
     .gw-header-actions { width: 100%; justify-content: space-between !important; }
@@ -764,7 +765,7 @@ const CheckInFAB = ({ onClick }) => (
 
 // ============ MOBILE HEADER LOGO ============
 const MobileLogo = () => (
-  <div className="gw-bottomnav" style={{
+  <div className="gw-mobile-logo" style={{
     display: 'none',
     position: 'sticky', top: 0, zIndex: 50,
     background: C.paper,
