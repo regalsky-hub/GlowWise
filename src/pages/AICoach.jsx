@@ -338,6 +338,10 @@ export default function AICoach() {
     const afterUser = [...messages, userMsg];
     setMessages(afterUser);
     setInput('');
+    if (e?.target) {
+      const textarea = e.target.querySelector?.('.chat-input') || document.querySelector('.chat-input');
+      if (textarea) textarea.style.height = 'auto';
+    }
     setLoading(true);
     persistMessages(afterUser, convId);
 
@@ -573,6 +577,8 @@ export default function AICoach() {
           padding: 11px 16px;
           font-family: 'Manrope', sans-serif; font-size: 15px; color: #3D4A52;
           outline: none; transition: all 0.2s;
+          resize: none; max-height: 120px; min-height: 22px;
+          line-height: 1.4; font-family: 'Manrope', sans-serif;
         }
         .chat-input:focus { border-color: #6B9E7F; box-shadow: 0 0 0 3px rgba(107, 158, 127, 0.1); }
         .send-btn {
@@ -820,12 +826,22 @@ export default function AICoach() {
         {/* Input + footer disclaimer */}
         <div className="input-bar">
           <form onSubmit={handleSendMessage} className="input-row">
-            <input
-              type="text"
+            <textarea
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage(e);
+                }
+              }}
               placeholder="Ask your wellness coach…"
               className="chat-input"
+              rows={1}
             />
             <button
               type="submit"
