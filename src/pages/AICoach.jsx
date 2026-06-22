@@ -299,16 +299,27 @@ export default function AICoach() {
     }
   };
 
-  // Builds a coach-voiced opening line from the card's text and sends it
+  // Builds a coach-voiced opening line from the card and sends it
   // immediately on arrival, as if the coach is continuing the thought from
-  // the card rather than waiting for the user to start typing.
+  // the card rather than waiting for the user to start typing. Each card
+  // type follows its own conversational pattern per the architecture spec:
+  //   discovery    → Observation, then ask if it feels accurate (Validation)
+  //   improvement  → name the win, then ask what contributed to it
+  //   recommendation → explain the reasoning, then offer to update the plan
+  // These are still rule-based templates, not AI-generated — the actual
+  // AI-generated opener (using card.coach_context as the real prompt input)
+  // is a TODO for when the real /api/chat call is extended to accept it;
+  // for now this sends a fixed, type-appropriate opening line as the
+  // user's own first message, and the real getAIResponse call (which DOES
+  // use buildUserContext) generates the actual reply.
   const sendCardOpeningMessage = async (ctx) => {
+    const { card } = ctx;
     const openers = {
-      discovery: `I wanted to dig into something I noticed: ${ctx.text}`,
-      improvement: `I wanted to follow up on this: ${ctx.text}`,
-      recommendation: `Let's talk through this recommendation: ${ctx.text}`,
+      discovery: `I wanted to follow up on something I noticed: ${card.summary} Does that feel accurate to you?`,
+      improvement: `I wanted to talk about this: ${card.summary} What do you think contributed most to that?`,
+      recommendation: `Can you walk me through this recommendation? ${card.summary}`,
     };
-    const openingText = openers[ctx.fromCard] || `Let's talk about this: ${ctx.text}`;
+    const openingText = openers[ctx.fromCard] || `Let's talk about this: ${card.summary}`;
     await sendMessageProgrammatically(openingText);
   };
 
