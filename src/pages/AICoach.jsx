@@ -220,8 +220,11 @@ export default function AICoach() {
   // Card context — set when arriving from a Home insight card (Discovery/
   // Improvement/Recommendation). Consumed once, then cleared from history so
   // refreshing the page or navigating back doesn't re-trigger the auto-send.
-  const cardContext = location.state?.fromCard
-    ? { fromCard: location.state.fromCard, text: location.state.text }
+  // `card` carries the full { id, type, title, summary, coach_context }
+  // shape built in Dashboard.jsx — summary is what was shown to the user,
+  // coach_context is why it matters and what this conversation should explore.
+  const cardContext = location.state?.fromCard && location.state?.card
+    ? { fromCard: location.state.fromCard, card: location.state.card }
     : null;
 
   const isPaid = profile?.subscription_tier === 'paid';
