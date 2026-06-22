@@ -25,10 +25,10 @@ export default function AppLayout({ children }) {
   const isActive = (path) => location.pathname === path;
 
   const navItems = [
-    { path: '/dashboard', icon: Home, label: 'Dashboard' },
+    { path: '/dashboard', icon: Home, label: 'Home' },
     { path: '/ai-coach', icon: MessageCircle, label: 'Coach' },
-    { path: '/checkin', icon: Calendar, label: 'Today' },
     { path: '/insights', icon: BarChart3, label: 'Insights' },
+    { path: '/plan', icon: Calendar, label: 'Plan' },
     { path: '/settings', icon: Settings, label: 'Profile' },
   ];
 
