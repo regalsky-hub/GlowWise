@@ -594,32 +594,20 @@ const InsightCards = ({ cards, anchor }) => {
   );
 };
 
-// ============ GLOW TYPE ROW (slim, links to Insights) ============
-// Deliberately not a card — plain text row, no background/border/shadow.
-// Sits below the 3 insight cards as a quiet identity anchor, not competing
-// with the coach's daily content above it.
-const GlowTypeRow = ({ profile }) => {
-  const glowType = profile?.glowType;
-  if (!glowType) return null; // nothing to show if onboarding hasn't set this yet
-
-  return (
-    <Link to="/glow-type" style={{
-      display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap',
-      textDecoration: 'none', marginBottom: 8, cursor: 'pointer',
-    }}>
-      <span style={{ ...eyebrow(C.mute) }}>Your glow type</span>
-      <span style={{
-        fontFamily: FF_DISPLAY, fontStyle: 'italic', fontWeight: 500,
-        fontSize: 16, color: C.sageDark, letterSpacing: '-0.01em',
-      }}>
-        {glowType}
-      </span>
-    </Link>
-  );
-};
-
 // ============ CHECK-IN FAB + MODAL ============
-const energyLabels = ['Drained', 'Low', 'Okay', 'Good', 'Energised'];
+// Unified, single check-in flow — replaces the old standalone /checkin page
+// (DailyCheckin.jsx) entirely. All fields are single-tap pills for speed;
+// only the symptoms/notes field is optional and collapsed by default.
+// Movement/eating/social were added so the Glow Type recalculation engine
+// has signal for all six types, not just the three that map to energy/
+// sleep/stress (see glowTypeEngine.js).
+const energyOptions = [
+  { key: 'drained', label: 'Drained' },
+  { key: 'low', label: 'Low' },
+  { key: 'okay', label: 'Okay' },
+  { key: 'good', label: 'Good' },
+  { key: 'energised', label: 'Energised' },
+];
 const moodOptions = [
   { key: 'low', label: 'Low' },
   { key: 'unsettled', label: 'Unsettled' },
@@ -636,6 +624,21 @@ const stressOptions = [
   { key: 'calm', label: 'Calm' },
   { key: 'elevated', label: 'Elevated' },
   { key: 'tense', label: 'Tense' },
+];
+const movementOptions = [
+  { key: 'none', label: 'None today' },
+  { key: 'light', label: 'A little' },
+  { key: 'active', label: 'Active' },
+];
+const eatingOptions = [
+  { key: 'easy', label: 'Easy, intuitive' },
+  { key: 'mixed', label: 'A bit mixed' },
+  { key: 'effortful', label: 'Effortful' },
+];
+const socialOptions = [
+  { key: 'alone', label: 'Mostly alone' },
+  { key: 'mixed', label: 'A mix' },
+  { key: 'with-others', label: 'With others' },
 ];
 
 const OptionPills = ({ options, value, onChange, accent }) => (
@@ -662,24 +665,42 @@ const OptionPills = ({ options, value, onChange, accent }) => (
   </div>
 );
 
+const CheckInField = ({ label, accent, children }) => (
+  <div style={{ marginBottom: 22 }}>
+    <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>{label}</div>
+    {children}
+  </div>
+);
+
 const CheckInModal = ({ open, onClose, onSubmit }) => {
-  const [energy, setEnergy] = useState(3);
+  const [energy, setEnergy] = useState(null);
   const [mood, setMood] = useState(null);
   const [sleep, setSleep] = useState(null);
   const [stress, setStress] = useState(null);
+  const [movement, setMovement] = useState(null);
+  const [eating, setEating] = useState(null);
+  const [social, setSocial] = useState(null);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   if (!open) return null;
 
-  const canSubmit = mood && sleep && stress;
+  const canSubmit = energy && mood && sleep && stress && movement && eating && social;
+
+  const resetState = () => {
+    setEnergy(null); setMood(null); setSleep(null); setStress(null);
+    setMovement(null); setEating(null); setSocial(null);
+    setNotesOpen(false); setNotes('');
+  };
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    onSubmit({ energy, mood, sleep, stress });
+    onSubmit({ energy, mood, sleep, stress, movement, eating, social, notes: notes.trim() });
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
-      setEnergy(3); setMood(null); setSleep(null); setStress(null);
+      resetState();
       onClose();
     }, 1100);
   };
@@ -726,32 +747,60 @@ const CheckInModal = ({ open, onClose, onSubmit }) => {
               </button>
             </div>
 
-            <div style={{ marginBottom: 26 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Energy</div>
-              <input
-                type="range" min="1" max="5" step="1"
-                value={energy}
-                onChange={(e) => setEnergy(Number(e.target.value))}
-                style={{ width: '100%', accentColor: C.sage, marginBottom: 8 }}
-              />
-              <div style={{ fontFamily: FF_DISPLAY, fontStyle: 'italic', fontSize: 15, color: C.sageDark }}>
-                {energyLabels[energy - 1]}
-              </div>
-            </div>
+            <CheckInField label="Energy">
+              <OptionPills options={energyOptions} value={energy} onChange={setEnergy} accent={C.amber} />
+            </CheckInField>
 
-            <div style={{ marginBottom: 26 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Mood</div>
+            <CheckInField label="Mood">
               <OptionPills options={moodOptions} value={mood} onChange={setMood} accent={C.terracotta} />
-            </div>
+            </CheckInField>
 
-            <div style={{ marginBottom: 26 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Sleep quality</div>
+            <CheckInField label="Sleep quality">
               <OptionPills options={sleepOptions} value={sleep} onChange={setSleep} accent={C.plum} />
-            </div>
+            </CheckInField>
 
-            <div style={{ marginBottom: 30 }}>
-              <div style={{ ...eyebrow(C.mute), marginBottom: 12 }}>Stress level</div>
+            <CheckInField label="Stress level">
               <OptionPills options={stressOptions} value={stress} onChange={setStress} accent={C.sageDark} />
+            </CheckInField>
+
+            <CheckInField label="Movement today">
+              <OptionPills options={movementOptions} value={movement} onChange={setMovement} accent={C.sageDark} />
+            </CheckInField>
+
+            <CheckInField label="Eating today">
+              <OptionPills options={eatingOptions} value={eating} onChange={setEating} accent={C.amber} />
+            </CheckInField>
+
+            <CheckInField label="Social today">
+              <OptionPills options={socialOptions} value={social} onChange={setSocial} accent={C.terracotta} />
+            </CheckInField>
+
+            <div style={{ marginBottom: 28 }}>
+              <button
+                onClick={() => setNotesOpen((v) => !v)}
+                style={{
+                  background: 'transparent', border: 'none', cursor: 'pointer',
+                  padding: 0, color: C.sageDark, fontFamily: FF_UI,
+                  fontSize: 13, fontWeight: 700, display: 'inline-flex',
+                  alignItems: 'center', gap: 4,
+                }}
+              >
+                {notesOpen ? 'Hide notes' : 'Anything to add?'}
+              </button>
+              {notesOpen && (
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Symptoms, cravings, supplements, anything on your mind..."
+                  style={{
+                    width: '100%', marginTop: 12,
+                    background: C.paperWarm, border: `1px solid ${C.lineSoft}`,
+                    borderRadius: 14, padding: '14px 16px',
+                    fontFamily: FF_UI, fontSize: 14, color: C.ink,
+                    outline: 'none', resize: 'vertical', minHeight: 80,
+                  }}
+                />
+              )}
             </div>
 
             <button
@@ -854,15 +903,31 @@ export default function Dashboard() {
   const dailySummary = null;
 
   const handleCheckInSubmit = (data) => {
-    // Maps modal selections to the existing Firestore check-in field names
-    // (energy, mood, sleep_hours/sleep, stress_level) — wire to real field names
-    // once confirmed; addCheckIn is assumed to already exist on UserDataContext.
+    // Maps modal selections to Firestore check-in fields. energy/mood/sleep/
+    // stress are now pill keys (strings), not numbers — addCheckIn's caller
+    // (UserDataContext) and any code reading these fields (AICoach.jsx's
+    // buildUserContext, WellnessPlan.jsx's calculateChange, Insights.jsx's
+    // detectPatterns/calculateTrends) all expect NUMERIC energy/sleep_hours/
+    // stress_level/mood — see the pillToNumber conversion below, required
+    // so existing trend calculations elsewhere keep working unchanged.
+    const pillToNumber = {
+      energy: { drained: 2, low: 4, okay: 6, good: 8, energised: 10 },
+      mood: { low: 2, unsettled: 4, steady: 7, bright: 10 },
+      sleep: { restless: 2, light: 4, fair: 7, restful: 10 },
+      stress: { calm: 2, elevated: 6, tense: 9 },
+    };
+    const sleepHoursEstimate = { restless: 4.5, light: 5.5, fair: 7, restful: 8.5 };
+
     if (typeof addCheckIn === 'function') {
       addCheckIn({
-        energy: data.energy,
-        mood: data.mood,
-        sleep_quality: data.sleep,
-        stress_level: data.stress,
+        energy: pillToNumber.energy[data.energy] ?? null,
+        mood: pillToNumber.mood[data.mood] ?? null,
+        sleep_hours: sleepHoursEstimate[data.sleep] ?? null,
+        stress_level: pillToNumber.stress[data.stress] ?? null,
+        movement: data.movement,
+        eating: data.eating,
+        social: data.social,
+        symptoms: data.notes ? [data.notes] : [],
         created_at: new Date(),
       });
     } else {
@@ -895,7 +960,6 @@ export default function Dashboard() {
             <Header name={firstName} onLogout={handleLogout} score={score} />
             <CoachHero name={firstName} summary={dailySummary} profile={profile} score={score} />
             <InsightCards cards={dailySummary} anchor={anchor} />
-            <GlowTypeRow profile={profile} />
           </main>
         </div>
         <BottomNav />
