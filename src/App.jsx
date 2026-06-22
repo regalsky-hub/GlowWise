@@ -107,6 +107,7 @@ function AppRoutes() {
       <Route path="/insights" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       <Route path="/wellness-plan" element={<ProtectedRoute><WellnessPlan /></ProtectedRoute>} />
+      <Route path="/plan" element={<ProtectedRoute><WellnessPlan /></ProtectedRoute>} />
       <Route path="/glow-type" element={<ProtectedRoute><GlowType /></ProtectedRoute>} />
 
       {/* Catch all */}
