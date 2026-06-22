@@ -90,24 +90,24 @@ export function UserDataProvider({ children }) {
       return;
     }
 
-    const recent = checkInData.slice(0, 7); // Last 7 days
+    // Glow Score reflects TODAY's check-in only — a daily snapshot, not a
+    // rolling average. checkInData is sorted newest-first (see the .sort()
+    // calls in loadUserData/addCheckIn), so index 0 is the most recent
+    // check-in regardless of whether it's actually dated today.
+    const latest = checkInData[0];
 
-    const average = (field, transform = (v) => v) => {
-      const valid = recent
-        .map((c) => safeNumber(c[field]))
-        .filter((v) => v !== null)
-        .map(transform);
-      if (valid.length === 0) return null;
-      return valid.reduce((a, b) => a + b, 0) / valid.length;
+    const field = (key, transform = (v) => v) => {
+      const v = safeNumber(latest[key]);
+      return v === null ? null : transform(v);
     };
 
-    const avgEnergy = average('energy');
-    const avgSleep = average('sleep_hours', (v) => (v / 9) * 10);
-    const avgStressRaw = average('stress_level');
-    const avgStress = avgStressRaw === null ? null : 10 - avgStressRaw;
-    const avgMood = average('mood');
+    const energyVal = field('energy');
+    const sleepVal = field('sleep_hours', (v) => (v / 9) * 10);
+    const stressRaw = field('stress_level');
+    const stressVal = stressRaw === null ? null : 10 - stressRaw;
+    const moodVal = field('mood');
 
-    const parts = [avgEnergy, avgSleep, avgStress, avgMood].filter((v) => v !== null);
+    const parts = [energyVal, sleepVal, stressVal, moodVal].filter((v) => v !== null);
     if (parts.length === 0) {
       setGlowScore(0);
       return;
