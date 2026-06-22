@@ -12,10 +12,12 @@
 // Legacy sections (GlowType, Vitals, MicroHabits, WeekChart, old Plan, old Coach)
 // are preserved at the bottom of this file as commented-out source — not rendered —
 // so the future Insights/Plan tabs can be built from them directly.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUserData } from '../context/UserDataContext';
+import { db } from '../config/firebase';
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import {
   Sun, MessageCircle, Calendar, BarChart3, User, ChevronRight,
   Plus, LogOut, X, Search, TrendingUp, Sparkles,
@@ -349,7 +351,34 @@ const Header = ({ name, onLogout, score }) => {
     </div>
   );
 };
+// ============ LAST CONVERSATION (real, not placeholder) ============
+// Reads the user's most recent non-empty Coach conversation, mirroring the
+// same query AICoach.jsx already uses for its own "welcome back" feature —
+// just simplified here to only need a topic line, not the full message
+// history. Returns null if there's no conversation yet, so the hero can
+// fall back to the onboarding-anchor logic below.
+const fetchLastConversationTopic = async (uid) => {
+  if (!uid) return null;
+  try {
+    const convsRef = collection(db, 'users', uid, 'conversations');
+    const q = query(convsRef, orderBy('updated_at', 'desc'), limit(5));
+    const snap = await getDocs(q);
+    const nonEmpty = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .find((c) => c.messages && c.messages.length > 0);
+    if (!nonEmpty) return null;
 
+    const firstUserMsg = nonEmpty.messages.find((m) => m.role === 'user');
+    if (!firstUserMsg) return null;
+    const topic = firstUserMsg.content;
+    return topic.length > 90 ? topic.slice(0, 90) + '…' : topic;
+  } catch (e) {
+    console.error('fetchLastConversationTopic failed:', e);
+    return null;
+  }
+};
+
+// ============ ANCHOR RESOLUTION ============
 // ============ ANCHOR RESOLUTION ============
 // Decides what the coach hero should reference, in priority order:
 //   1. body_signals (free text, most specific — onboarding step 4)
