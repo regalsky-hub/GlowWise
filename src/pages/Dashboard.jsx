@@ -527,7 +527,7 @@ const CoachHero = ({
 )}
 
           <p style={{ ...bodyText(15), maxWidth: 480, marginBottom: 26, color: C.sageDark, fontWeight: 500 }}>
-  Let's continue where we left off.
+  Tell me what's been on your mind lately.
 </p>
 
           <Link to="/ai-coach" style={{
