@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { Globe, Menu, X, Check, ArrowRight, Plus, Minus } from 'lucide-react';
+import { Globe, Menu, X, Check, ArrowRight, Plus, Minus, User } from 'lucide-react';
 import { db } from '../config/firebase';
 import { collection, doc, setDoc } from 'firebase/firestore';
 
