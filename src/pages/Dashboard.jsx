@@ -661,8 +661,8 @@ const buildFallbackCards = (anchor) => {
     discovery: {
       id: 'discovery_fallback_002', type: 'discovery',
       title: 'Weekday check-in pattern',
-      summary: "You're most consistent with check-ins on weekday mornings — weekends are where things slip.",
-      coach_context: `Investigate why weekends show a drop in check-in consistency compared to weekday mornings. Follow Observation → Validation → Exploration → Insight → Action: state the observation, ask if it feels accurate, explore what's different about their weekends, then offer one small adjustment.`,
+      summary: "Something interesting stood out. You tend to stay more connected to your wellbeing during the week than at weekends.",
+      coach_context: `I noticed the user tends to engage more consistently with their wellbeing during weekdays than weekends. Start by sharing the observation in a natural way, ask if it feels accurate, then explore what makes weekends different. Focus on curiosity rather than accountability.`
     },
     improvement: {
       id: 'improvement_fallback_002', type: 'improvement',
