@@ -476,8 +476,18 @@ const CoachHero = ({ name, summary, profile, score }) => {
 };
 
 // ============ INSIGHT CARDS: Discovery / Improvement / Recommendation ============
-// `cards` mock shape — replace with the daily-summary doc fields when the AI job exists:
-// { discovery: { text }, improvement: { text }, recommendation: { text } }
+// Architecture: each card is a conversation starter, not standalone content.
+// All three route to Coach — never to a separate page — carrying a
+// `coach_context` string that tells Coach WHY this card exists and what
+// the conversation should explore, separate from `summary` (what's shown
+// on the card itself). This mirrors the real daily-summary doc shape this
+// will read from once that job exists:
+//   { id, type, title, summary, coach_context }
+// Until then, buildFallbackCards() below produces this same shape from
+// static/rule-based text — same honest-placeholder pattern as the rest of
+// this app. Nothing here should change when the real AI job lands; only
+// where `cards` is sourced from should change (a Firestore read instead
+// of buildFallbackCards).
 const insightCardMeta = [
   {
     key: 'discovery',
@@ -487,7 +497,6 @@ const insightCardMeta = [
     bg: C.plumBg,
     text: '#5D4459',
     ctaLabel: 'Explore',
-    ctaTo: '/ai-coach',
   },
   {
     key: 'improvement',
@@ -497,7 +506,6 @@ const insightCardMeta = [
     bg: C.sageMint,
     text: '#3D5E48',
     ctaLabel: 'Tell me more',
-    ctaTo: '/ai-coach',
   },
   {
     key: 'recommendation',
@@ -506,12 +514,11 @@ const insightCardMeta = [
     accent: C.amber,
     bg: C.amberBg,
     text: '#8B6A30',
-    ctaLabel: 'Add to plan',
-    ctaTo: '/plan',
+    ctaLabel: 'Why?',
   },
 ];
 
-const InsightCard = ({ meta, text, onCta }) => {
+const InsightCard = ({ meta, card, onCta }) => {
   const { Icon, eyebrow: label, accent, bg, text: textColor, ctaLabel } = meta;
   return (
     <div className="gw-card-hover" style={{
@@ -531,7 +538,7 @@ const InsightCard = ({ meta, text, onCta }) => {
           fontFamily: FF_DISPLAY, fontSize: 16.5, lineHeight: 1.45,
           color: textColor, margin: 0, letterSpacing: '-0.01em',
         }}>
-          {text}
+          {card.summary}
         </p>
       </div>
       <button
@@ -550,22 +557,52 @@ const InsightCard = ({ meta, text, onCta }) => {
   );
 };
 
-// Fallback card copy used only when no daily-summary doc exists yet AND
-// there isn't enough check-in history to generate anything real. Once the
-// AI job exists, `cards` will be populated from Firestore and this object
-// is never reached.
+// Fallback card data used until the real daily-summary AI job exists.
+// Matches the { id, type, title, summary, coach_context } shape that job
+// will eventually write to Firestore — only the SOURCE changes later, not
+// this shape or anything that reads it.
 const buildFallbackCards = (anchor) => {
   if (anchor.type === 'body_signals') {
     return {
-      discovery: `We're just getting started — once you've logged a few check-ins, I'll be able to connect them to "${anchor.value}".`,
-      improvement: `Nothing to compare yet. Check in today and tomorrow, and I'll start tracking what's changing.`,
-      recommendation: `Try a check-in today so I have something real to work from.`,
+      discovery: {
+        id: 'discovery_fallback_001', type: 'discovery',
+        title: 'Just getting started',
+        summary: `We're just getting started — once you've logged a few check-ins, I'll be able to connect them to "${anchor.value}".`,
+        coach_context: `The user mentioned this concern at onboarding: "${anchor.value}". There isn't enough check-in history yet to identify a real pattern. Acknowledge that, and ask one gentle question to start gathering relevant detail.`,
+      },
+      improvement: {
+        id: 'improvement_fallback_001', type: 'improvement',
+        title: 'Nothing to compare yet',
+        summary: `Nothing to compare yet. Check in today and tomorrow, and I'll start tracking what's changing.`,
+        coach_context: `No trend data exists yet for this user. Explain in one or two sentences why check-ins matter for spotting real change, and encourage them warmly without being pushy.`,
+      },
+      recommendation: {
+        id: 'recommendation_fallback_001', type: 'recommendation',
+        title: 'Start with a check-in',
+        summary: `Try a check-in today so I have something real to work from.`,
+        coach_context: `Explain simply that today's check-in becomes the baseline everything else is measured against. Offer to walk them through what to expect.`,
+      },
     };
   }
   return {
-    discovery: "You're most consistent with check-ins on weekday mornings — weekends are where things slip.",
-    improvement: "Stress has dropped from an average of 6.8 to 5.1 over the past two weeks.",
-    recommendation: "Add a 10-minute wind-down before bed tonight — your sleep tends to dip after high-stress days.",
+    discovery: {
+      id: 'discovery_fallback_002', type: 'discovery',
+      title: 'Weekday check-in pattern',
+      summary: "You're most consistent with check-ins on weekday mornings — weekends are where things slip.",
+      coach_context: `Investigate why weekends show a drop in check-in consistency compared to weekday mornings. Follow Observation → Validation → Exploration → Insight → Action: state the observation, ask if it feels accurate, explore what's different about their weekends, then offer one small adjustment.`,
+    },
+    improvement: {
+      id: 'improvement_fallback_002', type: 'improvement',
+      title: 'Stress trending down',
+      summary: "Stress has dropped from an average of 6.8 to 5.1 over the past two weeks.",
+      coach_context: `The user's stress level has genuinely improved over the last two weeks. Open by naming the improvement, then ask what they think contributed most to it — explore and reinforce the behaviour rather than just reporting the number.`,
+    },
+    recommendation: {
+      id: 'recommendation_fallback_002', type: 'recommendation',
+      title: 'Evening wind-down',
+      summary: "Add a 10-minute wind-down before bed tonight — your sleep tends to dip after high-stress days.",
+      coach_context: `Explain the reasoning: sleep quality tends to dip on nights following high-stress days, and a short wind-down routine may help break that link. Offer to add this as a focus in their Plan if they're interested.`,
+    },
   };
 };
 
@@ -574,8 +611,13 @@ const InsightCards = ({ cards, anchor }) => {
   const data = cards || buildFallbackCards(anchor);
 
   const handleCta = (meta) => {
-    // Stubbed routing for now — Coach tab will accept context, Plan tab will accept additions
-    navigate(meta.ctaTo, { state: { fromCard: meta.key, text: data[meta.key] } });
+    const card = data[meta.key];
+    // Every card routes to Coach — cards are conversation starters, not
+    // standalone content. `card` carries both `summary` (what was shown)
+    // and `coach_context` (why it matters / what to explore), so Coach
+    // can open with a real, type-specific conversational turn instead of
+    // a generic "Hello, ask me anything."
+    navigate('/ai-coach', { state: { fromCard: card.type, card } });
   };
 
   return (
@@ -586,7 +628,7 @@ const InsightCards = ({ cards, anchor }) => {
         <InsightCard
           key={meta.key}
           meta={meta}
-          text={data[meta.key]}
+          card={data[meta.key]}
           onCta={() => handleCta(meta)}
         />
       ))}
