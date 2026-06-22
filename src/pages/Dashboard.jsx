@@ -636,6 +636,30 @@ const InsightCards = ({ cards, anchor }) => {
   );
 };
 
+// ============ GLOW TYPE ROW (slim, links to the full /glow-type page) ============
+// Deliberately not a card — plain text row, no background/border/shadow.
+// Sits below the 3 insight cards as a quiet identity anchor, not competing
+// with the coach's daily content above it.
+const GlowTypeRow = ({ profile }) => {
+  const glowType = profile?.glowType;
+  if (!glowType) return null; // nothing to show if onboarding hasn't set this yet
+
+  return (
+    <Link to="/glow-type" style={{
+      display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap',
+      textDecoration: 'none', marginBottom: 8, cursor: 'pointer',
+    }}>
+      <span style={{ ...eyebrow(C.mute) }}>Your glow type</span>
+      <span style={{
+        fontFamily: FF_DISPLAY, fontStyle: 'italic', fontWeight: 500,
+        fontSize: 16, color: C.sageDark, letterSpacing: '-0.01em',
+      }}>
+        {glowType}
+      </span>
+    </Link>
+  );
+};
+
 // ============ CHECK-IN FAB + MODAL ============
 // Unified, single check-in flow — replaces the old standalone /checkin page
 // (DailyCheckin.jsx) entirely. All fields are single-tap pills for speed;
@@ -1007,6 +1031,7 @@ export default function Dashboard() {
             <Header name={firstName} onLogout={handleLogout} score={score} />
             <CoachHero name={firstName} summary={dailySummary} profile={profile} score={score} />
             <InsightCards cards={dailySummary} anchor={anchor} />
+            <GlowTypeRow profile={profile} />
           </main>
         </div>
         <BottomNav />
