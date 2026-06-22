@@ -516,18 +516,9 @@ export default function GlowTypes() {
              <h2 className="gt-closing-title" style={{ ...display(40), margin: "0 0 22px", lineHeight: 1.15 }}>
                 You already have a <em style={{ fontStyle: "italic", color: C.sage }}>starting type</em>.
               </h2>
-              <p style={{ ...bodyText(15.5), maxWidth: 520, margin: "0 auto 30px", lineHeight: 1.8 }}>
-                Your Glow Type begins with your onboarding answers. Each gentle check-in sharpens it — and as your habits and rhythm shift, your type can evolve with you.
+              <p style={{ ...bodyText(15.5), maxWidth: 520, margin: "0 auto", lineHeight: 1.8 }}>
+                Your Glow Type comes from your onboarding answers — your priorities, your rhythm, what you told us matters most. As GlowWise learns more about you, your coach may revisit it.
               </p>
-              <button onClick={() => navigate('/checkin')} style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "14px 28px", borderRadius: 999,
-                background: C.sage, color: C.paper, border: "none", cursor: "pointer",
-                fontFamily: FF_UI, fontSize: 14, fontWeight: 600,
-                boxShadow: "0 10px 24px -12px rgba(107,158,127,0.55)",
-              }}>
-                <Icon.plus width={14} height={14} /> Begin today
-              </button>
             </div>
           </div>
         </section>
