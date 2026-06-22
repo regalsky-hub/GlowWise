@@ -974,6 +974,20 @@ export default function Dashboard() {
       user?.displayName ||
       ''
     ).split(' ')[0] || 'there';
+  
+  useEffect(() => {
+  const loadLastConversation = async () => {
+    if (!user?.uid) return;
+
+    const topic = await fetchLastConversationTopic(user.uid);
+
+    if (topic) {
+      setLastConversationTopic(topic);
+    }
+  };
+
+  loadLastConversation();
+}, [user]);
 
   const handleLogout = async () => {
     try {
