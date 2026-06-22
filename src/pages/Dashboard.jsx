@@ -1125,7 +1125,34 @@ export default function Dashboard() {
               score={score}
               lastConversationTopic={lastConversationTopic}
             />
-            <InsightCards cards={dailySummary} anchor={anchor} />
+           <div style={{ marginBottom: 18 }}>
+  <div
+    style={{
+      ...eyebrow(C.sageDark),
+      marginBottom: 6,
+      letterSpacing: '0.08em',
+    }}
+  >
+    WHAT'S ON YOUR COACH'S MIND
+  </div>
+
+  <p
+    style={{
+      ...bodyText(13),
+      margin: 0,
+      fontStyle: 'italic',
+      color: C.textMuted,
+      marginBottom: 14,
+    }}
+  >
+    Tap a card to start the conversation.
+  </p>
+
+  <InsightCards
+    cards={dailySummary?.cards}
+    anchor={anchor}
+  />
+</div>
             <GlowTypeRow profile={profile} />
           </main>
         </div>
