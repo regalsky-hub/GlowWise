@@ -440,10 +440,10 @@ const buildHeroLines = (anchor, name) => {
 const buildHeroGreeting = ({ lastConversation, profile }) => {
   if (lastConversation) {
     return {
-      title: "I've been thinking about our last conversation.",
-      message: `Last time we talked about "${lastConversation}". I'd love to hear how things have been since then.`,
-      cta: "Continue our conversation",
-    };
+  title: "Welcome back.",
+  message: `Last time we talked about ${lastConversation}. How have things felt since then?`,
+  cta: "Continue our conversation",
+};
   }
 
   const bodySignals = (profile?.body_signals || '').trim();
