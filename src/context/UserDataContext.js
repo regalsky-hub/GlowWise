@@ -73,6 +73,17 @@ export function UserDataProvider({ children }) {
   }, [user]);
 
   // Calculate Glow Score based on recent check-ins
+  // Defensively parses a check-in field as a number. Older or malformed
+  // documents (e.g. saved before a field-shape fix) may contain strings
+  // like "unsettled" instead of numbers — those poison sum/average math
+  // into NaN if not filtered out, which silently falls back to a hardcoded
+  // default score on the UI side. Returns null for anything unusable so
+  // it can be excluded from the average entirely, rather than counted as 0.
+  const safeNumber = (value) => {
+    const n = parseFloat(value);
+    return isNaN(n) ? null : n;
+  };
+
   const calculateGlowScore = (checkInData) => {
     if (checkInData.length === 0) {
       setGlowScore(0);
@@ -80,12 +91,29 @@ export function UserDataProvider({ children }) {
     }
 
     const recent = checkInData.slice(0, 7); // Last 7 days
-    const avgEnergy = recent.reduce((sum, c) => sum + (c.energy || 0), 0) / recent.length;
-    const avgSleep = (recent.reduce((sum, c) => sum + (c.sleep_hours || 0), 0) / recent.length) / 9 * 10;
-    const avgStress = 10 - (recent.reduce((sum, c) => sum + (c.stress_level || 0), 0) / recent.length);
-    const avgMood = recent.reduce((sum, c) => sum + (c.mood || 0), 0) / recent.length;
 
-    const score = Math.round((avgEnergy + avgSleep + avgStress + avgMood) / 4 * 10);
+    const average = (field, transform = (v) => v) => {
+      const valid = recent
+        .map((c) => safeNumber(c[field]))
+        .filter((v) => v !== null)
+        .map(transform);
+      if (valid.length === 0) return null;
+      return valid.reduce((a, b) => a + b, 0) / valid.length;
+    };
+
+    const avgEnergy = average('energy');
+    const avgSleep = average('sleep_hours', (v) => (v / 9) * 10);
+    const avgStressRaw = average('stress_level');
+    const avgStress = avgStressRaw === null ? null : 10 - avgStressRaw;
+    const avgMood = average('mood');
+
+    const parts = [avgEnergy, avgSleep, avgStress, avgMood].filter((v) => v !== null);
+    if (parts.length === 0) {
+      setGlowScore(0);
+      return;
+    }
+
+    const score = Math.round((parts.reduce((a, b) => a + b, 0) / parts.length) * 10);
     setGlowScore(Math.min(100, Math.max(0, score)));
   };
 
