@@ -413,7 +413,7 @@ const buildHeroLines = (anchor, name) => {
   if (anchor.type === 'body_signals') {
     return [
       `You mentioned: "${anchor.value}"`,
-      `I don't have enough check-ins yet to spot a pattern — but that's exactly what we're tracking toward.`,
+      `I don't have enough check-ins yet to spot a pattern, but that's exactly what we're tracking toward.`,
     ];
   }
 
@@ -424,18 +424,47 @@ const buildHeroLines = (anchor, name) => {
       : items.length === 2
         ? `${items[0]} and ${items[1]}`
         : `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+
     return [
       `You told us ${list} matter most to you right now.`,
       `Let's start connecting your daily check-ins to what's actually driving that.`,
     ];
   }
 
-  // Cold start — no onboarding signal at all, ask rather than guess
   return [
     `I don't know much about you yet.`,
     `What's the one thing about your hair, skin, energy, or sleep you'd like to understand better?`,
   ];
 };
+
+const buildHeroGreeting = ({ lastConversation, profile }) => {
+  if (lastConversation) {
+    return {
+      title: "I've been thinking about our last conversation.",
+      message: `Last time we talked about "${lastConversation}". I'd love to hear how things have been since then.`,
+      cta: "Continue our conversation",
+    };
+  }
+
+  const bodySignals = (profile?.body_signals || '').trim();
+
+  if (bodySignals) {
+    return {
+      title: "I'm here whenever you're ready.",
+      message: `You mentioned "${bodySignals}" during onboarding. We haven't explored it together yet.`,
+      cta: "Start talking",
+    };
+  }
+
+  return {
+    title: "Let's get to know each other.",
+    message:
+      "Tell me what's been on your mind lately, whether it's sleep, hormones, stress, energy, or something else entirely.",
+    cta: "Talk with your coach",
+  };
+};
+
+// ============ COACH HERO ============
 
 // ============ COACH HERO ============
 // `summary` shape (the future daily-summary job's contract):
