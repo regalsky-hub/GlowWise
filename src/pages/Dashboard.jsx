@@ -528,8 +528,8 @@ const CoachHero = ({
             fontSize: 14,
           }}>
             <MessageCircle size={15} strokeWidth={2} />
-            {heroContent.cta
-          </Link>
+            {heroContent.cta}
+            </Link>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
