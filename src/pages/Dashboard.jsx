@@ -509,14 +509,14 @@ const CoachHero = ({
           </div>
 
           <h2 className="gw-hero-title" style={{ ...display(36), margin: 0, marginBottom: 18, maxWidth: 520, lineHeight: 1.2 }}>
-            {lines[0]}
+            {heroContent.title}
           </h2>
 
-          {lines[1] && (
-            <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 14 }}>
-              {lines[1]}
-            </p>
-          )}
+          {heroContent.message && (
+  <p style={{ ...bodyText(16), maxWidth: 480, marginBottom: 14 }}>
+    {heroContent.message}
+  </p>
+)}
 
           <p style={{ ...bodyText(15), maxWidth: 480, marginBottom: 26, color: C.sageDark, fontWeight: 500 }}>
             Whatever's on your mind today, {name} — your coach is here to talk it through with you.
@@ -528,7 +528,7 @@ const CoachHero = ({
             fontSize: 14,
           }}>
             <MessageCircle size={15} strokeWidth={2} />
-            {isColdStart ? "Tell my coach" : "Let's talk"}
+            {heroContent.cta
           </Link>
         </div>
 
