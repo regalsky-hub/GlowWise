@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Insights() {
-  const { checkIns, getTodayCheckIn } = useUserData();
+  const { checkIns, getTodayCheckIn, profile, glowScore } = useUserData();
   const [chartData, setChartData] = useState([]);
   const [patterns, setPatterns] = useState([]);
   const [trends, setTrends] = useState({});
