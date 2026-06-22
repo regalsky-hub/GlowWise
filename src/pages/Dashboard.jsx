@@ -441,7 +441,15 @@ const buildHeroGreeting = ({ lastConversation, profile }) => {
   const priorities = profile?.wellness_priorities || [];
 
   if (priorities.length > 0) {
-    const focus = priorities[0];
+    const focusMap = {
+  "Sleep & Recovery": "sleep",
+  "Hormonal Balance": "hormonal health",
+  "Body & Weight": "weight and wellbeing",
+  "Stress Management": "stress",
+  "Energy": "energy",
+};
+
+const focus = focusMap[priorities[0]] || priorities[0].toLowerCase();
 
     return {
       title: `We've been quietly working on your ${focus.toLowerCase()} together.`,
