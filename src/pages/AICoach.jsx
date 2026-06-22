@@ -344,6 +344,24 @@ export default function AICoach() {
   };
 
   // Load most recent NON-EMPTY conversation. If none, leave state empty (welcome screen).
+  // True if the timestamp falls on a calendar day before today.
+  const isFromPreviousDay = (ts) => {
+    const d = toDate(ts);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const msgDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return msgDay.getTime() < today.getTime();
+  };
+
+  // Builds a short, honest topic line from a conversation's first user
+  // message. This is a placeholder for real AI summarization — it's the
+  // same truncation logic getConversationPreview already uses for the
+  // drawer list, just reused here so the coach can reference it directly.
+  const buildReturningTopicLine = (conv) => {
+    const preview = getConversationPreview(conv);
+    return preview === 'New conversation' ? null : preview;
+  };
+
   const loadLatestConversation = async () => {
     try {
       const convsRef = collection(db, 'users', user.uid, 'conversations');
@@ -354,7 +372,30 @@ export default function AICoach() {
         .find(c => c.messages && c.messages.length > 0);
       if (nonEmpty) {
         setConversationId(nonEmpty.id);
-        setMessages(nonEmpty.messages);
+        const lastMsg = nonEmpty.messages[nonEmpty.messages.length - 1];
+        const isReturningAfterAGap = lastMsg && isFromPreviousDay(lastMsg.timestamp);
+
+        if (isReturningAfterAGap) {
+          // Show the old thread, then append one new "welcome back" coach
+          // turn referencing what it was about — once per day, not on
+          // every single open, so it doesn't repeat if they check in
+          // multiple times in the same session.
+          const topicLine = buildReturningTopicLine(nonEmpty);
+          const welcomeBackText = topicLine
+            ? `Welcome back, ${userName}. Last time we talked about: "${topicLine}" — how have things been since then?`
+            : `Welcome back, ${userName}. How have things been since we last spoke?`;
+          const welcomeBackMsg = {
+            id: Date.now().toString(),
+            role: 'assistant',
+            content: welcomeBackText,
+            timestamp: new Date().toISOString(),
+          };
+          const withWelcomeBack = [...nonEmpty.messages, welcomeBackMsg];
+          setMessages(withWelcomeBack);
+          persistMessages(withWelcomeBack, nonEmpty.id);
+        } else {
+          setMessages(nonEmpty.messages);
+        }
       }
       // else: leave conversationId null — will be created lazily on first message
     } catch (e) {
