@@ -438,33 +438,33 @@ const buildHeroLines = (anchor, name) => {
 };
 
 const buildHeroGreeting = ({ lastConversation, profile }) => {
-  if (lastConversation) {
+  const priorities = profile?.wellness_priorities || [];
+
+  if (priorities.length > 0) {
+    const focus = priorities[0];
+
     return {
-  title: "Welcome back.",
-  message: `Last time we talked about ${lastConversation}. How have things felt since then?`,
-  cta: "Continue our conversation",
-};
+      title: `We've been quietly working on your ${focus.toLowerCase()} together.`,
+      message: "How's that actually been feeling day to day?",
+      cta: "Ask Your Coach Anything",
+    };
   }
 
-  const bodySignals = (profile?.body_signals || '').trim();
-
-  if (bodySignals) {
+  if (lastConversation) {
     return {
-      title: "I'm here whenever you're ready.",
-      message: `You mentioned "${bodySignals}" during onboarding. We haven't explored it together yet.`,
-      cta: "Start talking",
+      title: "We've been learning more about your wellbeing together.",
+      message: "What's been on your mind recently?",
+      cta: "Ask Your Coach Anything",
     };
   }
 
   return {
-    title: "Let's get to know each other.",
+    title: "How are you feeling today?",
     message:
-      "Tell me what's been on your mind lately, whether it's sleep, hormones, stress, energy, or something else entirely.",
-    cta: "Talk with your coach",
+      "Whether you're feeling great, struggling with something, or simply curious about your progress, I'm here to help.",
+    cta: "Ask Your Coach Anything",
   };
 };
-
-// ============ COACH HERO ============
 
 // ============ COACH HERO ============
 // `summary` shape (the future daily-summary job's contract):
