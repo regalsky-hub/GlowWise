@@ -603,7 +603,7 @@ const GlowTypeRow = ({ profile }) => {
   if (!glowType) return null; // nothing to show if onboarding hasn't set this yet
 
   return (
-    <Link to="/insights" style={{
+    <Link to="/glow-type" style={{
       display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap',
       textDecoration: 'none', marginBottom: 8, cursor: 'pointer',
     }}>
