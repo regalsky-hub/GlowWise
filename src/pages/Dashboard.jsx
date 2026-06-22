@@ -471,7 +471,13 @@ const buildHeroGreeting = ({ lastConversation, profile }) => {
 // { greetingLines: [string, string], discovery, improvement, recommendation }
 // When `summary` is null (no AI job yet, or job hasn't run today), the hero
 // falls back to the rule-based anchor lines built from onboarding data above.
-const CoachHero = ({ name, summary, profile, score }) => {
+const CoachHero = ({
+  name,
+  summary,
+  profile,
+  score,
+  lastConversationTopic,
+}) => {
   const anchor = resolveAnchor(profile);
   const lines = summary?.greetingLines || buildHeroLines(anchor, name);
   const isColdStart = !summary && anchor.type === 'cold_start';
@@ -1102,7 +1108,13 @@ export default function Dashboard() {
             maxWidth: 880, width: '100%', boxSizing: 'border-box',
           }}>
             <Header name={firstName} onLogout={handleLogout} score={score} />
-            <CoachHero name={firstName} summary={dailySummary} profile={profile} score={score} />
+            <CoachHero
+              name={firstName}
+              summary={dailySummary}
+              profile={profile}
+              score={score}
+              lastConversationTopic={lastConversationTopic}
+            />
             <InsightCards cards={dailySummary} anchor={anchor} />
             <GlowTypeRow profile={profile} />
           </main>
