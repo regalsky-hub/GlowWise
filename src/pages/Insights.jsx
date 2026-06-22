@@ -26,12 +26,22 @@ export default function Insights() {
     calculateTrends(sorted);
   };
 
+  // Defensively parses a check-in field as a number. Older/malformed
+  // documents (saved before a field-shape fix) may contain strings like
+  // "elevated" or "unsettled" instead of numbers — those poison sum/average
+  // math into NaN if not filtered out. Same pattern as
+  // UserDataContext.jsx's calculateGlowScore fix.
+  const safeNum = (value) => {
+    const n = parseFloat(value);
+    return isNaN(n) ? 0 : n;
+  };
+
   const detectPatterns = (data) => {
     const p = [];
     if (data.length >= 3) {
-      const avgSleep = data.reduce((s, c) => s + (c.sleep_hours || 0), 0) / data.length;
-      const avgEnergy = data.reduce((s, c) => s + (c.energy || 0), 0) / data.length;
-      const avgStress = data.reduce((s, c) => s + (c.stress_level || 0), 0) / data.length;
+      const avgSleep = data.reduce((s, c) => s + safeNum(c.sleep_hours), 0) / data.length;
+      const avgEnergy = data.reduce((s, c) => s + safeNum(c.energy), 0) / data.length;
+      const avgStress = data.reduce((s, c) => s + safeNum(c.stress_level), 0) / data.length;
 
       if (avgSleep < 7 && avgEnergy < 6) {
         p.push({
