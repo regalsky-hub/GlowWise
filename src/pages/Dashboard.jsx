@@ -667,9 +667,8 @@ const buildFallbackCards = (anchor) => {
     improvement: {
       id: 'improvement_fallback_002', type: 'improvement',
       title: 'Stress trending down',
-      summary: "Stress has dropped from an average of 6.8 to 5.1 over the past two weeks.",
-      coach_context: `The user's stress level has genuinely improved over the last two weeks. Open by naming the improvement, then ask what they think contributed most to it — explore and reinforce the behaviour rather than just reporting the number.`,
-    },
+      summary: "You've been handling stress more effectively recently. Even small improvements like this can make a real difference over time.",
+      coach_context: `The user has shown a genuine improvement in stress levels. Begin by celebrating the progress. Ask what they think has contributed to it, then explore the habits, routines, or mindset shifts behind the improvement. Focus on reinforcing success rather than analysing numbers.`
     recommendation: {
       id: 'recommendation_fallback_002', type: 'recommendation',
       title: 'Evening wind-down',
