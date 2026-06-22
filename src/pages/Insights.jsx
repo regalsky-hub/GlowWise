@@ -62,8 +62,8 @@ export default function Insights() {
       if (data.length >= 7) {
         const last7 = data.slice(-7);
         const first7 = data.slice(0, 7);
-        const lastEnergy = last7.reduce((s, c) => s + (c.energy || 0), 0) / 7;
-        const firstEnergy = first7.reduce((s, c) => s + (c.energy || 0), 0) / 7;
+        const lastEnergy = last7.reduce((s, c) => s + safeNum(c.energy), 0) / 7;
+        const firstEnergy = first7.reduce((s, c) => s + safeNum(c.energy), 0) / 7;
         if (lastEnergy > firstEnergy + 0.5) {
           p.push({
             title: 'Your rhythm seems steadier this week',
@@ -87,8 +87,8 @@ export default function Insights() {
     const earlier = data.slice(0, data.length - 7).slice(-7);
     const trend = (key) => {
       if (earlier.length === 0) return 0;
-      const ra = recent.reduce((s, c) => s + (c[key] || 0), 0) / recent.length;
-      const ea = earlier.reduce((s, c) => s + (c[key] || 0), 0) / earlier.length;
+      const ra = recent.reduce((s, c) => s + safeNum(c[key]), 0) / recent.length;
+      const ea = earlier.reduce((s, c) => s + safeNum(c[key]), 0) / earlier.length;
       return ((ra - ea) / (ea || 1)) * 100;
     };
     setTrends({ energy: trend('energy'), sleep: trend('sleep_hours'), stress: trend('stress_level'), mood: trend('mood') });
