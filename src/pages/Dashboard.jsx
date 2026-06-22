@@ -910,13 +910,18 @@ export default function Dashboard() {
     // detectPatterns/calculateTrends) all expect NUMERIC energy/sleep_hours/
     // stress_level/mood — see the pillToNumber conversion below, required
     // so existing trend calculations elsewhere keep working unchanged.
+    // Recalibrated so the best pill choice genuinely reaches a Glow Score of
+    // 100 and the worst genuinely reaches near the bottom — previously
+    // "calm" stress capped at 2 (not 0) and "restful" sleep capped at 8.5h
+    // (not ~9h), which made 100 mathematically unreachable regardless of
+    // what the user selected. Verified against UserDataContext's
+    // calculateGlowScore formula directly before shipping this mapping.
     const pillToNumber = {
-      energy: { drained: 2, low: 4, okay: 6, good: 8, energised: 10 },
-      mood: { low: 2, unsettled: 4, steady: 7, bright: 10 },
-      sleep: { restless: 2, light: 4, fair: 7, restful: 10 },
-      stress: { calm: 2, elevated: 6, tense: 9 },
+      energy: { drained: 1, low: 3.5, okay: 6, good: 8, energised: 10 },
+      mood: { low: 1, unsettled: 4, steady: 7, bright: 10 },
+      stress: { calm: 0, elevated: 5, tense: 9 },
     };
-    const sleepHoursEstimate = { restless: 4.5, light: 5.5, fair: 7, restful: 8.5 };
+    const sleepHoursEstimate = { restless: 3.5, light: 5.5, fair: 7, restful: 9 };
 
     if (typeof addCheckIn === 'function') {
       addCheckIn({
