@@ -674,8 +674,8 @@ const buildFallbackCards = (anchor) => {
 recommendation: {
       id: 'recommendation_fallback_002', type: 'recommendation',
       title: 'Evening wind-down',
-      summary: "Add a 10-minute wind-down before bed tonight — your sleep tends to dip after high-stress days.",
-      coach_context: `Explain the reasoning: sleep quality tends to dip on nights following high-stress days, and a short wind-down routine may help break that link. Offer to add this as a focus in their Plan if they're interested.`,
+      summary: "A short evening wind-down may be one of the simplest ways to support your sleep right now.",
+      coach_context: `You believe an evening wind-down routine could have a meaningful impact on the user's sleep. Start by explaining why you're recommending it, then ask whether evenings tend to feel rushed, stressful, or difficult to switch off from. Explore together before suggesting any plan changes. If appropriate, offer to add a simple wind-down habit to their Plan.`,
     },
   };
 };
