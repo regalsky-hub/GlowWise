@@ -283,7 +283,77 @@ export default function Insights() {
           </div>
         </section>
 
-        {/* NEW: YOUR SNAPSHOT SECTION */}
+        {/* GLOW TYPE + GLOW SCORE — compact summary row, links out to the full pages */}
+        <section className="fade-up" style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 }}>
+            <Link to="/glow-type" style={{ textDecoration: 'none' }}>
+              <div style={{
+                position: 'relative', overflow: 'hidden',
+                background: '#EDF4EF', border: '1px solid rgba(168,153,104,0.10)',
+                borderRadius: 18, padding: '24px', cursor: 'pointer',
+                transition: 'transform 0.2s ease',
+              }}>
+                <div style={{
+                  position: 'absolute', width: 120, height: 120, borderRadius: '50%',
+                  background: 'rgba(107,158,127,0.14)', filter: 'blur(40px)', top: -40, right: -30,
+                }} />
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div className="eyebrow" style={{ marginBottom: 12 }}>Your glow type</div>
+                  <div style={{
+                    fontFamily: "'Fraunces', serif", fontStyle: 'italic', fontWeight: 500,
+                    fontSize: 24, color: '#557E64', marginBottom: 8, letterSpacing: '-0.01em',
+                  }}>
+                    {profile?.glowType || 'The Steady Bloomer'}
+                  </div>
+                  <div style={{
+                    fontFamily: "'Manrope', sans-serif", fontSize: 12.5, color: '#5A6770',
+                    marginBottom: 14, lineHeight: 1.5,
+                  }}>
+                    {profile?.glowTypeDescription
+                      ? profile.glowTypeDescription.split('.')[0] + '.'
+                      : 'Routine is your soil. Small daily rituals compound into a deep, quiet bloom.'}
+                  </div>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    fontFamily: "'Manrope', sans-serif", fontSize: 12, fontWeight: 700, color: '#557E64',
+                  }}>
+                    Explore your full type <ChevronRight size={12} strokeWidth={2.2} />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            <div style={{
+              position: 'relative', overflow: 'hidden',
+              background: '#FAF3DC', border: '1px solid rgba(168,153,104,0.10)',
+              borderRadius: 18, padding: '24px',
+            }}>
+              <div style={{
+                position: 'absolute', width: 120, height: 120, borderRadius: '50%',
+                background: 'rgba(160,126,61,0.12)', filter: 'blur(40px)', top: -40, right: -30,
+              }} />
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <div className="eyebrow" style={{ marginBottom: 12 }}>Glow score</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 8 }}>
+                  <span style={{ fontFamily: "'Fraunces', serif", fontSize: 38, color: '#8B6A30', letterSpacing: '-0.02em' }}>
+                    {glowScore || 0}
+                  </span>
+                  <span style={{
+                    fontFamily: "'Manrope', sans-serif", fontSize: 12, fontWeight: 700,
+                    color: '#A07E3D', textTransform: 'uppercase', letterSpacing: '0.05em',
+                  }}>
+                    {glowScore >= 91 ? 'Glowing' : glowScore >= 76 ? 'Thriving' : glowScore >= 61 ? 'Balancing' : 'Recovering'}
+                  </span>
+                </div>
+                <div style={{ fontFamily: "'Manrope', sans-serif", fontSize: 12.5, color: '#5A6770' }}>
+                  Calculated from your last 7 check-ins — energy, sleep, stress, and mood combined.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* YOUR SNAPSHOT SECTION */}
         <section className="fade-up" style={{ marginBottom: '40px' }}>
           <div style={{ marginBottom: '18px' }}>
             <div className="eyebrow" style={{ marginBottom: '6px' }}>This morning</div>
