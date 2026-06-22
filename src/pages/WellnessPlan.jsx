@@ -371,7 +371,23 @@ export default function WellnessPlan() {
   const noticingText = buildWhatImNoticing(checkIns);
 
   const handleDiscuss = () => {
-    navigate('/ai-coach', { state: { fromCard: 'recommendation', text: noticingText } });
+    // Matches the { id, type, title, summary, coach_context } shape
+    // Dashboard.jsx's insight cards now send — AICoach.jsx checks for
+    // BOTH location.state.fromCard AND location.state.card before firing
+    // the auto-send; sending only `text` (the old shape) silently fails
+    // that check and the user lands on the blank welcome screen instead.
+    navigate('/ai-coach', {
+      state: {
+        fromCard: 'recommendation',
+        card: {
+          id: 'plan_noticing_001',
+          type: 'recommendation',
+          title: "What I'm noticing",
+          summary: noticingText,
+          coach_context: `This is something the coach noticed while reviewing the user's Plan page — their current focus area and recent check-in patterns. Explain the reasoning behind it and ask a clarifying question before suggesting next steps.`,
+        },
+      },
+    });
   };
 
   return (
