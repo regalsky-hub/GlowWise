@@ -964,6 +964,7 @@ export default function Dashboard() {
   } = useUserData();
 
   const [checkInOpen, setCheckInOpen] = useState(false);
+  const [lastConversationTopic, setLastConversationTopic] = useState(null);
 
   const firstName =
     (
