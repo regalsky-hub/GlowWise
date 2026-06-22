@@ -478,9 +478,10 @@ const CoachHero = ({
   score,
   lastConversationTopic,
 }) => {
-  const anchor = resolveAnchor(profile);
-  const lines = summary?.greetingLines || buildHeroLines(anchor, name);
-  const isColdStart = !summary && anchor.type === 'cold_start';
+  const heroContent = buildHeroGreeting({
+  lastConversation: lastConversationTopic,
+  profile,
+});
 
   return (
     <div className="gw-hero-pad" style={{
