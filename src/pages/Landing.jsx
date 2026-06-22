@@ -624,14 +624,29 @@ export default function Landing() {
             <button onClick={() => navigate('/signup')} className="btn-primary" style={{ padding: '11px 22px', fontSize: '14px' }}>Start free</button>
           </div>
 
-          {/* Mobile burger */}
-          <button
-            className="show-mobile"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3D4A52' }}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile right cluster: login icon always visible + burger.
+              Previously Login was only reachable inside the hamburger
+              menu — a real friction point for returning users on mobile,
+              who'd otherwise have to dig through 4 nav links to find it. */}
+          <div className="show-mobile" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <button
+              onClick={() => navigate('/login')}
+              aria-label="Login"
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: '#3D4A52', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', padding: '6px',
+              }}
+            >
+              <User size={22} strokeWidth={1.6} />
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3D4A52' }}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
