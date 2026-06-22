@@ -665,11 +665,13 @@ const buildFallbackCards = (anchor) => {
       coach_context: `I noticed the user tends to engage more consistently with their wellbeing during weekdays than weekends. Start by sharing the observation in a natural way, ask if it feels accurate, then explore what makes weekends different. Focus on curiosity rather than accountability.`
     },
     improvement: {
-      id: 'improvement_fallback_002', type: 'improvement',
-      title: 'Stress trending down',
-      summary: "You've been handling stress more effectively recently. Even small improvements like this can make a real difference over time.",
-      coach_context: `The user has shown a genuine improvement in stress levels. Begin by celebrating the progress. Ask what they think has contributed to it, then explore the habits, routines, or mindset shifts behind the improvement. Focus on reinforcing success rather than analysing numbers.`
-    recommendation: {
+  id: 'improvement_fallback_002',
+  type: 'improvement',
+  title: 'Stress trending down',
+  summary: "You've been handling stress more effectively recently. Even small improvements like this can make a real difference over time.",
+  coach_context: `The user has shown a genuine improvement in stress levels. Begin by celebrating the progress. Ask what they think has contributed to it, then explore the habits, routines, or mindset shifts behind the improvement. Focus on reinforcing success rather than analysing numbers.`,
+},
+recommendation: {
       id: 'recommendation_fallback_002', type: 'recommendation',
       title: 'Evening wind-down',
       summary: "Add a 10-minute wind-down before bed tonight — your sleep tends to dip after high-stress days.",
