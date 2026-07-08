@@ -4,6 +4,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+  return res.status(503).json({ error: 'Subscriptions temporarily paused.' });
 
   try {
     const session = await stripe.checkout.sessions.create({
