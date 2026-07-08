@@ -14,7 +14,7 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [selectedPlan, setSelectedPlan] = useState('paid');
+  const [selectedPlan, setSelectedPlan] = useState('free');
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -217,11 +217,11 @@ export default function Signup() {
 
           {/* Plan Selection */}
           <div>
-            <label className="eyebrow" style={{ display: 'block', marginBottom: '12px' }}>Choose your plan</label>
+            <label className="eyebrow" style={{ display: 'block', marginBottom: '12px' }}>Your plan</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-              {/* Paid Plan — preselected */}
-              <div
+              {/* Paid Plan — temporarily hidden */}
+              {false && <div
                 className={`plan-card ${selectedPlan === 'paid' ? 'selected-paid' : ''}`}
                 onClick={() => setSelectedPlan('paid')}
                 style={{ position: 'relative' }}
