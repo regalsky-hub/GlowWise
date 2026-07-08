@@ -292,6 +292,9 @@ export default function Signup() {
             </label>
           </div>
 
+          <div style={{ background: 'rgba(212, 232, 221, 0.5)', border: '1px solid #6B9E7F', borderRadius: '8px', padding: '12px 16px', textAlign: 'center', fontSize: '13px', color: '#557E64', lineHeight: 1.5, marginBottom: '4px' }}>
+             <strong>GlowWise Plus is temporarily unavailable</strong> while we make improvements. Free accounts are open — paid subscriptions will reopen soon!
+          </div>
           <button type="submit" disabled={!canSubmit} className="btn-primary" style={{ marginTop: '4px' }}>
             {loading ? 'Creating your account...' : (
               <>
