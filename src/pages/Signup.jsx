@@ -220,8 +220,9 @@ export default function Signup() {
             <label className="eyebrow" style={{ display: 'block', marginBottom: '12px' }}>Your plan</label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
 
-              {/* Paid Plan — temporarily hidden */}
-              {false && <div
+              {/* Paid Plan — temporarily disabled */}
+              {false && (
+              <div
                 className={`plan-card ${selectedPlan === 'paid' ? 'selected-paid' : ''}`}
                 onClick={() => setSelectedPlan('paid')}
                 style={{ position: 'relative' }}
@@ -251,6 +252,7 @@ export default function Signup() {
                 </div>
               </div>
 
+              )}
               {/* Free Plan */}
               <div
                 className={`plan-card ${selectedPlan === 'free' ? 'selected' : ''}`}
