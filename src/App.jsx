@@ -50,6 +50,9 @@ function ProtectedRoute({ children }) {
 if (!user) {
     return <Navigate to="/" replace />;
   }
+  if (profile && !profile.onboarding_completed) {
+    return <Navigate to="/onboarding" replace />;
+  }
   return children;
 }
 
