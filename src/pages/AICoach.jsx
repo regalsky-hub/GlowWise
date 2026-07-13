@@ -407,9 +407,9 @@ export default function AICoach() {
             content: welcomeBackText,
             timestamp: new Date().toISOString(),
           };
-          const withWelcomeBack = [...nonEmpty.messages, welcomeBackMsg];
-          setMessages(withWelcomeBack);
-          persistMessages(withWelcomeBack, nonEmpty.id);
+          // Display-only: shown in the UI but never persisted, so the
+          // model's history contains only words it actually generated.
+          setMessages([...nonEmpty.messages, { ...welcomeBackMsg, ephemeral: true }]);
         } else {
           setMessages(nonEmpty.messages);
         }
