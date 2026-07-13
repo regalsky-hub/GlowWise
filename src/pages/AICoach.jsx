@@ -12,15 +12,18 @@ import {
 import ReactMarkdown from 'react-markdown';
 
 // ---------- Real OpenAI call via Vercel serverless function ----------
-async function getAIResponse(userMessage, history, profile) {
+async function getAIResponse(userMessage, history, user) {
   try {
+    const idToken = await user.getIdToken();
     const response = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
       body: JSON.stringify({
-        userMessage,
-        history,
-        userContext: profile || null,
+        message: userMessage,
+        history: history.map(m => ({ role: m.role, content: m.content })),
       }),
     });
 
@@ -272,7 +275,7 @@ export default function AICoach() {
     persistMessages(afterUser, convId);
 
     try {
-      const aiText = await getAIResponse(text, afterUser, buildUserContext(profile, checkIns, glowScore));
+      const aiText = await getAIResponse(text, afterUser, user);
       const newCount = dailyCount + 1;
       setDailyCount(newCount);
       if (!isPaid && newCount >= FREE_LIMIT) setShowTeaser(true);
