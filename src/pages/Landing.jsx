@@ -281,8 +281,9 @@ export default function Landing() {
     a: 'Your data is encrypted and used only to personalise your guidance. We don\'t sell it. We don\'t share it with third parties. GDPR compliant. You can delete messages, photos or your whole account anytime — no questions, no fees.'
   },
   {
+    {
     q: 'Who is GlowWise for?',
-    a: 'Anyone 18+ looking for clarity on their wellness. Whether you\'re tracking hormones, hair, energy, sleep, stress, skin, nutrition or brain health — GlowWise adapts to you.'
+    a: 'GlowWise is built for women who suspect their energy, sleep, skin, hair or mood are connected to their hormones — and want someone to finally connect the dots. That said, anyone 18+ can use it: the coach adapts to whoever it\'s talking to.'
   },
   {
     q: 'What if I miss a day?',
@@ -709,7 +710,7 @@ export default function Landing() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px 28px', fontSize: '12px', color: '#A89968', alignItems: 'center' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968' }}></span>
-                  Built for women &amp; men
+                  Hormone-literate coaching
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#A89968' }}></span>
