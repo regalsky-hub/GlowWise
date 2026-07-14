@@ -281,7 +281,6 @@ export default function Landing() {
     a: 'Your data is encrypted and used only to personalise your guidance. We don\'t sell it. We don\'t share it with third parties. GDPR compliant. You can delete messages, photos or your whole account anytime — no questions, no fees.'
   },
   {
-    {
     q: 'Who is GlowWise for?',
     a: 'GlowWise is built for women who suspect their energy, sleep, skin, hair or mood are connected to their hormones — and want someone to finally connect the dots. That said, anyone 18+ can use it: the coach adapts to whoever it\'s talking to.'
   },
